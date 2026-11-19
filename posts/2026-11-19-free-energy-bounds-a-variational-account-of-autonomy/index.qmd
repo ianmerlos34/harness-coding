@@ -92,11 +92,11 @@ digraph G {
   eps[label="epsilon_spec (accuracy)"]
   budget[label="KL budget = F_max - T*eps"]
   perstep[label="Per-step ceiling = budget / T"]
-  K --> budget
-  T --> budget
-  Fmax --> budget
-  eps --> budget
-  budget --> perstep
+  K -> budget
+  T -> budget
+  Fmax -> budget
+  eps -> budget
+  budget -> perstep
 }
 ```
 
