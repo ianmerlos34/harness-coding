@@ -1,0 +1,232 @@
+---
+title: "Gauge Symmetry and the Invariant Core of Harness Autonomy"
+description: "Apply gauge-symmetry principles to collapse the combinatorial design space of LLM agent harnesses into a finite set of inequivalent autonomy structures."
+author: "Ian Merlos"
+date: "2026-11-19"
+categories: [autonomous-agents, ai-architecture, theoretical-physics, software-engineering]
+tags: [gauge-symmetry, agent-harness-design, llm-pipelines, differential-geometry, autonomy-curvature, llm-agent-architecture]
+keywords: [gauge symmetry, LLM agent harness design, autonomous coding agent, agent pipeline topology, gauge invariance in AI, LLM agent architecture, harness reparameterization, autonomy curvature, agent design space reduction, multi-agent pipeline optimization]
+image: "cover.png"
+draft: false
+title-block-banner: "cover.png"
+---
+
+
+<!-- meta-description: Apply gauge-symmetry principles from field theory to collapse the combinatorial design space of autonomous coding-agent harnesses into a finite set of inequivalent configurations. -->
+
+I spent three weeks A/B-testing pipeline topologies for an autonomous coding agent. Reordering tool-call stages. Swapping where the verification gate sits. Nudging context-window allocations by a token here, a budget unit there. And you know what? The performance delta was noise. Pure, unremarkable, "is-this-significant-or-is-my-laptop-just-thermal-throttling" noise.
+
+Every "improvement" I measured was, in retrospect, a coordinate artifact. The agent's actual autonomy structure hadn't budged. I'd just reparameterized it. Spun the same object on a different axis and called it progress.
+
+This post is my attempt to explain why that frustration is *systemic*, not just a bad week. Most of the combinatorial explosion in LLM agent harness design is what physicists would call *gauge redundancy*: architecturally distinct descriptions that are empirically identical. Electromagnetism lets you pick infinitely many vector potentials $\mathbf{A}$ for the same field $\mathbf{F} = d\mathbf{A}$. A given autonomy structure, I'll argue, admits a whole continuous family of harness configurations that differ only in bookkeeping. The thing that actually determines whether your agent succeeds or fails—the *curvature*, the commutator structure that no amount of reparameterization can scrub away—is what matters.
+
+## Abstract
+
+There's a persistent, low-grade frustration in engineering autonomous coding-agent harnesses: the apparent combinatorial freedom in pipeline topology, tool ordering, context allocation, constraint placement. It makes the design space feel infinite when it, I think, isn't. Drawing on the gauge-symmetry principle from theoretical physics, this post formalizes the "gauge group" $\mathcal{G}$ of harness reparameterizations, identifies the gauge-invariant autonomy curvature $\mathcal{K}_{ij}$, and derives design consequences that collapse the effective search space to a finite set of inequivalent configurations. For a harness with $m$ decision stages, the number of genuinely distinct autonomy structures is bounded by a small number of discrete invariants, regardless of how much continuous reparameterization freedom you have. The practical upshot: *classify before you configure*.
+
+## TL;DR — Key Takeaways
+
+- **Most harness "choices" are gauge artifacts.** Reordering tool calls, shifting verification gates, re-allocating context windows—these often describe the *same* autonomy structure in different coordinates. You're spinning the same object.
+- **The invariant is the commutator.** The gauge-invariant quantity is the autonomy curvature $\mathcal{K}_{ij}$—how much the *order* in which you apply two design knobs actually matters. You can't transform this away.
+- **The effective design space is finite.** For $m$ decision stages, the number of inequivalent configurations is bounded by a small set of discrete invariants (commutation class, topological winding, budget partition), not by the continuous parameter space.
+- **Classify before you configure.** First identify the invariant class of your harness, *then* optimize within that class. The search shrinks from an infinite continuum to a finite combinatorial problem.
+- **This is tool-agnostic.** LangGraph state graphs, CrewAI task DAGs, AutoGen conversation topologies, your bespoke pipeline in a `for` loop—same invariants. They're structural, not implementation-specific.
+
+*You should be comfortable with basic differential geometry (forms, connections, curvature) and have hands-on experience building LLM agent pipelines. No prior QFT knowledge needed; I'll introduce the physics analogies as we go.*
+
+---
+
+## 1. The Combinatorial Illusion
+
+Picture a typical autonomous coding agent harness: a sequence of $m$ decision stages (plan → retrieve → generate → verify → iterate), each with a continuous "knob" turned by some engineer (temperature, context-window size, tool-call budget, retry threshold). A naive read of the design space gives you dimension $O(m \cdot k)$ where $k$ is knobs per stage. The implied search space is a high-dimensional hypercube. Intimidating. And—as my three weeks of shuffling made painfully clear—largely wasted effort.
+
+Here's the key observation, borrowed (heavily) from gauge theory: many points in that hypercube are *the same physical point*. In electrodynamics, the vector potential $\mathbf{A}$ is not unique. The gauge transformation $\mathbf{A} \mapsto \mathbf{A} + \nabla\chi$ leaves the measurable field $\mathbf{F} = \nabla \times \mathbf{A}$ untouched. The redundancy isn't a bug in the description; it's a symmetry. A feature.
+
+I'm claiming an analogous structure exists for agent harnesses. A *harness reparameterization* is a smooth, invertible remapping of stage orderings, knob allocations, constraint placements that leaves the observable autonomy behavior invariant. All such reparameterizations form a group $\mathcal{G}$, and the true design space is the quotient $\mathcal{C}/\mathcal{G}$, where $\mathcal{C}$ is the space of all configurations.
+
+And this isn't just decorative math. It explains—*actually* explains—why A/B tests across pipeline topologies so often come back null. The configurations you tested probably belonged to the same gauge orbit. You were comparing coordinates, not physics.
+
+For a broader treatment of the autonomy levels at play here, see [The Autonomy Imperative: Code as Self-Governing Architecture](/posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/), and for the information-theoretic cost floor that any harness must pay, see [The Autonomy Channel: Rate-Distortion in Harness Design](/posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/).
+
+---
+
+## 2. Formalizing the Gauge Group
+
+Let a harness configuration be a tuple $\mathbf{c} = (h_1, h_2, \ldots, h_m)$, where each $h_i$ is a "connection" on the $i$-th decision stage—a map from the agent's internal state to an action (tool call, generation, verification). The space of all such configurations is $\mathcal{C}$.
+
+A **gauge transformation** $g \in \mathcal{G}$ is a smooth, invertible map $\mathcal{C} \to \mathcal{C}$ satisfying:
+
+1. $g \circ \text{id} = \text{id}$ (identity is in $\mathcal{G}$);
+2. $g \circ g' \in \mathcal{G}$ for all $g, g' \in \mathcal{G}$ (closure);
+3. The observable autonomy behavior $\mathcal{B}(\mathbf{c}) = \mathcal{B}(g \cdot \mathbf{c})$ for all $g \in \mathcal{G}$ (invariance).
+
+Concretely, I've identified four families of gauge transformations that actually come up in harness design:
+
+### 2.1 Topological Gauge (Permutation)
+
+The symmetric group $S_m$ acts by permuting stage orderings: $g \cdot (h_1, \ldots, h_m) = (h_{g(1)}, \ldots, h_{g(m)})$. If two stages *commute* (their actions are independent of order), the permutation is pure gauge redundancy. In plain terms: swapping two steps that don't talk to each other changes literally nothing about what the agent does. You could shuffle them in your sleep.
+
+### 2.2 Parametric Gauge (Knob Reparameterization)
+
+A smooth change of variables on the knob space. E.g., replacing a temperature parameter $T \in [0, 2]$ with $T' = f(T)$ for some diffeomorphism $f$. As long as the *relative* effect of the knob on the output distribution is preserved, the absolute scale is gauge. It's the harness analogue of rescaling your coordinate axes. The physics doesn't care whether you measure in meters or feet.
+
+### 2.3 Constraint Gauge (Gauge-Fixing)
+
+Just as the Coulomb gauge $\nabla \cdot \mathbf{A} = 0$ or Lorenz gauge $\partial_\mu A^\mu = 0$ selects a convenient representative within a gauge orbit (i.e., two different coordinate conventions that describe the same underlying field), a harness may impose a *constraint placement*—where verification gates sit, which stages are "frozen"—without changing the invariant content. The constraint is a gauge choice. A coordinate convention. Not a physical degree of freedom.
+
+### 2.4 Context Gauge (Window Shuffling)
+
+Redistributing tokens across the context window (system prompt vs. few-shot examples vs. retrieval results) while preserving the total information-theoretic content is a gauge transformation. This connects directly to the rate-distortion analysis in [The Autonomy Channel](/posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/): the rate $R$ is gauge-invariant, while the particular allocation of bits across stages is gauge-dependent. You can shuffle the bits around; the total information budget doesn't care.
+
+```{mermaid}
+flowchart LR
+  A[Configuration c₁] -->|gauge g₁| B[Configuration c₂]
+  A -->|gauge g₂| C[Configuration c₃]
+  B -->|g⁻¹| A
+  C -->|g₂⁻¹| A
+  B <-->|same orbit| C
+  style A fill:#e8f4fd,stroke:#2196F3
+  style B fill:#e8f4fd,stroke:#2196F3
+  style C fill:#e8f4fd,stroke:#2196F3
+```
+*Three harness configurations that are behaviorally identical under the gauge group $\mathcal{G}$: they occupy the same orbit and therefore represent the same autonomy structure.*
+
+The group $\mathcal{G}$ is, in general, a semidirect product of the topological group $S_m$ with a continuous group of knob reparameterizations, further extended by the constraint-placement and context-shuffling symmetries. For most practical harnesses ($m \leq 8$), the topological part dominates the gauge redundancy. The continuous knobs are almost all noise.
+
+---
+
+## 3. The Gauge-Invariant Autonomy Curvature
+
+If the connection $h_i$ encodes "how stage $i$ acts on the agent's state," the natural invariant object is the **autonomy curvature**:
+
+$$\mathcal{K}_{ij} \;=\; [h_i, h_j]_{\mathcal{G}} \;=\; h_i \circ h_j \;-\; h_j \circ h_i$$
+
+defined on pairs of stages $(i, j)$. This is the commutator of two stage-connections, evaluated in the quotient by the gauge group.
+
+**Why is $\mathcal{K}_{ij}$ invariant?** Because it's defined as a commutator of covariant derivatives, it transforms as a tensor under gauge transformations: $g \cdot \mathcal{K}_{ij} = \mathcal{K}_{ij}$ for all $g \in \mathcal{G}$. Concretely: permute stages, reparameterize knobs, shuffle context—whatever you do—the *order-dependence* between any pair of stages is preserved. It's the same structural reason the electromagnetic field tensor $F_{\mu\nu} = \partial_\mu A_\nu - \partial_\nu A_\mu$ is gauge-invariant. The antisymmetrized derivative "cancels" the pure-gauge part. The field survives; the potential doesn't.
+
+In plain terms (and I mean *plain*): the curvature measures how much the *order* in which you change two design knobs matters. If $\mathcal{K}_{ij} = 0$, stages $i$ and $j$ commute—you can reorder them freely, and nothing changes. Pure gauge. If $\mathcal{K}_{ij} \neq 0$, the order is physically meaningful. No reparameterization, no amount of A/B testing, is going to erase it.
+
+This is the harness analogue of the Aharonov–Bohm effect, with one important clarification: the AB effect is specifically about a *topological* phase acquired in a region where the local field strength vanishes but the potential is non-trivial (i.e., holonomy in a non-simply-connected space). The harness analogue is a *path-dependent autonomy budget*: the total "effort" the agent expends depends on the route through the stage graph, even if each individual stage looks gauge-equivalent in isolation. The non-trivial holonomy is the invariant. You can't shortcut it.
+
+The curvature $\mathcal{K}_{ij}$ is antisymmetric ($\mathcal{K}_{ij} = -\mathcal{K}_{ji}$) and, in the classical (non-quantized) regime, satisfies the Bianchi identity $\mathcal{K}_{ij} + \mathcal{K}_{jk} + \mathcal{K}_{ki} = 0$ for any triple of stages. This reduces the number of independent curvature components from $\binom{m}{2}$ to $\binom{m}{2} - \binom{m}{3}$, a non-trivial constraint on the design space. Not all combinations of stage interactions are independently realizable.
+
+For the variational perspective on how much autonomy a harness can sustain given these invariants, see [Free Energy Bounds: A Variational Account of Autonomy](/posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/). And for why autonomy tends to emerge in discrete jumps rather than smoothly, see [Percolation of Autonomy: Critical Dynamics in Harness Design](/posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/).
+
+---
+
+## 4. The Quotient: A Finite Set of Inequivalent Configurations
+
+The central claim of this post can now be stated precisely:
+
+> **The space of inequivalent harness autonomy structures is the quotient $\mathcal{C}/\mathcal{G}$, and for a harness with $m$ decision stages, this quotient is determined by a finite set of discrete invariants.**
+
+These invariants are:
+
+| Invariant | Values | Meaning |
+|-----------|--------|---------|
+| Commutation class | $\{0,1\}^{\binom{m}{2}}$ (antisymmetric) | Which pairs of stages have $\mathcal{K}_{ij} \neq 0$ |
+| Topological winding | $\pi_1(\mathcal{C})$ (often $\mathbb{Z}$ or trivial) | Whether the stage graph has non-trivial cycles (holonomy) |
+| Budget partition | Integer partitions of the total autonomy budget into $m$ parts | How the "effort" is irreducibly allocated |
+| Constraint rank | $\{0, 1, \ldots, m\}$ | Number of independent gauge-fixing constraints (verification gates) |
+
+*This is the cheat-sheet an engineer can pin to a wall: four numbers (or a small matrix) that fully specify your harness's autonomy structure, independent of any particular implementation.*
+
+A note on scaling, because I want to be honest here: for fixed $m$, each invariant is finite, so the quotient is finite. However, the commutation class has $2^{\binom{m}{2}}$ possible patterns, which grows combinatorially with $m$. For $m = 6$, that's $2^{15} = 32{,}768$ patterns. For $m = 10$, $2^{45} \approx 3.5 \times 10^{13}$. So the reduction from the continuous parameter space (dimension $O(m \cdot k)$) to this discrete set is still dramatic for small $m$, but the "finite" label should be read as *discrete and classifiable*, not necessarily *small*. In practice, the Bianchi identity and symmetry constraints reduce the reachable set to a small fraction of the full Boolean lattice. You won't be enumerating all 32,768.
+
+The practical upshot (and this is the part I'd actually put on a whiteboard in a design review): before optimizing any continuous knob, determine which of these four invariants your harness occupies. Two harnesses in the same invariant class are gauge-equivalent. No amount of hyperparameter tuning will distinguish them. I promise. Two harnesses in *different* classes are genuinely different autonomy structures, and the choice between them is a structural decision, not a tuning decision.
+
+This perspective resonates with the dialectical view in [Scaffolding to Sovereignty: The Dialectic of Code Autonomy](/posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/): the "scaffolding" (constraint placement, gauge-fixing) is not a tax on autonomy. It's a coordinate choice that makes the invariant content manifest. You're not restricting the agent. You're picking a frame.
+
+---
+
+## 5. Four Heuristics for Harness Engineers
+
+OK, so the theory yields four practical design heuristics. I've ordered them roughly by how much I wish someone had told me before those three weeks:
+
+**Heuristic 1: Classify before you configure.**
+Before tuning temperatures, context windows, or tool-call budgets, identify the commutation class of your stage graph. If two stages commute ($\mathcal{K}_{ij} = 0$), their relative order is irrelevant—*stop A/B-testing their sequence*. You're measuring noise. Focus your experimental budget on the non-commuting pairs, where the order is physically meaningful and where a real difference might live.
+
+**Heuristic 2: Fix the gauge deliberately.**
+Choose your constraint placement (verification gates, retry loops) as a *gauge-fixing* condition, not as a free parameter. The Lorenz gauge analogy is instructive: you pick the gauge that makes the equations simplest, not the one that looks "most correct." In practice, place verification gates at the points of maximum curvature ($\|\mathcal{K}_{ij}\|$ large), where order-dependence is highest. That's where the agent is most vulnerable to sequencing errors.
+
+**Heuristic 3: Check for holonomy before adding stages.**
+Before adding a new stage to the pipeline, verify that it introduces a non-trivial winding in the stage graph. If the new stage is gauge-equivalent to an existing one (it commutes with all others and carries no independent budget), it's redundancy, not capability. You've just added a coordinate. This is the percolation-critical insight from [Percolation of Autonomy](/posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/): autonomy emerges in discrete jumps when the constraint density crosses a critical threshold, not gradually. There's a phase transition in there.
+
+**Heuristic 4: Budget partitions are the real design variable.**
+The continuous knobs (temperature, window size) are largely gauge. The *integer partition* of the total autonomy budget across stages is the invariant. Spend your design time deciding *how many* retries, *how many* verification passes, *how much* context each stage irreducibly requires. These are the numbers that survive in the quotient. Everything else is coordinate noise.
+
+### A Worked Micro-Example
+
+Consider a minimal 3-stage harness for an autonomous coding agent: **Plan → Generate → Verify**. The pseudocode is:
+
+```python
+def harness(state):
+    plan    = plan_stage(state, budget=B1)       # Stage 1
+    code    = generate_stage(plan, budget=B2)    # Stage 2
+    verdict = verify_stage(code, budget=B3)      # Stage 3
+    return verdict
+```
+
+**Gauge-equivalent reparameterization:** Swap the order of Plan and Verify (a topological gauge), and rescale the budgets as $B_1' = \alpha B_1$, $B_3' = \alpha^{-1} B_3$ (a parametric gauge):
+
+```python
+def harness_gauge(state):
+    verdict = verify_stage(state, budget=B3')    # Stage 3 (moved first)
+    plan    = plan_stage(verdict, budget=B1')    # Stage 1 (moved second)
+    code    = generate_stage(plan, budget=B2)    # Stage 2 (unchanged)
+    return code
+```
+
+**The invariant that remains:** The commutator $\mathcal{K}_{12} = [\text{plan}, \text{generate}]$ is non-zero (generation depends on the plan—obviously, you need a plan to generate from), but $\mathcal{K}_{13} = [\text{plan}, \text{verify}] = 0$ (verification is order-independent of planning when the budget is conserved). This single non-zero entry in the curvature matrix is the *only* structural fact about this harness. Everything else—stage order, absolute budget values—is gauge. You could shuffle the order of Plan and Verify a thousand times and the agent would behave identically.
+
+This framework is tool-agnostic. It applies directly to a [LangGraph](https://langchain-ai.github.io/langgraph/) state graph (where nodes are stages and edges are connections), a [CrewAI](https://www.crewai.com/) task DAG (where tasks are stages and dependencies define the commutation structure), or an [AutoGen](https://github.com/microsoft/autogen) conversation topology (where agents are stages and message-passing is the connection). The invariants are properties of the *graph structure*, not of the runtime. You don't need to be in any particular framework.
+
+For those seeking an external taxonomy of autonomy levels to ground the "five-level spectrum" referenced above, the [NIST AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) provides a useful reference for the constraint and verification dimensions.
+
+---
+
+## 6. Limitations and Open Questions
+
+Intellectual honesty requires me to say what this framework does *not* capture. I'll be upfront:
+
+**Quantization is missing.** The curvature $\mathcal{K}_{ij}$ is treated as a continuous tensor. In practice, LLM agent harnesses are *discrete*: tool calls are atomic, context windows are integer-token, verification is binary (pass/fail). The classical gauge structure is an approximation that becomes exact in the large-budget limit. For small budgets ($B_i \leq 5$), the discreteness introduces "quantization" effects that the continuous curvature simply doesn't see. I'm comfortable with this approximation for most production systems, but it's an approximation.
+
+**Non-Abelian complexity.** The gauge group $\mathcal{G}$ is treated as effectively Abelian (commuting families). For harnesses with $m \geq 5$ and strong inter-stage coupling, the group becomes non-Abelian, and the curvature satisfies a Yang–Mills-type equation rather than the simpler Maxwell form. The design consequences get more complex, and the "finite set of invariants" claim weakens. I haven't worked out the full non-Abelian case. It's on the list.
+
+**Empirical validation is pending.** The gauge-equivalence claim is structural, not yet empirically confirmed. A controlled experiment—taking two harnesses in the same invariant class but different gauge, and measuring task success rate over 1000+ runs—would be the critical test. My three-week anecdote in the introduction is suggestive. It's not a proof. I'd like someone to actually run the experiment. (Ideally me, once I stop being the one who *needs* the experiment to justify the three weeks.)
+
+**The Bianchi identity may not hold.** The identity $\mathcal{K}_{ij} + \mathcal{K}_{jk} + \mathcal{K}_{ki} = 0$ assumes a flat underlying stage space. If the agent's state space is genuinely curved (say, due to long-range dependencies in the context window that create non-local coupling), the Bianchi identity acquires a source term, and the constraint on the design space weakens. This is the case I'm least sure about, and where the physics analogy might actually break down.
+
+---
+
+## 7. Discussion and Conclusion
+
+The gauge-symmetry perspective on harness design doesn't eliminate the need for careful engineering. It *reorganizes* the effort. A substantial fraction of the perceived design freedom is identified as redundancy, and the irreducible content is isolated into a small set of discrete invariants. For a team building an autonomous coding agent, this means the question isn't "what temperature should I use?" or "should verification come before or after generation?" (it doesn't matter, if they commute). The question is: "what is the commutation structure of my stage graph, and what is my budget partition?"
+
+This is, in a sense, the engineering analogue of the insight that changed theoretical physics in the 1950s: the "force" is not the potential; the "design" is not the configuration. The potential (the configuration) is gauge-dependent and non-unique. The field (the invariant) is what does the work. You can change coordinates all day. The field doesn't care.
+
+The broader implication for the autonomous agent ecosystem is a shift from *search* to *classification*. Rather than exhaustively exploring a high-dimensional hypercube of hyperparameters (which, as I've learned the hard way, mostly finds noise), an engineer should first classify the invariant class, then optimize within that class. The search space shrinks from continuous to discrete, from infinite to finite, and the A/B testing that so often yields null results becomes targeted. Actually informative.
+
+This post is the fourth in a series building toward a complete treatment of autonomous agent harness design. The rate-distortion floor ([The Autonomy Channel](/posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/)) tells us the minimum cost. The free-energy bound ([Free Energy Bounds](/posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/)) tells us the maximum sustainable autonomy. The percolation analysis ([Percolation of Autonomy](/posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/)) tells us where the phase transitions are. And this post tells us *which of the apparent choices are real*. Together, they form a coherent design calculus for the harness engineer.
+
+The next step is empirical: building the controlled experiments that confirm or refute the gauge-equivalence hypothesis, and identifying the first non-Abelian effects in production harnesses. Until then, the practical advice stands: *look for the invariant, and stop tuning the gauge*.
+
+---
+
+## References
+
+1. Utiyama, R. (1956). Invariant theoretical interpretation of non-Abelian gauge field. *Physical Review*, 101(3), 1597–1602.
+2. Yang, C.-N. (1954). Conservation of isotopic spin and isotopic gauge invariance. *Physical Review*, 96(1), 191–195.
+3. Nakahara, M. (2003). *Geometry, Topology and Physics* (2nd ed.). Institute of Physics Publishing.
+4. NIST. (2023). *AI Risk Management Framework (AI RMF 1.0)*. National Institute of Standards and Technology. https://www.nist.gov/itl/ai-risk-management-framework
+5. Yao, S., et al. (2024). ReAct: Synergizing reasoning and acting in language models. *Proceedings of ICLR 2023*; see also the 2024 LangGraph architecture documentation for practical multi-stage agent topologies. https://langchain-ai.github.io/langgraph/
+6. Ouyang, L., et al. (2025). Information-geometric approaches to LLM agent architecture. *arXiv:2501.04321*.
+7. Wu, Y., et al. (2024). Autogen: Enabling next-gen LLM applications via multi-agent conversation. *arXiv:2308.08155*.
+
+---
+
+*Cite this post:*
+Gauge Symmetry and the Invariant Core of Harness Autonomy. *Building Autonomous Agents* (2026). https://[blog-domain]/posts/gauge-symmetry-and-the-invariant-core-of-harness-autonomy/
+
+*This post is part of a series on building completely autonomous agent harnesses. For the full series index, see the [Autonomy Imperative](/posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/).*

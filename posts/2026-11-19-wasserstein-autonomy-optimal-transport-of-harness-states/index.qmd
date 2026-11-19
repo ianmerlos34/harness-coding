@@ -1,0 +1,243 @@
+---
+title: "Wasserstein Autonomy: Optimal Transport of Harness States"
+description: "Recasting the scaffold-to-autonomy transition as an optimal-transport problem yields a provable lower bound on refactoring effort and a CI-auditable plan."
+author: "Ian Merlos"
+date: "2026-11-19"
+categories: [Software Engineering, AI Agents, Applied Mathematics]
+tags: [optimal-transport, wasserstein-distance, coding-agents, harness-design, refactoring, constraint-lattice]
+keywords: [optimal transport, Wasserstein distance, coding agent autonomy, harness refactoring cost, constraint lattice, Kantorovich dual, scaffold to autonomy, refactoring effort estimation, AI agent guardrails, optimal transport scheduling]
+image: "cover.png"
+draft: false
+title-block-banner: "cover.png"
+---
+
+
+<!-- meta description: We recast the scaffold-to-autonomy transition for coding-agent harnesses as a Kantorovich optimal-transport problem, yielding a computable lower bound on refactoring effort and a concrete, order-preserving work schedule. -->
+<!-- og:description: We recast the scaffold-to-autonomy transition for coding-agent harnesses as a Kantorovich optimal-transport problem, yielding a computable lower bound on refactoring effort and a concrete, order-preserving work schedule. -->
+
+## Abstract
+
+So here's a question that keeps coming up in conversations about coding agents: how much actual engineering work sits between a fully scaffolded harness and one that runs with barely any human in the loop? We recast this question as a Kantorovich optimal-transport (OT) problem between two probability measures on a partially ordered constraint lattice, and out of that framing falls a provable lower bound—the Wasserstein-2 distance (W₂)—on the irreducible cost of getting to autonomy. The dual formulation gives you a certifiable refactoring schedule, and the whole thing slots neatly into the entropy, free-energy, and percolation threads we've been pulling through this series.
+
+> **What you will get from this post**
+>
+> - A formal W₂ lower bound on the refactoring cost between any two harness configurations.
+> - A dual-potential certificate you can actually drop into a CI pipeline and have it audited.
+> - A seven-step algorithm that turns the bound into an ordered, dependency-respecting work schedule.
+> - Explicit connections to the rate-distortion, free-energy, and percolation results elsewhere in this series.
+
+*Prerequisites.* Fair warning: this post assumes you're comfortable with basic measure theory, the Kantorovich formulation of OT, and enough lattice theory to follow the partial-order notation. If OT is new to you, Villani (2009), Chapters 1–2, is the classic entry point, or the more accessible survey in Peyré & Cuturi (2019), Chapter 1, will get you there. For the broader autonomy-spectrum model we're building on, see [The Autonomy Imperative](/posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/).
+
+---
+
+## 1. Why Transport, Not Enumeration
+
+"How far is my harness from full autonomy?" Sounds like a simple question, right? The naive move is to enumerate: list the constraints you need to pull, the invariants you need to loosen, the feedback loops you need to rewire, and then sum up the person-hours. And sure, you can do that. But it's fragile. The *order* in which you relax things matters—some relaxations are only possible after others are in place. And the geometry of the constraint space (its partial order, its symmetries, its critical thresholds) sets a cost floor that no clever scheduling can get below.
+
+Optimal transport gives us exactly the right language for this. Instead of asking "which constraints do I remove?", the question becomes "what's the minimum work to deform the probability measure describing my current harness into the one describing the target autonomous state?" The W₂ distance between those two measures *is* that minimum work. Concretely, it's the cost of moving mass—engineering attention, test coverage, guardrail density—from wherever the scaffolded regime puts it to wherever the autonomous regime needs it, subject to the geometric constraints of the lattice.
+
+And this isn't just a pretty reframing. It buys you three things: (i) a lower bound that doesn't care what schedule you pick, (ii) a dual certificate you can verify without enumerating the full coupling, and (iii) a natural bridge to the rate-distortion floor in [The Autonomy Channel](/posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/) and the free-energy bound in [Free Energy Bounds](/posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/).
+
+---
+
+## 2. The Constraint Lattice and Its Measures
+
+### 2.1 The Lattice $\mathcal{L}$
+
+A harness configuration is modelled as an element $a \in \mathcal{L}$ of a finite distributive lattice $(\mathcal{L}, \preceq)$. The atoms are individual constraints—input-validation rules, output-checklist gates, sandbox isolation levels, human-approval checkpoints, that sort of thing. The order $\preceq$ encodes *weakening*: $a \preceq b$ means configuration $b$ has relaxed (or removed) at least the constraints present in $a$. Top element $\top$ is the fully scaffolded harness; bottom element $\bot$ is maximal autonomy (nothing left beyond the irreducible safety invariants we identified in [Cohomological Obstructions](/posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/)).
+
+The distance between two configurations is defined via an **effort function**:
+
+$$d(a, b) \;=\; \text{effort}(a \to b),$$
+
+where $\text{effort}(a \to b)$ is the engineering cost (person-hours, CI-cycle-equivalents, whatever normalised unit you like) of going from configuration $a$ to $b$ along the shortest dependency-respecting path in $\mathcal{L}$.
+
+**Estimating the effort function.** This is the single most important empirical input to the whole framework, and honestly, it deserves way more attention than a one-line definition gets. In practice, you'll calibrate $\text{effort}(a \to b)$ from a few sources:
+
+- **CI/CD telemetry.** Wall-clock time and retry counts for the sequence of test-suite changes needed to pass under relaxed constraints.
+- **Pull-request review data.** Median review time and revision cycles for PRs that touch the same guardrail files.
+- **Historical refactoring logs.** If your team has already walked part of the lattice, the realised effort for each transition $(a, b)$ is a direct sample.
+- **Expert elicitation.** For transitions nobody's traversed yet, structured Delphi estimates (anchored on the ones you *have* traversed) give you a defensible prior.
+
+The key requirement is that $d$ satisfy the triangle inequality on $\mathcal{L}$. It need not be symmetric if adding constraints costs differently than removing them, but for the W₂ formulation we assume symmetry (or restrict to the directed setting). A companion post will develop a proper statistical estimator for $\text{effort}$ from heterogeneous telemetry; for now, treat it as given.
+
+### 2.2 Probability Measures on $\mathcal{L}$
+
+Here's the point that trips people up: a *harness state* isn't a single lattice element. In production, you're running across multiple codebases, feature branches, deployment environments—so the state is really a *distribution* over lattice elements. Formally, a harness state is a probability measure $\mu \in \mathcal{P}(\mathcal{L})$ (for finite $\mathcal{L}$, just a probability vector). The scaffolded state $\mu_S$ concentrates mass near $\top$; the autonomous target $\mu_A$ concentrates near $\bot$.
+
+### 2.3 Notation Summary
+
+| Symbol | Meaning |
+|--------|---------|
+| $\mathcal{L}, \preceq$ | Finite distributive constraint lattice |
+| $a, b \in \mathcal{L}$ | Harness configurations |
+| $d(a,b)$ | Symmetric effort distance |
+| $\mu, \nu \in \mathcal{P}(\mathcal{L})$ | Harness states (probability measures) |
+| $\gamma$ | Coupling (joint distribution on $\mathcal{L} \times \mathcal{L}$) |
+| $W_2(\mu,\nu)$ | Wasserstein-2 distance |
+| $\varphi, \psi$ | Dual potentials |
+| $H(\gamma)$ | Shannon entropy of the coupling |
+| $F(\mu)$ | Free-energy functional |
+| $p_c$ | Percolation threshold |
+| $\nu$ (exponent) | Critical exponent of the percolation cluster |
+| $\mathrm{KL}(\mu \| \nu)$ | Kullback–Leibler divergence |
+
+---
+
+## 3. The Worked Example
+
+> **Concrete anchor.** Let's make this tangible. Picture a small harness with four constraints: input validation (IV), output checklist (OC), sandbox isolation (SI), and human approval (HA). The lattice has $2^4 = 16$ elements (all subsets of active constraints). The scaffolded state $\mu_S$ puts 80% mass on the full set $\{IV, OC, SI, HA\}$ and 20% on $\{IV, SI, HA\}$. The autonomous target $\mu_A$ puts 70% mass on $\{IV\}$ and 30% on $\{IV, SI\}$.
+>
+> The effort function, calibrated from (say) a year of CI logs, looks like this: removing HA costs 40 h; removing OC costs 25 h; removing SI costs 60 h (because it requires re-architecting the sandbox boundary); adding any constraint back costs 10 h per constraint. The W₂ distance between $\mu_S$ and $\mu_A$ comes out of solving the linear programme over the $16 \times 16$ coupling matrix. The optimal coupling assigns the 70% mass at $\{IV, OC, SI, HA\}$ to $\{IV\}$ at cost $d^2 = (40+25+60)^2 = 18225$, and the 30% mass at $\{IV, SI, HA\}$ to $\{IV, SI\}$ at cost $d^2 = 40^2 = 1600$. The W₂ value is $\sqrt{0.7 \cdot 18225 + 0.3 \cdot 1600} \approx 112.4$ (in $\sqrt{\text{h}^2}$ units).
+>
+> *Interpretation.* No matter how cleverly you sequence the refactoring, the total effort can't fall below $\approx 112.4^2 \approx 12{,}630$ h² (or $\approx 112.4$ h in the linearised reading). That's the irreducible cost.
+
+What I like about this example is the key property it exposes: the W₂ bound is *schedule-independent*. Whether the team pulls HA first, or OC first, or parallelises the SI re-architecture alongside the HA removal—the total effort can't dip below the bound. Period.
+
+---
+
+## 4. The Dual Formulation
+
+### 4.1 Primal and Dual
+
+The primal Wasserstein-2 problem is
+
+$$W_2^2(\mu, \nu) \;=\; \inf_{\gamma \in \Pi(\mu,\nu)} \int_{\mathcal{L} \times \mathcal{L}} d(a,b)^2 \, d\gamma(a,b),$$
+
+where $\Pi(\mu,\nu)$ is the set of all couplings (joint distributions with marginals $\mu$ and $\nu$).
+
+By the Kantorovich dual, this equals
+
+$$\boxed{\;W_2^2(\mu, \nu) \;=\; \sup_{\varphi, \psi} \;\left\{ \int \varphi \, d\mu \;+\; \int \psi \, d\nu \;\;\middle|\;\; \varphi(a) + \psi(b) \;\leq\; d(a,b)^2 \;\;\forall\, a,b \in \mathcal{L} \right\}.\;}$$
+
+Let me translate that into plain English: the squared W₂ distance equals the best you can do by assigning a "price" $\varphi(a)$ to every source configuration and a "value" $\psi(b)$ to every target, subject to the single rule that no pair's combined price-and-value may exceed the squared transport cost between them.
+
+For finite $\mathcal{L}$, the dual is a linear programme with $2|\mathcal{L}|$ variables and $|\mathcal{L}|^2$ inequality constraints. Here's where it gets practically useful: a feasible dual pair $(\varphi, \psi)$ is a *certificate*. If someone on the team proposes a refactoring schedule with total cost $C$, and $\int \varphi\, d\mu + \int \psi\, d\nu > C$, then that schedule is provably suboptimal. You can check this in CI. No hand-waving required.
+
+### 4.2 Existence and Uniqueness
+
+For the discrete setting (finite $\mathcal{L}$), the optimal coupling always exists—the feasible set $\Pi(\mu,\nu)$ is compact and the objective is linear, so you're done. Uniqueness is a bit more delicate: it holds whenever the cost matrix $(d(a_i, b_j)^2)_{ij}$ is *non-degenerate* in the sense that no two distinct pairs $(a_i, b_j) \neq (a_k, \ell)$ share the same cost value (Murota, 2003, Ch. 5). When the cost matrix has ties, the optimal coupling is unique up to the face of the coupling polytope that's degenerate, and any element of that face works. In practice, the strict lattice ordering of $\mathcal{L}$ and the monotonicity of $\text{effort}$ keep things non-degenerate for all but pathological effort assignments.
+
+---
+
+## 5. The Optimal Coupling as a Refactoring Schedule
+
+Now, the optimal coupling $\gamma^*$ isn't just some abstract probability distribution sitting in a vector space. Because $\mathcal{L}$ is a poset, the *support* of $\gamma^*$—the set of pairs $(a, b)$ with $\gamma^*(a, b) > 0$—induces a partial order on the refactoring steps. Concretely: if $\gamma^*$ assigns mass to $(a_1, b_1)$ and $(a_2, b_2)$ with $a_1 \preceq a_2$ but $b_1 \not\preceq b_2$, then the transition for $(a_1, b_1)$ must be finished before $(a_2, b_2)$ can start. Topologically sort that partial order, and you've got a concrete, dependency-respecting schedule.
+
+```{mermaid}
+flowchart TD
+  A["Scaffolded state μ_S<br/>(mass near ⊤)"] -->|"Step 1: Remove HA<br/>(40 h)"| B
+  B -->|"Step 2: Remove OC<br/>(25 h)"| C
+  C -->|"Step 3: Re-architect SI<br/>(60 h)"| D["Autonomous state μ_A<br/>(mass near ⊥)"]
+  A -.->|"Dual certificate<br/>φ + ψ ≤ d²"| C
+  B -.->|"Dual certificate"| D
+  style A fill:#e8f0fe,stroke:#4285f4
+  style D fill:#fce8e6,stroke:#ea4335
+```
+
+*Figure 1: The optimal coupling as a directed acyclic refactoring graph. Arrows indicate the transport of mass along the lattice; dashed edges represent the dual-potential feasibility constraints that certify optimality.*
+
+The schedule is *order-preserving*: it never asks you to remove a constraint before its prerequisites are in place. That's a direct consequence of the lattice structure and the monotonicity of the cost. It means the W₂ schedule is always a valid engineering plan—whereas an arbitrary enumeration might happily propose pulling the sandbox before the approval gate that depends on it. (I've seen that happen in planning documents. Don't.)
+
+---
+
+## 6. Entropy and the Transport Cost
+
+The coupling $\gamma$ is a joint distribution, so it carries a Shannon entropy $H(\gamma) = -\sum_{a,b} \gamma(a,b) \log \gamma(a,b)$. A deterministic coupling (a bijection between support points of $\mu$ and $\nu$) has $H(\gamma) = 0$; a maximally mixed coupling hits $H(\gamma) = \log(|\mathcal{L}|)$.
+
+What does the entropy of the *optimal* coupling actually tell you? It measures the intrinsic ambiguity in the refactoring schedule. If $H(\gamma^*) > 0$, there are multiple ways to route the mass and the team has genuine scheduling freedom. If $H(\gamma^*) = 0$, the schedule is rigid—every unit of mass must travel along a single, uniquely determined path. In the worked example from §3, $H(\gamma^*) = 0$ because the support has exactly two points and the masses match one-to-one.
+
+Entropy also feeds into the rate-distortion connection. As we showed in [The Autonomy Channel](/posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/), the minimum "description length" of a harness configuration at distortion level $D$ is governed by $R(D)$, and the W₂ cost provides a geometric realisation of that distortion.
+
+---
+
+## 7. Free-Energy Connection
+
+The free-energy functional we introduced in [Free Energy Bounds](/posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/) is
+
+$$F(\mu) \;=\; \int \Phi(a) \, d\mu(a) \;+\; T \, H(\mu),$$
+
+where $\Phi: \mathcal{L} \to \mathbb{R}$ is the constraint-potential (the "energy" of a configuration, increasing with the number of active constraints), $T > 0$ is a temperature parameter (think: engineering slack), and $H(\mu)$ is the entropy of the harness state.
+
+Now, assume the interpolation $\mu_t$ between $\mu_S$ and $\mu_A$ follows the gradient flow of $F$ (i.e., $\partial_t \mu_t = -\nabla_{\mu} F(\mu_t)$ in the Wasserstein tangent space). The Benamou–Brenier kinetic-energy identity then gives
+
+$$W_2^2(\mu_S, \mu_A) \;=\; \inf_{\mu_t} \int_0^1 \int_{\mathcal{L}} \frac{|\nabla \varphi_t(a)|^2}{2} \, d\mu_t(a) \, dt.$$
+
+Under that same gradient-flow assumption, the chain rule yields
+
+$$\frac{d}{dt} F(\mu_t) \;=\; -\int_{\mathcal{L}} \frac{|\nabla \varphi_t(a)|^2}{2} \, d\mu_t(a),$$
+
+so integrating from $t=0$ to $t=1$:
+
+$$\boxed{\;W_2^2(\mu_S, \mu_A) \;=\; F(\mu_S) - F(\mu_A).\;}$$
+
+In words: the squared transport cost *equals* the drop in free energy between the scaffolded and autonomous states. This isn't a coincidence—it's the Wasserstein analogue of the thermodynamic fact that work equals the change in free energy along a reversible path.
+
+The practical upshot: the per-step KL budget from [Free Energy Bounds](/posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/) reads as a *local* bound on the instantaneous transport speed $|\nabla \varphi_t|^2 / 2$, while the W₂ bound is the *global* integral of that speed over the full transition. One is the speedometer; the other is the odometer.
+
+---
+
+## 8. Percolation Threshold and the W₂ Bound
+
+In [Percolation of Autonomy](/posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/), we model the constraint lattice as a site-percolation process: each constraint is "active" (scaffolded) with probability $p$, and autonomy emerges when the active-constraint cluster percolates. The critical threshold $p_c$ is where the expected cluster size diverges.
+
+The W₂ bound interacts with this in a sharp way. Define the *autonomy deficit* at threshold as
+
+$$\Delta W_2^2 \;=\; W_2^2(\mu_S, \mu_A) \Big|_{p = p_c} \;-\; W_2^2(\mu_S, \mu_A) \Big|_{p \to 0}.$$
+
+Near $p_c$, the cluster size scales as $\langle s \rangle \sim |p - p_c|^{-\nu}$ (with $\nu \approx 4/3$ in 2D, $\nu \approx 0.876$ in 3D; Stauffer & Aharony, 1994). The W₂ cost inherits this divergence: as $p \to p_c^-$, the optimal coupling must route mass through increasingly large intermediate clusters, and $W_2^2$ blows up as $|p_c - p|^{-2\nu}$.
+
+What this means in practice is that the *last* increment of autonomy—the final relaxation of the last percolating constraint cluster—is disproportionately expensive. The W₂ bound makes that quantitative. You should expect a power-law blow-up in effort as the harness approaches the critical threshold, and you should plan buffer capacity accordingly. The RG-flow cascade algorithm in [Coarse-Graining Autonomy](/posts/2026-11-19-coarse-graining-autonomy-rg-flow-in-harness-design/) gives you a practical method for identifying which constraints belong to the percolating cluster and scheduling their relaxation before you hit the critical window.
+
+---
+
+## 9. Practical Algorithm
+
+Here's the seven-step pipeline that converts the W₂ bound into an actionable refactoring plan. A reference implementation in Python, built on the `POT` library (Peyré & Cuturi, 2019) with a custom lattice-distance kernel, lives at [the companion repository](https://github.com/harness-ot/wasserstein-autonomy) (placeholder; see project page for the live link).
+
+1. **Enumerate the lattice.** List all constraint configurations $a_1, \ldots, a_N$ and the partial order $\preceq$. (For $k$ independent constraints, $N = 2^k$; for correlated constraints, $N$ is smaller.)
+2. **Calibrate the effort function.** Populate the $N \times N$ cost matrix $d(a_i, a_j)$ from CI telemetry, PR review data, and expert estimates (§2.1).
+3. **Specify the target measure.** Define $\mu_A$ by listing the desired constraint configurations and their target probabilities across the deployment fleet.
+4. **Solve the dual LP.** Run a linear programme (e.g., `scipy.optimize.linprog` or a commercial solver) to get the optimal potentials $(\varphi^*, \psi^*)$. The objective value *is* $W_2^2$.
+5. **Extract the coupling.** Recover $\gamma^*$ from the complementary-slackness conditions: $\gamma^*(a,b) > 0$ only where $\varphi^*(a) + \psi^*(b) = d(a,b)^2$.
+6. **Topologically sort the support.** Build the DAG from the support of $\gamma^*$ and produce the ordered refactoring schedule (§5).
+7. **Emit the certificate.** Write $(\varphi^*, \psi^*)$ to a machine-readable file. Downstream CI checks can then verify that any proposed schedule with cost $C$ satisfies $C \geq \int \varphi^*\, d\mu_S + \int \psi^*\, d\mu_A$.
+
+The whole pipeline runs in $O(N^3)$ time for the LP (dominated by the $N^2$ constraint matrix), which is tractable up to $N \leq 10^4$—comfortably beyond the $2^{20} \approx 10^6$ configurations of a 20-constraint harness.
+
+---
+
+## 10. Discussion and Open Questions
+
+**Relation to the geodesic framework.** The W₂ geodesic between $\mu_S$ and $\mu_A$ is the unique (up to the non-degeneracy condition) constant-speed path in $\mathcal{P}(\mathcal{L})$ that minimises kinetic energy. This is the same geodesic we identified in [Autonomy as Geodesic](/posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/), where the Riemannian metric on $\mathcal{P}(\mathcal{L})$ is induced by the lattice distance $d$. What this post adds is the dual certificate and the percolation sensitivity layered on top of that geometric picture.
+
+**Relation to functorial structure.** You can view the optimal coupling $\gamma^*$ as a natural transformation between the "scaffolded" and "autonomous" functors on the constraint category, in the sense we developed in [Functorial Autonomy](/posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/). The W₂ bound then becomes a lower bound on the "distance" between natural transformations, and the dual potentials are component-wise witnesses of the naturality square. (I know, I know—category theory. But it earns its keep here.)
+
+**Multi-agent case.** When the harness has to coordinate $n > 2$ concurrent agent instances (say, a coder, a reviewer, and a security auditor), the single coupling $\gamma$ is replaced by a joint distribution on $\mathcal{L}^n$ with prescribed marginals. The dual becomes a system of $n$ coupled potentials $(\varphi_1, \ldots, \varphi_n)$ with $n(n-1)/2$ cross-constraints. The W₂ bound generalises to the *multi-marginal Wasserstein distance*, and the dual LP has $n \cdot N$ variables. The percolation analysis extends naturally: the critical threshold now governs the simultaneous percolation of $n$ interdependent constraint clusters. Full treatment deferred to a subsequent post—this one's already long enough.
+
+**Gauge invariance.** As we showed in [Gauge Symmetry and the Invariant Core](/posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/), many distinct lattice elements are gauge-equivalent: they differ only in the *labelling* of constraints, not in their structural role. The W₂ distance is gauge-invariant (it depends only on the orbit of $\mu$ under the gauge group), so the bound is well-defined on the quotient space $\mathcal{P}(\mathcal{L}) / \mathcal{G}$. This reduces the effective dimension of the LP and kills the spurious cost differences that creep in from arbitrary constraint naming.
+
+**Cohomological obstructions.** Not every target $\mu_A$ is reachable by any finite sequence of constraint relaxations. As proved in [Cohomological Obstructions](/posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/), non-trivial elements of $H^1(\mathcal{L}; \mathbb{Z})$ obstruct the existence of a global section of the constraint-bundle, meaning *no* coupling $\gamma$ exists for certain target measures. The W₂ problem is then infeasible, and the dual LP flags this via unboundedness of the dual objective. Practical advice: run the feasibility check (Step 4) *before* you invest in the full schedule. Saves you a week of work.
+
+**If you are looking for adjacent topics:** this post sits at the intersection of LLM agent evaluation methodology, coding-agent guardrail design, refactoring cost estimation, and quantitative software-architecture trade-offs. The spectral-conditioning result in [The Spectral Gap of Autonomy](/posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/) gives a complementary convergence-speed bound, while the dialectical framing in [Scaffolding to Sovereignty](/posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/) tackles the philosophical question of whether scaffolding is a prerequisite or a hindrance.
+
+---
+
+## 11. Conclusion
+
+So. We've recast the scaffold-to-autonomy transition as a Kantorovich optimal-transport problem on a constraint lattice. The W₂ distance between the scaffolded and autonomous harness states gives you a schedule-independent lower bound on refactoring effort. The dual potentials give you a CI-auditable certificate. And the optimal coupling, read against the lattice order, produces a concrete, dependency-respecting work schedule. The bound sharpens with the entropy of the coupling, aligns with the free-energy drop along the autonomy geodesic, and diverges at the percolation threshold—quantifying the disproportionate cost of that final increment of autonomy.
+
+The practical message, if you take nothing else from this post: before your team starts ripping out guardrails, compute the W₂ bound. It tells you, in a single number, how much effort is irreducibly required. And the dual certificate tells you, in a single file, whether any proposed schedule can beat it.
+
+**The distance between a scaffolded harness and an autonomous one is not a matter of opinion, priority, or political negotiation. It is a number, and it is provably the smallest one that will do.**
+
+---
+
+### References
+
+- Murota, K. (2003). *ID-functions and M-convex Functions*. Springer.
+- Peyré, G., & Cuturi, M. (2019). *Computational Optimal Transport*. Foundations and Trends in Machine Learning, 11(5–6), 355–607.
+- Stauffer, D., & Aharony, A. (1994). *Introduction to Percolation Theory* (2nd ed.). Taylor & Francis.
+- Villani, C. (2009). *Optimal Transport: Old and New*. Springer. (Grundlehren, vol. 338.)
+- [Internal series references as linked above.](/posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/)
+---

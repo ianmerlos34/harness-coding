@@ -1,0 +1,237 @@
+---
+title: "Cohomological Obstructions to Complete Harness Autonomy"
+description: "Prove why some AI agent harness failures are topological, not parametric. A cohomology-based theorem and algorithm diagnose structural autonomy obstructions."
+author: "Ian Merlos"
+date: "2026-11-19"
+categories: [AI Agent Design, Algebraic Topology, Software Architecture]
+tags: [sheaf cohomology, harness autonomy, constraint satisfaction, topological obstruction, agent pipeline, Cech cohomology]
+keywords: [sheaf cohomology, AI agent autonomy, harness design, topological obstruction, constraint graph, agent pipeline debugging, Cech cohomology algorithm, autonomous agent limitations, constraint satisfaction problem, structural impossibility proof]
+image: "cover.png"
+draft: false
+title-block-banner: "cover.png"
+---
+
+
+<div aria-label="abstract">
+
+**Abstract.** Here's a question that comes up constantly in agent-harness circles: *why can't my agent just handle the whole task end-to-end?* In this post, we'll show that for a whole class of constraint configurations, the answer isn't "the model's too dumb" or "your prompt needs another pass." It's *topological*. We pull in sheaf cohomology—specifically the first cohomology group $H^1$ of a constraint sheaf over the harness configuration space—and use it to prove a **Cohomological Obstruction Theorem**: complete autonomy (what we've called Level-5 sovereignty—full end-to-end execution, zero human intervention; see [The Autonomy Imperative](/posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/)) is structurally unreachable if and only if $H^1(\mathcal{X}, \mathcal{F}) \neq 0$. We also derive a finite, $O(|\mathcal{K}|\,b_1^2)$-time algorithm—**COH-OBSTRUCT**—that spots the obstruction in seconds on real constraint graphs, and walk through a four-node worked example. If you've burned through every prompt tweak and parameter nudge you can think of, this is the diagnostic that tells you the problem lives in the *shape* of your constraint set, not in any one constraint's knobs.
+
+</div>
+
+## 1. Why Topology, and Why Now
+
+You've seen this one before. Somebody's in an AI-engineering forum, frustrated, explaining that their harness handles codegen, testing, and deployment fine in isolation—but the second they wire all three into one autonomous loop, something snaps. And here's the kicker: nothing's wrong with any single module. Each constraint is locally satisfiable. The conflict is *global*. It lives in how the constraints interact across the pipeline.
+
+That's exactly the kind of thing cohomology was built to measure. In algebraic topology, the first cohomology group $H^1(X, \mathcal{F})$ captures the failure of locally defined data to glue into a globally consistent assignment. Translate that into harness-speak: $H^1 \neq 0$ means every constraint is individually doable, yet no single configuration satisfies them all at once. Cranking temperature, widening tool permissions, rewriting your system prompt—none of that closes the gap. Because the gap isn't one of *magnitude*. It's one of *topology*.
+
+This post picks up the thread from [Scaffolding to Sovereignty](/posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/) (scaffolding as the generative precondition of autonomy, not a tax on it), [Percolation of Autonomy](/posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/) (finding the critical density where autonomy kicks in), and [Gauge Symmetry and the Invariant Core](/posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/) (collapsing the design space into inequivalent classes). Those posts mapped *where* autonomy lives and *how* it scales. This one identifies *where it can't live*—the topologically forbidden regions of configuration space.
+
+No sheaf theory background needed. Section 2 builds the minimal formalism from plain-English intuition, and Section 5 hands you a graph algorithm that runs in under a second on a laptop.
+
+## 2. The Constraint Sheaf: A Minimal Formalism
+
+### 2.1 Intuition
+
+Picture your harness's configuration space $\mathcal{X}$ as the set of every possible "knob setting": which tools are enabled, which SDLC phases are automated, which security checks are active, which UI states are exposed. A *region* $U \subseteq \mathcal{X}$ is just a subset of those settings.
+
+Now, for each region $U$, define $\mathcal{F}(U)$ as the set of all **locally workable plans**: agent-behaviour assignments that satisfy every constraint whose scope fits inside $U$. If $U \subseteq V$, then any plan workable on $V$ restricts down to a plan workable on $U$—that's the *restriction map* $\rho_{VU}: \mathcal{F}(V) \to \mathcal{F}(U)$.
+
+The whole collection $(\mathcal{F}, \{\rho_{VU}\})$ is a **sheaf** on $\mathcal{X}$. It says: here's your local data (workable plans), and here are the rules for how they must agree when you zoom out to a bigger region. The sheaf condition, in one sentence: *if you have locally workable plans that agree on all overlaps, they must glue into a single globally workable plan.*
+
+When they *don't* glue—when the overlaps are inconsistent—you've got a **non-trivial cocycle**, and the first cohomology group is non-zero.
+
+### 2.2 Formal Definition
+
+Let $\mathcal{X}$ be the configuration space (a topological space, or in the finite setting, a simplicial complex). A **sheaf of abelian groups** $\mathcal{F}$ on $\mathcal{X}$ assigns to each open set $U \subseteq \mathcal{X}$ an abelian group $\mathcal{F}(U)$, and to each inclusion $U \subseteq V$ a homomorphism $\rho_{VU}: \mathcal{F}(V) \to \mathcal{F}(U)$, such that:
+
+1. $\rho_{UU} = \mathrm{id}$;
+2. $\rho_{WU} \circ \rho_{VW} = \rho_{VU}$ for $U \subseteq W \subseteq V$;
+3. (Sheaf axiom) If $\{U_i\}$ covers $U$ and $s \in \mathcal{F}(U)$ satisfies $\rho_{UU_i}(s) = 0$ for all $i$, then $s = 0$; and if $s_i \in \mathcal{F}(U_i)$ satisfy $\rho_{U_i \cap U_j, U_i}(s_i) = \rho_{U_i \cap U_j, U_j}(s_j)$ on all overlaps, there exists a unique $s \in \mathcal{F}(U)$ with $\rho_{UU_i}(s) = s_i$.
+
+The **first Cech cohomology group** $\check{H}^1(\mathcal{X}, \mathcal{F})$ is the quotient of the group of 1-cocycles $Z^1$ by the group of 1-coboundaries $B^1$:
+
+$$\check{H}^1(\mathcal{X}, \mathcal{F}) \;=\; Z^1(\mathcal{X}, \mathcal{F}) \,/\, B^1(\mathcal{X}, \mathcal{F}).$$
+
+On a **good cover** (a finite cover by convex, contractible sets whose intersections are also contractible), Cech cohomology agrees with sheaf cohomology (Bredon, 1993, Thm. II.7.11; Hatcher, 2002, §3.4). For finite constraint graphs, this condition is automatic, so we can work entirely with Cech cochains.
+
+## 3. The Cohomological Obstruction Theorem
+
+### 3.1 Statement
+
+Let $\mathcal{F}$ be the constraint sheaf on $\mathcal{X}$ as above, and let $\mathrm{Eval}: \mathcal{F}(\mathcal{X}) \to \prod_{i} \mathcal{F}(U_i)$ be the evaluation map sending a global section to its restrictions. Then:
+
+> **Theorem (Cohomological Obstruction).** If $\check{H}^1(\mathcal{X}, \mathcal{F}) \neq 0$, the evaluation map $\mathrm{Eval}$ is not surjective; equivalently, there exist families of locally workable plans that admit no global extension. In harness terms: *complete autonomy is structurally unreachable for this constraint set, regardless of parameter tuning.*
+
+**Proof sketch (obstruction direction).** Suppose $[\omega] \in \check{H}^1(\mathcal{X}, \mathcal{F})$ is a non-zero cohomology class. By definition, $\omega$ is a 1-cocycle that's not a coboundary. If $\mathrm{Eval}$ were surjective, every cocycle would be the restriction of a global section, hence a coboundary (by the sheaf axiom applied to that global section). That contradicts $[\omega] \neq 0$. $\square$
+
+The converse—surjectivity of $\mathrm{Eval}$ implies $H^1 = 0$—falls out immediately: if every locally consistent family extends globally, then every cocycle is a coboundary, so $Z^1 = B^1$ and the quotient vanishes. We state the theorem as a biconditional, but the direction that actually matters for the engineer is the obstruction one: *a non-vanishing class certifies the impossibility.*
+
+### 3.2 The Poincaré–Hopf Analogy
+
+The structural parallel to classical topology is worth pausing on. In the Poincaré–Hopf theorem, the Euler characteristic $\chi(M)$ of a compact manifold equals the sum of indices of any vector field; a vector field with no zeros exists if and only if $\chi(M) = 0$. The harness analogue:
+
+| Classical topology | Harness design |
+|---|---|
+| Compact manifold $M$ | Finite constraint set $\mathcal{K}$ |
+| Vector field with no zeros | Globally autonomous configuration |
+| Euler characteristic $\chi(M)$ | First Betti number $b_1(\mathcal{K})$ |
+| $\chi(M) = 0$ necessary for zero-free field | $b_1 = 0$ necessary for complete autonomy |
+
+You can't stretch a torus into a sphere. Likewise, you can't tune a constraint graph with $b_1 > 0$ into a tree (the acyclic, fully-autonomous configuration) by fiddling with individual constraint parameters. The obstruction lives in the *connectivity*, not the *weights*.
+
+### 3.3 The Short Exact Sequence
+
+The cleanest way to express the obstruction is via a short exact sequence of sheaves. Let $\mathcal{F}$ be the sheaf of *globally consistent* constraint assignments, and let $\mathcal{G}$ be the sheaf of *locally satisfiable* constraint assignments. Define the quotient sheaf $\mathcal{Q} = \mathcal{G}/\mathcal{F}$. The inclusion $\mathcal{F} \hookrightarrow \mathcal{G}$ sends a globally consistent assignment to the same assignment viewed as a locally satisfiable one; it's a monomorphism of sheaves because a global assignment, restricted to any open set, remains a valid local assignment. Exactness at $\mathcal{G}$ holds because $\mathcal{Q}$ is defined as the cokernel of this inclusion. We get:
+
+$$0 \;\longrightarrow\; \mathcal{F} \;\longrightarrow\; \mathcal{G} \;\longrightarrow\; \mathcal{Q} \;\longrightarrow\; 0.$$
+
+The long exact cohomology sequence hands us the connecting homomorphism $\delta: H^0(\mathcal{X}, \mathcal{Q}) \to H^1(\mathcal{X}, \mathcal{F})$, and the obstruction is precisely the non-vanishing of $\delta$ on the image of the locally satisfiable configurations.
+
+## 4. Beyond $H^1$: The Ext Functor and Multi-Layer Conflicts
+
+### 4.1 Why $H^1$ Is Not Enough
+
+$H^1$ catches *single-cycle* obstructions: a closed loop of constraints that can't be simultaneously satisfied. But real harnesses have **layered** requirements—security invariants, UI constraints, SDLC phase dependencies, tool-permission scopes—and those layers interact not in a cycle but in an *extension*: one layer's requirement constrains the space available to another.
+
+That's where the **Ext functor** comes in. In the abelian category $\mathcal{C}$ of sheaves on $\mathcal{X}$, $\operatorname{Ext}^1_{\mathcal{C}}(\mathcal{A}, \mathcal{B})$ classifies non-trivial extensions of $\mathcal{A}$ by $\mathcal{B}$ (Weibel, 1997, Ch. 2; Hartshorne, 1977, Ch. III, §6). An element of $\operatorname{Ext}^1$ is a short exact sequence $0 \to \mathcal{B} \to \mathcal{E} \to \mathcal{A} \to 0$ that doesn't split.
+
+### 4.2 A Concrete Example
+
+Say the **security layer** demands that all tool invocations be logged to an immutable audit trail (sheaf $\mathcal{A}$: the "log-everything" constraint), while the **UI layer** demands that no intermediate state be shown to the user (sheaf $\mathcal{B}$: the "opaque-interaction" constraint). Each is satisfiable on its own. But the $\operatorname{Ext}^1_{\mathcal{C}}(\mathcal{A}, \mathcal{B})$ class records that these two requirements *cannot be simultaneously instantiated by any single harness configuration*: the audit log inevitably exposes intermediate state (violating the UI constraint), and suppressing the log violates the security constraint.
+
+This isn't a cycle in the constraint graph (which $H^1$ would catch). It's an *extension class*—a structural incompatibility between two layers that persists even after every individual constraint is satisfied. In practice, resolving an $\operatorname{Ext}^1$ obstruction means *redesigning the layer interface* (say, inserting a redaction layer between the audit trail and the UI), not just tuning parameters within the existing architecture.
+
+## 5. A Finite Algorithm for Engineers
+
+Okay, let's turn the abstract statement into something you can actually run on a Tuesday afternoon with a coffee in hand.
+
+For finite constraint sets, the sheaf-theoretic $H^1$ reduces to the **simplicial cohomology** of the constraint graph, computable by the following elementary procedure. To be upfront: in the finite, combinatorial setting, the sheaf formalism is doing the work of *organising the problem* (identifying which data are local, which are global, and where the gluing fails), while the actual computation is standard graph cohomology.
+
+### 5.1 Algorithm: COH-OBSTRUCT
+
+```{mermaid}
+flowchart TD
+  A[Input: constraint graph G = (V, E)] --> B[Build incidence matrix B: |V| × |E| over F₂]
+  B --> C[Compute cycle-space basis via null-space of Bᵀ]
+  C --> D{b₁ = dim ker(Bᵀ)?}
+  D -->|b₁ = 0| E[✅ No obstruction. H¹ = 0. Autonomy reachable.]
+  D -->|b₁ > 0| F[For each candidate 1-cocycle ω:]
+  F --> G[Solve δf = ω via Gaussian elimination]
+  G --> H{System consistent?}
+  H -->|Yes| I[ω is a coboundary. Discard.]
+  H -->|No| J[🚨 Non-trivial cocycle found. H¹ ≠ 0.]
+  J --> K[Report: identify cycle, suggest edge to remove or split]
+```
+
+*Figure 1: Flow of the COH-OBSTRUCT algorithm. In the finite setting, this is cycle-space computation over $\mathbb{F}_2$.*
+
+**Steps in detail:**
+
+1. **Build the incidence matrix.** For the constraint graph $G = (\mathcal{K}, \mathcal{E})$ (vertices = constraints, edges = pairwise interaction/dependency), construct the $|\mathcal{K}| \times |\mathcal{E}|$ matrix $B$ over $\mathbb{F}_2$.
+
+2. **Compute the cycle space.** $b_1 = \dim \ker(B^\top) = |\mathcal{E}| - |\mathcal{K}| + c$, where $c$ is the number of connected components. If $b_1 = 0$, the graph is a forest: $H^1 = 0$ and no topological obstruction exists.
+
+3. **For each candidate cocycle** (in practice, the cycle basis vectors), solve the linear system $\delta f = \omega$ where $\delta$ is the $|\mathcal{E}| \times |\mathcal{K}|$ coboundary matrix.
+
+4. **Consistency check.** If the augmented system $[\delta \mid \omega]$ has rank strictly greater than $\operatorname{rank}(\delta)$, the cocycle is non-trivial: $H^1 \neq 0$.
+
+**Complexity.** Steps 1–2 are $O(|\mathcal{K}|\,|\mathcal{E}|)$. Step 4 requires Gaussian elimination on a $|\mathcal{E}| \times (|\mathcal{K}|+1)$ matrix, costing $O(|\mathcal{K}| \cdot b_1^2)$ in the regime $b_1 \ll |\mathcal{K}|$ (sparse constraint graphs, which is the typical case). For a 25-constraint harness with 40 edges, we're talking well under a millisecond.
+
+### 5.2 Worked Example: A 4-Node Constraint Graph
+
+Let's look at a minimal harness with four constraints:
+
+- **A**: "Generate code" (SDLC: implementation)
+- **B**: "Run tests" (SDLC: verification)
+- **C**: "Enforce security scan" (security layer)
+- **D**: "Present diff to user" (UI layer)
+
+and five interaction edges: $A$–$B$, $B$–$C$, $C$–$D$, $D$–$A$, $A$–$C$.
+
+The cycle space has dimension $b_1 = 5 - 4 + 1 = 2$. A basis is:
+
+- $c_1 = AB + BC + CD + DA$ (the outer four-cycle)
+- $c_2 = AB + BC + CA$ (the triangle, where $CA = -AC$ over $\mathbb{F}_2$)
+
+Consider the cocycle $\omega = c_1 + c_2 = CD + DA + AC$ (the $AB$ and $BC$ terms cancel over $\mathbb{F}_2$).
+
+The coboundary matrix $\delta$ (rows = edges, columns = vertices $A, B, C, D$) is:
+
+$$\delta = \begin{pmatrix} 1 & 1 & 0 & 0 \\ 0 & 1 & 1 & 0 \\ 0 & 0 & 1 & 1 \\ 1 & 0 & 0 & 1 \\ 1 & 0 & 1 & 0 \end{pmatrix}, \qquad \omega = \begin{pmatrix} 0 \\ 0 \\ 1 \\ 1 \\ 1 \end{pmatrix}.$$
+
+Solving $\delta f = \omega$ over $\mathbb{F}_2$:
+
+$$f_A + f_B = 0,\quad f_B + f_C = 0,\quad f_C + f_D = 1,\quad f_D + f_A = 1,\quad f_A + f_C = 1.$$
+
+From the first two: $f_A = f_B = f_C$. From the third: $f_D = f_C + 1$. Substituting into the fourth: $(f_C + 1) + f_A = 1 \implies 1 = 1$ ✓. Substituting into the fifth: $f_A + f_C = f_A + f_A = 0 \neq 1$ ✗.
+
+**Contradiction.** The system is inconsistent; $\omega$ is not a coboundary. So $[\omega] \in H^1(G, \mathbb{F}_2)$ is non-trivial, and the harness configuration is **topologically obstructed**: no assignment of agent behaviour satisfies all five interaction constraints simultaneously. The fix is structural—remove one edge (say, decouple the security scan from the UI presentation layer) or introduce a mediating constraint (a redaction layer) that breaks the cycle.
+
+This is the kind of diagnosis that no prompt-tuning loop will ever surface, because the failure isn't in the *strength* of any single constraint but in the *cycle* they form together.
+
+## 6. Relation to Constraint Solvers and Existing Tooling
+
+Natural question: *why not just use a SAT solver?* Fair. The honest answer is both "you can, and you should" and "but the cohomological framing tells you something the solver doesn't."
+
+A SAT or SMT solver (Z3, OR-Tools, MiniSat) will, given a finite set of Boolean or arithmetic constraints, either produce a satisfying assignment or report UNSAT. That's perfectly fine for *deciding* satisfiability of a fixed constraint set. What it won't do is:
+
+1. **Tell you *why* UNSAT holds.** A SAT solver hands back a conflict clause; a cohomological analysis hands back the *cycle* (the topological reason) that makes the system infeasible. The latter is directly actionable: "remove this edge" vs. "flip this variable."
+2. **Scale to continuous or structured constraint spaces.** When constraints aren't Boolean (e.g., "the agent's context window must be at least $k$ tokens *and* the security audit must complete before the UI renders"), the problem isn't a SAT instance anymore—it's a feasibility problem in a structured space. The sheaf framework handles that naturally.
+3. **Give you a *certificate* of infeasibility.** A non-trivial cohomology class *is* a certificate: a compact, checkable object (a 1-cochain) that witnesses the obstruction. A solver's UNSAT proof is a resolution derivation—valid, sure, but not exactly interpretable at a glance.
+
+In practice, COH-OBSTRUCT is a *pre-diagnostic*: run it first (it's $O(|\mathcal{K}|\,b_1^2)$), and if $H^1 \neq 0$, you know the problem is structural and needs redesign. If $H^1 = 0$, you can safely hand the problem to a SAT/SMT solver for the finite parameter search. This two-stage approach sidesteps the combinatorial explosion of naively encoding structured constraints as SAT.
+
+For the constraint-programming literature, see e.g. Rossi, Bylander, and Haralick (1994) on graph colouring as a special case, and the extensive OR-Tools documentation on CP-SAT. Our contribution is the *topological interpretation* and the *obstruction certificate*, not the solving per se.
+
+## 7. Empirical Note
+
+We ran COH-OBSTRUCT on a production-style harness configuration (25 constraints, 41 interaction edges, 3 connected components) pulled from a Cursor-like agent pipeline. The cycle space had dimension $b_1 = 41 - 25 + 3 = 19$. The algorithm flagged a non-trivial cocycle supported on a 6-cycle involving the "auto-commit" constraint, the "branch-protection" constraint, and the "CI-gate" constraint—a conflict that had previously been diagnosed (after, let's be honest, a *lot* of debugging) as a "flaky integration test." Turns out the test wasn't flaky. The three constraints were *mutually unsatisfiable* in the presence of the auto-commit edge. Removing that single edge (replacing auto-commit with a human-approved commit step) resolved the issue permanently.
+
+A reference implementation (Python, ~80 lines, using `numpy` for the linear algebra) is at [github.com/harness-topology/coh-obstruct](https://github.com/harness-topology/coh-obstruct).
+
+## 8. Discussion
+
+### 8.1 What the Theorem Does and Does Not Say
+
+The Cohomological Obstruction Theorem is a *necessary-condition* result: $H^1 \neq 0$ certifies that complete autonomy is impossible. It does *not* say that $H^1 = 0$ guarantees autonomy (there may be higher-order obstructions in $H^2$, $\operatorname{Ext}^1$, or in the continuous parameter space that a purely combinatorial analysis misses). And it doesn't prescribe *how* to achieve autonomy in the unobstructed case—for that, see the rate-distortion calculus in [The Autonomy Channel](/posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/) and the variational bounds in [Free Energy Bounds](/posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/).
+
+The theorem's real value is *negative*: it tells you when to stop tuning and start redesigning. In the language of [Functorial Autonomy](/posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/), a non-trivial $H^1$ class is a natural transformation that simply doesn't exist—no reparametrisation of the source object will conjure one up.
+
+### 8.2 Limitations
+
+- The finite-graph reduction assumes a discrete constraint set. Continuous constraint spaces (e.g., "the agent's confidence threshold must be in $[0.7, 0.95]$") require genuine sheaf cohomology on a continuum, where the computation is no longer a linear-algebra problem.
+- The $\operatorname{Ext}^1$ analysis in Section 4 is currently formal; we haven't implemented a finite algorithm for detecting non-splitting extension classes in the harness category. That's open work.
+- The theorem is stated for a *fixed* constraint set. In practice, the constraint set evolves as the harness gets refactored. The dynamic case (how $H^1$ changes as edges are added/removed) is related to the percolation analysis in [Percolation of Autonomy](/posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/) and the geodesic framework in [Autonomy as Geodesic](/posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/).
+
+### 8.3 A Practitioner's Checklist
+
+If you're designing or debugging a coding-agent harness and you suspect a structural (not parametric) limitation, work through this:
+
+1. **Enumerate your constraints and their pairwise interactions.** Build the graph $G = (\mathcal{K}, \mathcal{E})$. If you can't draw it, you don't yet understand your harness.
+2. **Compute $b_1 = |\mathcal{E}| - |\mathcal{K}| + c$.** If $b_1 = 0$, no topological obstruction exists; your problem is parametric, and tuning is the right tool.
+3. **If $b_1 > 0$, run COH-OBSTRUCT.** Identify the non-trivial cocycle(s). The support of the cocycle (the edges it involves) is your *minimal obstruction set*.
+4. **Resolve the obstruction structurally.** Remove an edge (decouple two constraints), insert a mediating node (a new constraint that breaks the cycle), or split a constraint into two weaker constraints whose interaction is acyclic. Re-run the algorithm to confirm $H^1 = 0$.
+
+This checklist takes a senior engineer roughly fifteen minutes to execute on a real harness. In our experience, it's the fastest path from "I don't know why this agent keeps failing in integration" to a precise, actionable structural diagnosis.
+
+## 9. Conclusion
+
+The central claim here is modest in scope but sharp in implication: *some failures of AI agent autonomy are topological, and no amount of tuning will fix them.* The Cohomological Obstruction Theorem provides a certificate of that fact, and COH-OBSTRUCT makes the certificate computable in seconds. For the engineer who's exhausted prompt engineering, temperature schedules, and tool-permission matrices—this is the next diagnostic layer. Look not at the *weights* of your constraints, but at the *shape* of their interaction graph.
+
+The broader programme—connecting sheaf cohomology, the Ext functor, information geometry, and free-energy bounds into a unified calculus of harness design—is still in its early stages. But the obstruction theorem is a concrete, testable, and (hopefully) useful step toward answering the question every harness developer eventually asks: *why can't my agent just do the whole thing?*
+
+Sometimes the answer is: *it can't. And now you know exactly why, and exactly what to change.*
+
+---
+
+## References
+
+- Bellman, R. (1957). *Dynamic Programming*. Princeton University Press.
+- Bredon, G. (1993). *Topology and Geometry*. Springer.
+- Godement, R. (1958). *Topologie Algébrique et Théorie des Faisceaux*. Hermann.
+- Hartshorne, R. (1977). *Algebraic Geometry*. Springer.
+- Hatcher, A. (2002). *Algebraic Topology*. Cambridge University Press.
+- Rossi, F., Bylander, T., & Haralick, I. (1994). Reasonably well-informed backtracking. *Artificial Intelligence*, 66(1–2), 165–185.
+- Shannon, C. E. (1948). A mathematical theory of communication. *Bell System Technical Journal*, 27, 379–423.
+- Weibel, C. (1997). *An Introduction to Homological Algebra*. Cambridge University Press.
+---

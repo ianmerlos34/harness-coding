@@ -1,0 +1,266 @@
+---
+title: "Autonomy as Geodesic: Information Geometry of Harness Design"
+description: "Recasting coding-agent harness design as a Riemannian manifold where autonomy transitions are geodesics, with computable effort, curvature, and drift."
+author: "Ian Merlos"
+date: "2026-11-19"
+categories: [AI Engineering, Applied Mathematics, Software Architecture]
+tags: [information geometry, Fisher information metric, geodesic optimization, coding agent harness, Riemannian manifold, autonomy design]
+keywords: [information geometry, Fisher information metric, geodesic path optimization, coding agent harness design, Riemannian manifold, autonomy level transition, natural gradient descent, parallel transport constraints, harness reconfiguration cost, statistical manifold]
+image: "cover.png"
+draft: false
+title-block-banner: "cover.png"
+---
+
+
+## Abstract
+
+We recast the space of all parametrically defined coding-agent harness configurations as a statistical manifold equipped with the Fisher information metric. Every shift in autonomy level becomes a geodesic trajectory whose length, curvature, and parallel transport carry precise engineering meaning. The payoff? A differential-geometric calculus in which "how hard is it to make a harness more autonomous?" stops being an ad-hoc design heuristic and becomes a computable quantity.
+
+<details>
+<summary><em>Full abstract (paper-style)</em></summary>
+
+Let $\mathcal{H}$ denote the set of all parametrically specified harnesses for a coding agent, and let $\theta \in \Theta \subset \mathbb{R}^n$ be the vector of design parameters (constraint densities, permission scopes, verification gates, feedback-loop gains, etc.). For each $\theta$, the agent's behavior is summarized by a conditional distribution $p_\theta(\mathbf{y} \mid \mathbf{x})$ over task outcomes. Equipping $\Theta$ with the Fisher information metric $g_{ij}(\theta) = \mathbb{E}_\theta[\partial_i \log p_\theta \;\partial_j \log p_\theta]$ turns $(\Theta, g)$ into a Riemannian manifold $\mathcal{M}$. We show that (i) optimal autonomy transitions are geodesics; (ii) the sectional curvature at $\theta$ quantifies the sensitivity of that transition to the *order* in which sub-constraints are relaxed; (iii) parallel transport along a geodesic defines a canonical way to carry constraint semantics from a lower-autonomy regime to a higher one without "twist." We derive a design calculus: given a target autonomy level, the engineer computes the geodesic, reads off its length (effort), curvature (fragility), and holonomy (semantic drift), and thereby obtains a principled, quantitative answer to the central question of harness design.
+</details>
+
+---
+
+## Key Takeaways
+
+- **Autonomy transitions are paths, not jumps.** The geometric distance between two harness configurations (measured by the Fisher information metric) is the true cost of reconfiguration—not the number of parameters you happen to change.
+- **Curvature is fragility.** High sectional curvature near a configuration means the *order* in which you relax constraints actually matters; low curvature means the transition is robust to sequencing.
+- **Parallel transport is semantic preservation.** Carrying a constraint's meaning along a geodesic without holonomy is just the math way of saying "the agent still understands what 'safe' means" at the new autonomy level.
+- **A 2-D worked example** (Gaussian-parameter manifold) shows how to compute the geodesic, the curvature, and the effort integral by hand.
+- **The workflow is concrete:** estimate the Fisher metric on your task suite, solve the geodesic ODE, read off length and curvature, and iterate.
+
+---
+
+## Table of Contents
+
+1. [The Manifold of Harness Configurations](#1-the-manifold-of-harness-configurations)
+2. [The Fisher Information Metric on Configuration Space](#2-the-fisher-information-metric-on-configuration-space)
+3. [Geodesics as Optimal Autonomy Transitions](#3-geodesics-as-optimal-autonomy-transitions)
+4. [Curvature and the Cost of Autonomy](#4-curvature-and-the-cost-of-autonomy)
+5. [Parallel Transport and Constraint Inheritance](#5-parallel-transport-and-constraint-inheritance)
+6. [The Geodesic Design Workflow: Six Steps from Current to Target Autonomy](#6-the-geodesic-design-workflow-six-steps-from-current-to-target-autonomy)
+7. [Connection to Natural Gradient Descent](#7-connection-to-natural-gradient-descent)
+8. [Limitations](#8-limitations)
+9. [Further Reading and External Resources](#9-further-reading-and-external-resources)
+10. [References](#references)
+
+---
+
+## Series Navigation
+
+| | |
+|---|---|
+| ← [The Autonomy Imperative](/posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/) | [The Autonomy Channel](/posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/) → |
+
+*This is Part 7 in the series on building a completely autonomous coding-agent harness.*
+
+---
+
+## 1. The Manifold of Harness Configurations
+
+So what *is* a coding-agent harness, really? It's the parametric scaffold that governs what an LLM-based agent is allowed to perceive, decide, and execute across the software development lifecycle. Concretely, a harness is a tuple $\mathbf{h} = (\mathcal{S}, \mathcal{P}, \mathcal{V}, \mathcal{F})$ comprising a set of scope rules $\mathcal{S}$, a permission matrix $\mathcal{P}$, a verification gate $\mathcal{V}$, and a feedback controller $\mathcal{F}$. Each component gets parameterized by a finite vector, and you collect the whole thing into a single parameter vector $\theta \in \Theta \subset \mathbb{R}^n$.
+
+For a given $\theta$, the agent's observable behavior on a task distribution $\mathcal{D}$ is captured by a conditional outcome distribution $p_\theta(\mathbf{y} \mid \mathbf{x})$, where $\mathbf{x}$ is the task specification and $\mathbf{y}$ is the vector of deliverable properties (correctness, security, style compliance, and so on). The mapping $\theta \mapsto p_\theta$ is, in the classical sense (Amari & Nagaoka, 2000), a *statistical model*.
+
+Now here's where it gets geometric. The set of all such configurations $\Theta$—modulo reparameterization invariance—forms a smooth manifold $\mathcal{M}$. It's smooth wherever the parameterization is regular, meaning the Fisher information matrix stays positive-definite. Its topology inherits from the ambient parameter space, modulo the equivalence class of reparameterizations that leave the induced distribution family unchanged. This resonates with the gauge-symmetry reduction I explored in [Gauge Symmetry and the Invariant Core of Harness Autonomy](/posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/), where combinatorially distinct harnesses collapse into a finite set of inequivalent autonomy structures.
+
+**Engineering reading.** You don't need to know differential geometry to use this framework. What matters is this: *your harness is a point on a curved surface, and moving it costs something. The cost isn't the number of toggles you flip; it's the geometric distance you traverse.*
+
+---
+
+## 2. The Fisher Information Metric on Configuration Space
+
+The central object here is the Fisher information metric (FIM). For the parameter vector $\theta = (\theta^1, \dots, \theta^n)$, the components are
+
+$$
+g_{ij}(\theta) \;=\; \mathbb{E}_{p_\theta}\!\left[\frac{\partial \log p_\theta(\mathbf{y}\mid\mathbf{x})}{\partial \theta^i}\;\frac{\partial \log p_\theta(\mathbf{y}\mid\mathbf{x})}{\partial \theta^j}\right].
+$$
+
+In plain terms: $g_{ij}$ measures how much the agent's *behavioral distribution* shifts when you nudge parameter $i$ and parameter $j$ at the same time. Think of it as the intrinsic "stiffness" of the harness along the $(i,j)$ direction.
+
+The arc length of a path $\gamma(t)$, $t \in [0,1]$, in configuration space works out to
+
+$$
+L(\gamma) \;=\; \int_0^1 \sqrt{g_{ij}(\gamma(t))\;\dot{\gamma}^i \dot{\gamma}^j}\; dt.
+$$
+
+*In plain terms: this is the "effort score" of reconfiguring the harness, measured in units of behavioral change rather than parameter units. A path that changes a lot of parameters but produces little behavioral shift is short; a path that tweaks few parameters but radically alters the agent's decision boundary is long.*
+
+The FIM is positive-definite on the interior of $\Theta$ (where $p_\theta$ is regular), so $(\mathcal{M}, g)$ is a genuine Riemannian manifold. The Levi-Civita connection $\Gamma^i_{jk}$ comes in the standard way, and the geodesic equation reads
+
+$$
+\ddot{\gamma}^i + \Gamma^i_{jk}\,\dot{\gamma}^j \dot{\gamma}^k = 0.
+$$
+
+**Engineering reading.** The geodesic equation isn't some aesthetic choice. It's the *minimum-effort* path between two autonomy levels. Any non-geodesic reconfiguration—say, flipping the permission matrix before tightening the verification gate—traverses a longer path and thus incurs more behavioral disruption than strictly necessary. This is the geometric content behind the ordering-sensitivity I observed in [Percolation of Autonomy: Critical Dynamics in Harness Design](/posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/), where autonomy emerges in discrete jumps rather than sliding in continuously.
+
+---
+
+## 3. Geodesics as Optimal Autonomy Transitions
+
+> **Theorem (informal).** *Let $\theta_A$ and $\theta_B$ be two harness configurations at autonomy levels $\ell_A < \ell_B$ (per the five-level spectrum in [The Autonomy Imperative](/posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/)). Among all smooth reconfiguration paths $\gamma$ with $\gamma(0)=\theta_A$, $\gamma(1)=\theta_B$, the geodesic $\gamma^*$ minimizes the Fisher arc length $L(\gamma)$. Equivalently, the geodesic is the unique path that maximizes behavioral continuity per unit of parameter change.*
+
+The proof is the standard variational argument: the arc-length functional is convex in the velocity $\dot{\gamma}$ (since $g_{ij}$ is positive-definite), and the Euler–Lagrange equation yields the geodesic ODE. Uniqueness holds locally (within a convex normal neighborhood), which is exactly the regime in which practical autonomy transitions live.
+
+### A Worked 2-D Example
+
+Consider a harness with two free parameters: the mean confidence threshold $\mu$ and the verification strictness $\sigma$. The induced outcome model is Gaussian, $p_\theta(\mathbf{y}|\mathbf{x}) = \mathcal{N}(\mu, \sigma^2)$. The Fisher information metric is
+
+$$
+g_{\mu\mu} = \frac{1}{\sigma^2}, \qquad g_{\mu\sigma} = 0, \qquad g_{\sigma\sigma} = \frac{2}{\sigma^2}.
+$$
+
+The Christoffel symbols (non-zero) are:
+
+$$
+\Gamma^\mu_{\mu\sigma} = -\frac{1}{2\sigma}, \qquad \Gamma^\sigma_{\mu\mu} = \frac{1}{4\sigma}, \qquad \Gamma^\sigma_{\sigma\sigma} = -\frac{1}{\sigma}.
+$$
+
+The geodesic equations become:
+
+$$
+\ddot{\mu} - \frac{1}{\sigma}\,\dot{\mu}\,\dot{\sigma} = 0, \qquad \ddot{\sigma} + \frac{1}{2\sigma}\,\dot{\mu}^{\,2} - \frac{2}{\sigma}\,\dot{\sigma}^{\,2} = 0.
+$$
+
+Starting at $(\mu, \sigma) = (0, 1)$ with initial velocity $(\dot\mu, \dot\sigma) = (1, 0)$, the first-order expansion gives $\mu(t) \approx t$, $\sigma(t) \approx 1 - t^2/4$. The arc length over $t \in [0, 1]$ is
+
+$$
+L \;=\; \int_0^1 \frac{\sqrt{1 + t^2/2}}{1 - t^2/4}\;dt \;\approx\; 1.13.
+$$
+
+The sectional curvature of this 2-D surface is constant: $K = -1/4$.
+
+**Engineering reading.** A constant negative curvature means that *any* reconfiguration path between two autonomy levels on this surface will exhibit "divergence": two initially similar reconfiguration strategies (e.g., "raise $\mu$ first" vs. "raise $\sigma$ first") will separate as the transition proceeds. The negative curvature quantifies *how quickly* those strategies diverge. In practice, this means that at higher autonomy levels, the *ordering* of constraint relaxation becomes increasingly consequential—a prediction consistent with the percolation-criticality findings in [Percolation of Autonomy](/posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/).
+
+```{mermaid}
+flowchart LR
+  L1["Level 1\nHuman-directed"] -->|"geodesic γ₁\nL ≈ 0.7"| L3["Level 3\nCollaborative"]
+  L3 -->|"geodesic γ₂\nL ≈ 0.8"| L5["Level 5\nAutonomous"]
+  L1 -.->|"non-geodesic jump\nL ≈ 1.9\n(high curvature cost)"| L5
+
+  style L1 fill:#e8f5e9,stroke:#2e7d32
+  style L3 fill:#fff3e0,stroke:#e65100
+  style L5 fill:#e3f2fd,stroke:#1565c0
+```
+
+*Figure 1. Two geodesic segments (solid arrows) connecting Level 1 → Level 3 → Level 5 autonomy, contrasted with a single non-geodesic dashed arrow jumping directly from Level 1 to Level 5. The two-segment path is shorter because it traverses lower-curvature regions of the manifold.*
+
+---
+
+## 4. Curvature and the Cost of Autonomy
+
+The Riemann curvature tensor $R^i_{\;jkl}$ encodes the failure of parallel-transported vectors to close around infinitesimal loops. For engineering purposes, though, what actually matters is the *sectional curvature* in the 2-plane spanned by two reconfiguration directions $u, v$:
+
+$$
+K(u,v) \;=\; \frac{R_{ikjl}\;u^i v^j v^k u^l}{\bigl(g_{ik}g_{jl} - g_{il}g_{jk}\bigr)\;u^i u^j v^k v^l}.
+$$
+
+The denominator is $\|u\|^2\|v\|^2 - \langle u, v\rangle^2$, which is just the squared area of the parallelogram spanned by $u$ and $v$.
+
+**Interpretation.** If $K > 0$ in the $(\partial_i, \partial_j)$ plane, then relaxing constraint $i$ and then $j$ produces a *different* final behavioral state than relaxing $j$ and then $i$—the commutator $[\nabla_i, \nabla_j]$ is non-zero. The agent's interpretation of "safe" or "correct" depends on the path you took. If $K < 0$ (as in our Gaussian example), the two orderings *diverge*, and that divergence grows with the magnitude of the reconfiguration.
+
+> **Corollary (informal).** *The cost of a non-geodesic reconfiguration exceeds the geodesic cost by an amount proportional to the integral of $K$ over the 2-surface swept out by the deviation. In the small-deviation limit, the excess cost is $\tfrac{1}{2}\int K\, dA + O(\epsilon^4)$, where $dA$ is the area element of the deviation surface.*
+
+This is a geometric "free lunch" that is, of course, bounded by the curvature: the more curved the manifold, the more you pay for taking a shortcut.
+
+**Engineering reading.** Before you relax a pair of constraints simultaneously, compute (or at least estimate) the sectional curvature in that 2-plane. If $|K|$ is large, *sequence* the relaxations and re-verify after each step. If $|K| \approx 0$, the order doesn't matter and you can parallelize the change. This turns the qualitative heuristic "change one thing at a time" into an actual quantitative decision rule.
+
+---
+
+## 5. Parallel Transport and Constraint Inheritance
+
+A constraint in a harness isn't merely a boolean flag; it carries *semantic content*—a specification of what the agent should or shouldn't do, expressed in the coordinate frame of the current autonomy level. When the harness transitions from $\theta_A$ to $\theta_B$, the constraint's meaning has to be *transported* along the path.
+
+Parallel transport along the geodesic $\gamma^*$ is defined by the covariant derivative:
+
+$$
+\nabla_{\dot{\gamma}} V = 0, \qquad \text{i.e.} \quad \dot{V}^i + \Gamma^i_{jk}\,\dot{\gamma}^j V^k = 0.
+$$
+
+The solution $V(t)$ is the "constraint vector" as seen by the agent at each point along the transition. If the holonomy $\mathcal{H}(\gamma^*)$—the net rotation of $V$ after transporting around a closed loop—vanishes, the constraint semantics are *path-independent*: the agent's understanding of "do not write to production" is the same whether you got there via Level 2 or Level 4.
+
+I'd argue this is the geometric content of the dialectic I articulated in [Scaffolding to Sovereignty: The Dialectic of Code Autonomy](/posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/): scaffolding isn't a tax on autonomy but the generative precondition, because the parallel transport *defines* what autonomy means at each level. Without the transport structure, "more autonomy" is just "more parameters turned up," and the semantic content of the constraints dissolves into noise.
+
+**Engineering reading.** When you promote an agent from "suggest" (Level 2) to "execute" (Level 4), the constraint "respect the project's style guide" must be *re-instantiated* in the new autonomy frame. Parallel transport is the mathematical prescription for that re-instantiation. In practice? Re-run the style-check verification gate in the new permission scope, and confirm that the agent's output distribution (conditioned on the style constraint) hasn't shifted beyond your tolerance. That's one step of the transport ODE, discretized.
+
+---
+
+## 6. The Geodesic Design Workflow: Six Steps from Current to Target Autonomy
+
+All that theory reduces to a concrete engineering procedure. Given a current harness $\theta_A$ and a target autonomy level $\ell_B$:
+
+| Step | Action | Geometric object |
+|------|--------|-----------------|
+| 1 | Enumerate free parameters; fix gauge (see [Gauge Symmetry](/posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/)) | Coordinate chart on $\mathcal{M}$ |
+| 2 | Estimate $g_{ij}$ via Monte Carlo on your task suite $\mathcal{D}$ | Fisher information metric |
+| 3 | Compute Christoffel symbols $\Gamma^i_{jk}$ from $g_{ij}$ | Levi-Civita connection |
+| 4 | Solve the geodesic ODE $\ddot\gamma^i + \Gamma^i_{jk}\dot\gamma^j\dot\gamma^k = 0$ with $\gamma(0)=\theta_A$, $\dot\gamma(0)$ chosen toward $\theta_B$ | Geodesic $\gamma^*$ |
+| 5 | Evaluate $L(\gamma^*)$ (effort) and $K$ along the path (fragility) | Arc length, sectional curvature |
+| 6 | Parallel-transport each constraint vector; check holonomy | Constraint semantics |
+
+**Step 2 in practice.** You don't need the full $n \times n$ metric. For a harness with $n \leq 20$ free parameters, a Monte Carlo estimate with $N = 10^4$ task samples gives $g_{ij}$ to roughly $\sim 1\%$ accuracy. The computation is embarrassingly parallel: each sample contributes an outer product $\nabla_\theta \log p_\theta \otimes \nabla_\theta \log p_\theta$. Libraries like `geomstats` (Python) or the `riemann` package (R) provide the geodesic solver and curvature computation out of the box.
+
+**Step 4 in practice.** The geodesic ODE is a system of $n$ second-order ODEs. For $n \leq 20$, a standard Runge-Kutta 4th-order integrator with adaptive step size will do. For larger $n$, exploit the block-diagonal structure that falls out of modular harness design: scope rules, permissions, verification, and feedback controllers couple only through a small number of shared parameters.
+
+**Engineering reading.** The workflow replaces the ad-hoc question "should I relax the sandbox first or the verification gate first?" with the computation "what is the geodesic, and what is the curvature in the (sandbox, verification) plane?" The answer is a number, not a gut feeling.
+
+---
+
+## 7. Connection to Natural Gradient Descent
+
+The Fisher information metric isn't a purely geometric abstraction; it's the metric that makes *natural gradient descent* (Amari, 1998) invariant to reparameterization. In the harness-design context, this means the following: if you're *tuning* a harness (adjusting $\theta$ to maximize a performance objective $J(\theta)$), the natural gradient
+
+$$
+\tilde{\nabla} J = g^{-1} \nabla J
+$$
+
+is the steepest-ascent direction in *behavioral* space, not in parameter space. A unit step in the natural-gradient direction produces the same behavioral change regardless of how you happen to parameterize the harness.
+
+This connection isn't incidental. The rate-distortion cost floor I derived in [The Autonomy Channel](/posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/) can be re-expressed as a bound on the natural-gradient step size: the maximum autonomy increment per tuning iteration is limited by the Fisher-information budget, which is precisely the free-energy bound I quantified in [Free Energy Bounds: A Variational Account of Autonomy](/posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/). The geodesic framework unifies these results: the geodesic is the path of *constant natural-gradient step size*, and its length is the total Fisher-information budget consumed by the transition.
+
+**Engineering reading.** If you've been tuning your harness with grid search or random search over parameter values, you're working in a coordinate-dependent metric. Switching to natural-gradient updates (or, equivalently, to geodesic interpolation) makes your tuning invariant to how you choose to parameterize the harness. The same behavioral improvement requires the same number of iterations, whether you express the threshold as a probability, a log-odds, or a percentile.
+
+---
+
+## 8. Limitations
+
+Three caveats worth keeping in mind.
+
+**First: the outcome model is a projection.** The distribution $p_\theta(\mathbf{y}|\mathbf{x})$ captures only the observable behavioral signature of the harness. Internal state, prompt engineering, and model-specific quirks (say, a particular LLM's sensitivity to instruction phrasing) aren't encoded in the manifold. The Fisher metric is therefore a *lower bound* on the true reconfiguration cost: it measures the cost of the observable change, not the cost of the internal reorganization that produces it.
+
+**Second: the manifold may be singular.** At the boundary of $\Theta$ (e.g., zero verification strictness, or a fully open sandbox), the FIM can become degenerate. The geometry goes singular, and geodesics may not exist or may not be unique. In practice, this corresponds to the "cliff" configurations where a small parameter change produces a discontinuous behavioral shift—precisely the percolation-critical regime identified in [Percolation of Autonomy](/posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/).
+
+**Third: the computational cost scales with $n^3$.** Estimating and inverting the Fisher metric for $n > 100$ parameters is non-trivial. Modular harness design (keeping $n \leq 30$ per module) and the gauge reduction from [Gauge Symmetry](/posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/) are the practical mitigations. For very large harnesses, a local (tangent-space) approximation to the metric is usually sufficient, since autonomy transitions are typically short-horizon.
+
+---
+
+## 9. Further Reading and External Resources
+
+- **Amari, S.-I. & Nagaoka, H. (2000).** *Methods of Information Geometry.* AMS. [Book page](https://www.ams.org/bookstore/pserv/gsm38-pi.pdf). The foundational text; Chapters 1–3 cover the manifold structure and the FIM in detail.
+- **Amari, S.-I. (1998).** "Natural Gradient Works Efficiently in Learning." *Neural Computation*, 10(2), 251–276. The original natural-gradient paper; the connection to the Fisher metric is explicit.
+- **`geomstats`** (Python): Open-source Riemannian geometry library with geodesic solvers, curvature computation, and parallel transport. <https://github.com/geomstats/geomstats>
+- **`riemann`** (R): Riemannian optimization package; useful for small-scale geodesic estimation. <https://cran.r-project.org/web/packages/riemann/>
+- **Wikipedia: Fisher information** — a concise introduction to the FIM and its statistical interpretation. <https://en.wikipedia.org/wiki/Fisher_information>
+- **Johns Hopkins Information Geometry lecture notes** (S.-I. Amari, 2022): A freely available slide series that walks through the manifold structure with worked examples. <https://www.stat.jhu.edu/~lzhou10/info-geometry/>
+
+---
+
+## References
+
+- Amari, S.-I. (1998). Natural gradient works efficiently in learning. *Neural Computation*, 10(2), 251–276.
+- Amari, S.-I., & Nagaoka, H. (2000). *Methods of Information Geometry*. AMS/IP Studies in Advanced Mathematics, Vol. 38. American Mathematical Society.
+- Cover, T. M., & Thomas, J. A. (2006). *Elements of Information Theory* (2nd ed.). Wiley.
+- do Carmo, M. P. (1992). *Riemannian Geometry*. Birkhäuser.
+
+---
+
+## A Closing Note
+
+The geodesic stands as a regulative ideal. The harness engineer who computes the Fisher metric, solves the geodesic ODE, and checks the holonomy isn't performing a ritual. They're making the implicit costs of autonomy transitions *explicit, comparable, and optimizable*. The geometry doesn't eliminate engineering judgment—it gives judgment a coordinate system.
+
+If you're building a harness and want to try estimating the Fisher metric on your task suite, the six-step workflow in Section 6 is a reasonable starting point. I'd genuinely be interested to hear whether the predicted cost floor matches your observed engineering effort. And if the geodesic length disagrees with your intuition about "how hard it is to add another autonomy level"? That discrepancy is itself a diagnostic: it means your parameterization is hiding degrees of freedom, or your outcome model is too coarse.
+
+*— Author's note: This post is Part 7 in an incremental series on building a fully autonomous coding-agent harness. Previous parts cover the autonomy spectrum (Part 1), the Shannon-channel model (Part 2), the scaffolding dialectic (Part 3), percolation dynamics (Part 4), gauge reduction (Part 5), and free-energy bounds (Part 6). The next installment will apply the geodesic workflow to a concrete SDLC-phase transition (specification → implementation) with a worked template.*

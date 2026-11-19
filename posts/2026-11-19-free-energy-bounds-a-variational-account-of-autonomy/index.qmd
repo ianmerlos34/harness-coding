@@ -1,0 +1,167 @@
+---
+title: "Free Energy Bounds: A Variational Account of Autonomy"
+description: "A free-energy bound quantifying the maximum autonomy a coding-agent harness can sustain, with a per-step KL budget design calculus for engineers."
+author: "Ian Merlos"
+date: "2026-11-19"
+categories: [AI Agent Design, Software Engineering, Information Theory]
+tags: [variational free energy, coding agent harness, KL divergence budget, active inference, autonomy design]
+keywords: [free energy bound, coding agent autonomy, variational free energy principle, harness design calculus, KL divergence budget, agent constraint architecture, active inference software engineering, LLM harness engineering]
+image: "cover.png"
+draft: false
+title-block-banner: "cover.png"
+---
+
+
+<!-- meta-description: A free-energy bound that quantifies the maximum autonomy a coding-agent harness can sustain—complete with a per-step KL budget design calculus for harness engineers. -->
+<!-- og-title: How Much Autonomy Can a Harness Sustain? A Free-Energy Bound for Agent Design -->
+
+So here's the thing about a coding-agent harness. At its core, it's a control architecture sitting between an LLM's generative capacity and the hard constraints of a real software development lifecycle. The gap between what the harness *permits* and what the agent *actually does*—that's the gap between a prior and a posterior, if you're thinking in Bayesian terms. This post takes the variational free-energy framework from active inference (Friston, 2010) and slaps it onto that gap. What falls out is a quantitative design calculus: a per-step KL-divergence budget that tells you how much autonomous behaviour a given constraint architecture can sustain before the free-energy objective just… diverges. For harness engineers who spend their days balancing tightness of control against an agent's generative capacity, this converts a fuzzy intuitive trade-off into an inequality you can actually check before shipping.
+
+This work builds directly on the five-level autonomy spectrum in [The Autonomy Imperative](/posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/), the dialectical scaffolding model in [Scaffolding to Sovereignty](/posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/), and the percolation-theory analysis of constraint density in [Percolation of Autonomy](/posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/). Those posts establish *what* autonomy looks like and *when* it emerges. This one asks the more practical question: *how much* can a harness afford to grant? And it gives you a number.
+
+> **Key terms (plain-English glosses)**
+> - **Variational free energy (FVE):** An upper bound on the surprise (negative log-likelihood) of observed data under a probabilistic model. Lower is better.
+> - **KL-divergence ($D_{\mathrm{KL}}$):** A measure of how much one probability distribution differs from another, expressed in nats. $D_{\mathrm{KL}}(q\|p)=0$ iff $q=p$.
+> - **Information bottleneck:** A compression principle (Tishby et al., 1999) that trades fidelity to the source for compactness of the representation.
+> - **Percolation threshold:** The critical density above which a constraint graph ceases to fragment and instead percolates across the action space (see [Percolation of Autonomy](/posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/)).
+
+## The Accuracy–Complexity Trade-off in Harness Design
+
+The variational free-energy objective decomposes into two terms (Friston, 2010):
+
+$$\mathcal{F}(q) \;=\; \underbrace{D_{\mathrm{KL}}\!\bigl(q(\mathbf{h})\,\|\,p(\mathbf{h}\mid\mathbf{o})\bigr)}_{\text{accuracy (expected surprise)}} \;+\; \underbrace{D_{\mathrm{KL}}\!\bigl(q(\mathbf{h})\,\|\,p(\mathbf{h})\bigr)}_{\text{complexity (KL from prior)}}$$
+
+The first term penalises the agent's posterior hypothesis $\mathbf{h}$ for diverging from what the observations $\mathbf{o}$—the spec, the test suite, the lint output—actually support. The second term penalises the posterior for straying from the harness's learned prior $p(\mathbf{h})$, which is really just the set of allowed actions, tool schemas, and phase-gate rules baked into the architecture.
+
+And this isn't some abstract analogy I'm reaching for. In a coding-agent harness, the correspondence is pretty direct:
+
+| Free-energy quantity | Harness component |
+|---|---|
+| Prior $p(\mathbf{h})$ | Tool whitelist, phase-gate rules, prompt scaffolding |
+| Posterior $q(\mathbf{h})$ | Agent's actual action sequence over a trajectory |
+| Observations $\mathbf{o}$ | Spec checklist, test results, lint/CI signals |
+| Accuracy term | Spec-compliance score (checklist pass rate) |
+| Complexity term | Degree to which the agent "invents" actions outside the prior |
+
+*Table 1. Correspondence between free-energy-principle quantities and harness components.*
+
+The trade-off is almost painfully straightforward: tighten the prior (narrow the tool space, pile on more phase gates) and the complexity term drops, but you risk raising the accuracy term because the agent simply can't reach the action that would satisfy the spec. Loosen the prior and the reverse happens. The FVE bound tells you where the sweet spot is, rather than leaving you to feel it out.
+
+## Formal Bound for Discrete Actions
+
+Consider a harness with a discrete action space of size $K$ (say, $K=12$ tools) and a trajectory of $T$ steps. Under the assumption that the posterior is a product distribution across steps (a standard Markovian approximation for sequential agents), the total free energy satisfies:
+
+$$\mathcal{F}_{\text{total}} \;=\; \sum_{t=1}^{T}\!\Bigl[\,\epsilon_t + D_{\mathrm{KL}}\!\bigl(q_t\,\|\,p_t\bigr)\Bigr] \;\leq\; T\,\epsilon_{\max} + T\,\log K$$
+
+where $\epsilon_t$ is the per-step accuracy penalty and $\log K$ is the maximum per-step KL (achieved when $q_t$ is a point mass on a single symbol and $p_t$ is uniform over all $K$ symbols, giving $D_{\mathrm{KL}} = \log K$; or when $q_t$ is uniform and $p_t$ is a point mass on the same symbol).
+
+Rearranging for the autonomy budget:
+
+$$\boxed{\;\sum_{t=1}^{T} D_{\mathrm{KL}}\!\bigl(q_t\,\|\,p_t\bigr) \;\leq\; \mathcal{F}_{\max} \;-\; T\,\epsilon_{\text{spec}}\;}$$
+
+where $\mathcal{F}_{\max}$ is the maximum free energy the engineering team is willing to tolerate (set by quality gates) and $\epsilon_{\text{spec}}$ is the per-step spec-compliance cost.
+
+> **Practitioner's note.** Strip away the notation and it's basically: count your steps, count your tools, and you have a ceiling on how "free" the agent can be per step. And if your agent keeps violating the spec, the problem isn't that it's too autonomous. It's that your verification (the accuracy term) is too weak to anchor it.
+
+**Worked example.** Suppose a trajectory spans $T=40$ steps over a $K=12$-action tool space. The theoretical maximum total KL is $T\log K \approx 40 \times 2.48 \approx 99$ nats. If the harness sets $\mathcal{F}_{\max}=30$ and the spec-compliance cost is $\epsilon_{\text{spec}}=10$ nats per step (total accuracy penalty $T\epsilon_{\text{spec}}=400$—wait, that exceeds $\mathcal{F}_{\max}$; let us use a more realistic $\epsilon_{\text{spec}}=0.5$ nats per step, giving $T\epsilon_{\text{spec}}=20$), the KL budget is $\mathcal{F}_{\max} - T\epsilon_{\text{spec}} = 30 - 20 = 10$ nats total, or $0.25$ nats per step. That's roughly $25\%$ of the single-step maximum $\log 12 \approx 2.48$ nats. The agent retains meaningful autonomy headroom while staying well within the divergence bound.
+
+The following diagram captures the two-term structure:
+
+```{mermaid}
+flowchart LR
+  H[Harness Prior p(h)] --> FVE[Free-Energy Objective F]
+  A[Agent Posterior q(h)] --> FVE
+  O[Observations: spec, tests, CI] --> ACC[Accuracy Term]
+  ACC --> FVE
+  H --> COM[Complexity Term]
+  A --> COM
+  COM --> FVE
+  FVE --> BOUND[KL Budget per Step]
+```
+
+*Figure 1. The harness prior, agent posterior, and observations feed into the two terms of the free-energy objective, yielding a per-step KL budget.*
+
+A dependency view of how the bound constrains design choices:
+
+```{dot}
+digraph G {
+  rankdir=TB
+  K[label="Tool space size K"]
+  T[label="Trajectory length T"]
+  Fmax[label="F_max (quality gate)"]
+  eps[label="epsilon_spec (accuracy)"]
+  budget[label="KL budget = F_max - T*eps"]
+  perstep[label="Per-step ceiling = budget / T"]
+  K --> budget
+  T --> budget
+  Fmax --> budget
+  eps --> budget
+  budget --> perstep
+}
+```
+
+*Figure 2. The design inputs (tool space, trajectory length, quality gate, accuracy cost) jointly determine the per-step KL ceiling.*
+
+## Design Calculus for Harness Engineers
+
+Okay, so the bound in the previous section is necessary but not, on its own, a usable design rule. The following heuristics are where it gets practical—translating the inequality into actual SDLC-phase decisions.
+
+### 5.1 Set the Prior Tightness from the Tool Space
+
+The maximum per-step KL is $\log K$. If your harness exposes 50 tools, the agent's theoretical "freedom" per step is $\log 50 \approx 3.91$ nats. If your budget allows only $0.25$ nats per step (as in the worked example), you're operating at roughly $6\%$ of maximum freedom. Practically, this means: **reduce $K$** by phasing tools in and out across the SDLC (design → implement → test → deploy), so that the effective $K$ at any given step is small. This is the percolation insight from [Percolation of Autonomy](/posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/): constraint density must sit below the critical threshold for autonomy to percolate, but above it for safety. You're threading a needle, but at least now you know where the needle is.
+
+### 5.2 Estimate the Per-Step KL from Logged Traces
+
+The bound is only as useful as your estimator. A plug-in estimator over $N$ logged trajectories is:
+
+$$\hat{D}_{\mathrm{KL}} = \frac{1}{N}\sum_{i=1}^{N}\log\frac{q(a_i)}{p(a_i)}$$
+
+where $q(a_i)$ is the empirical frequency of action $a_i$ in the agent's logs and $p(a_i)$ is the harness's prior probability (uniform over the active tool set, or a learned distribution). Report a 95% bootstrap confidence interval over at least $N=200$ trajectories to control estimator variance. If the CI's upper bound exceeds your per-step budget, tighten the prior before the next release cycle. Don't wing it.
+
+### 5.3 Phase-Gate the Accuracy Term
+
+Here's something that's easy to miss: the spec-compliance cost $\epsilon_{\text{spec}}$ is *not* constant across the SDLC. During the *design* phase, the spec is a requirements document and $\epsilon_{\text{spec}}$ is low (the agent is still exploring). During *implementation*, it's a checklist of acceptance criteria and $\epsilon_{\text{spec}}$ rises. During *verification*, it's the full test suite and $\epsilon_{\text{spec}}$ peaks. The harness should schedule tighter priors (smaller $K$) in high-$\epsilon$ phases to keep the total within $\mathcal{F}_{\max}$.
+
+### 5.4 Calibrate $\mathcal{F}_{\max}$ from Production Defect Rates
+
+$\mathcal{F}_{\max}$ is not a physical constant; it's a policy parameter. A reasonable calibration: set $\mathcal{F}_{\max}$ so that the predicted KL budget, when saturated, corresponds to a defect rate your team is actually willing to triage. If your SLO is 2% escaped defects and your regression suite catches 80% of them, work backward from the observed defect distribution to set $\mathcal{F}_{\max}$. And revisit it quarterly—because your codebase changes, and your tolerance for sloppiness probably shouldn't.
+
+## Comparison with Existing Frameworks
+
+The FVE bound is complementary to, not competitive with, three families of existing work. Worth a quick pass through each.
+
+**Reward shaping in RL.** In reinforcement learning, the reward function encodes the accuracy term and the policy regulariser (KL penalty against a reference policy) encodes the complexity term (Mnih et al., 2015). The FVE bound makes the same trade-off explicit for *deterministic* harnesses where there's no gradient update—only a static prior. The practical difference: in RL you tune the reward; in a harness you tune the tool whitelist and phase gates. Different levers, same underlying tension.
+
+**Scaffolding heuristics in LangChain / CrewAI.** These frameworks provide template-level scaffolding (role prompts, tool routing, memory windows) but don't expose a quantitative budget on how much the agent may deviate from the scaffold. The FVE bound supplies that missing number: the per-step KL ceiling. It's the thing you've been eyeballing and hoping is "probably fine."
+
+**Constraint satisfaction in AutoGen.** AutoGen's group-chat architecture enforces constraints at the message level (who speaks next, which tools are callable). The FVE bound subsumes this: each constraint reduces the effective $K$, lowering $\log K$ and thereby *increasing* the relative autonomy headroom per remaining action.
+
+> **Multi-agent note.** The formalism above assumes a single agent–harness pair. In multi-agent harnesses (e.g., AutoGen's group chat or a pipeline of specialist agents), the prior becomes a joint distribution $p(\mathbf{h}_1,\dots,\mathbf{h}_n)$ and the total KL must be decomposed via the chain rule: $D_{\mathrm{KL}}(q\|p) = \sum_i D_{\mathrm{KL}}(q(h_i\mid h_{<i})\|p(h_i\mid h_{<i}))$. The per-agent budget then depends on the conditioning history, and the bound tightens as agents become more correlated.
+
+## Limitations
+
+I want to be upfront about where this breaks down.
+
+**6.1 Markovian approximation.** The product-distribution assumption across steps ignores long-range dependencies (e.g., a design decision at step 3 constraining the tool choice at step 38). The bound is therefore a *lower* bound on the true complexity cost. In practice, this means the actual autonomy headroom is smaller than the formula suggests. The bound is optimistic, not pessimistic.
+
+**6.2 Discrete action space.** The $\log K$ ceiling assumes a finite, known tool set. Continuous action spaces (e.g., free-form code generation with no tool restriction) require a differential-entropy generalisation, which is less tractable and for which no closed-form bound is available. So if your agent is just… writing code with no tool restrictions, this framework doesn't directly apply.
+
+**6.3 Static prior.** The analysis treats the harness prior as fixed over the trajectory. Adaptive harnesses that update $p(\mathbf{h})$ mid-episode (say, narrowing the tool set after a failed test) violate the assumption and require a time-varying bound. The per-step result still holds locally, but the total integral may differ.
+
+**6.4 Empirical validation.** This is the big one. The bound is a necessary condition, not a sufficient one. Satisfying the inequality does not guarantee spec compliance; it only guarantees that the free-energy objective does not diverge. A full validation protocol—comparing predicted KL budgets against observed defect rates across multiple SDLC projects—is needed before the bound can be used as a *sufficient* design criterion. Until then, treat it as a sanity check, not a proof.
+
+## Conclusion
+
+The variational free-energy framework gives harness engineers a single, checkable inequality that connects the number of tools you expose, the number of steps in your pipeline, and the quality bar you demand. It's not a substitute for good engineering judgement, and it doesn't tell you *which* tools to phase out or *how* to write a spec checklist. But it does tell you whether your current constraint architecture is internally consistent—whether the autonomy you've granted is actually affordable under the accuracy you require.
+
+As argued in [Scaffolding to Sovereignty](/posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/), scaffolding is not a tax on autonomy; it's its generative precondition. The free-energy bound quantifies *how much* scaffolding is sufficient. The bound is a design calculus: its limits are the guardrails that make autonomy both possible and predictable.
+
+---
+
+**References**
+
+Friston, K. (2010). The free-energy principle: a unified brain theory? *Nature Reviews Neuroscience*, 11(2), 127–138.
+
+Mnih, V., Kavukcuoglu, K., Silver, D., et al. (2015). Human-level control through deep reinforcement learning. *Nature*, 518(7540), 529–533.
+
+Tishby, N., Pereira, F. C., & Bialek, W. (1999). The information bottleneck method. *Proceedings of the 37th Allerton Conference on Communication, Control, and Computing*, 363–372.

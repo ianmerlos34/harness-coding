@@ -1,0 +1,282 @@
+---
+title: "Functorial Autonomy: Categorical Structure of Harness Design"
+description: 'Recast harness design as a category where safe refactors are natural transformations, yielding a checkable algebraic criterion for autonomy preservation.'
+author: 'Ian Merlos'
+date: '2026-11-19'
+categories: [category-theory, ai-engineering, software-architecture, llm-agents]
+tags: [natural-transformations, harness-design, yoneda-lemma, autonomy-preservation, safe-refactoring, categorical-structure]
+keywords: [category theory, coding agent harness, natural transformation, safe refactoring criteria, LLM agent design, Yoneda lemma applications, autonomy-preserving refactors, harness configuration, categorical safety, AI agent architecture]
+image: "cover.png"
+draft: false
+title-block-banner: "cover.png"
+---
+
+
+*We define a category of coding-agent harness configurations and prove that safe refactors are exactly the natural transformations—giving you a checkable algebraic criterion for autonomy-preserving design.*
+
+## Abstract
+
+So here's the thing. When you go and refactor a coding-agent harness—swap a tool, tighten a prompt, add a memory slot—you're doing something that has a clean mathematical description, we just haven't written it down yet. In this post, we recast harness design as a category **Harness** whose objects are complete configurations and whose arrows are autonomy-preserving refactors. The central result is a Yoneda-lemma-based completeness criterion: a harness is fully determined by its external interactions, so any two configurations that behave identically toward all tools, constraints, and context windows are the *same* object. This yields a practical corollary. A refactor is safe if and only if it is a natural transformation in the categorical sense. We show how this single algebraic condition subsumes the ad-hoc heuristics that practitioners currently apply, and we provide a concrete worked example, a finite (in principle) checkable procedure, and explicit guidance for LangChain, CrewAI, and AutoGen users.
+
+**Key terms defined inline:** *harness* (the scaffolding code that wraps an LLM with tools, constraints, and memory), *natural transformation* (a structure-preserving map between two functors), *Yoneda lemma* (a theorem stating that an object is determined by its relationships to all others).
+
+---
+
+## Practical Takeaways (Read This First)
+
+If you're shipping a coding-agent harness today and just want a Monday-morning checklist before wading into the formalism—here you go:
+
+1. **AP-1 (Tool-superset).** After any refactor, your `allowed_tools` list must be a superset of the pre-refactor list. In LangChain terms: verify that every `Tool` instance in the pre-refactor `AgentExecutor` still appears in the post-refactor one.
+2. **AP-2 (Schema-stability).** The JSON `output_schema` (or equivalent Pydantic model) that downstream consumers parse must be unchanged. In CrewAI, this means the `task.expected_output` contract is invariant.
+3. **AP-3 (Context-budget monotonicity).** The maximum tokens consumed per step must not increase. In AutoGen, check that `max_consecutive_auto_reply` and `token_budget` are non-decreasing in capacity.
+4. **Naturality check.** If you can name a specific tool, constraint, or consumer for which AP-1 through AP-3 *all* hold simultaneously, the refactor is a natural transformation and autonomy is preserved. If any single consumer breaks, the morphism is non-natural and you have silently degraded autonomy.
+
+Now, these four conditions aren't pulled out of thin air. As we'll see below, they're the component-wise projections of a single categorical axiom. But if you walk away with nothing else, walk away with these four.
+
+---
+
+## 1. Why Category Theory? The Failure of Ad-Hoc Heuristics
+
+Every harness developer has inherited a set of "gotchas." Don't remove the `web_search` tool without checking the system prompt. Don't shrink the context window below 8 192 tokens. Don't swap the retry policy without re-testing the error-recovery path. These rules work. But—and this is the key word—they are *enumerated*, not *derived*. They're a finite list of patches accumulated from incident post-mortems, and nobody can tell you why the list stops where it does.
+
+The problem with an enumerated list is that it doesn't compose. Add a new tool, a new constraint, a new memory layer, and suddenly the list doubles. Now you need pairwise interaction checks: does the new memory layer interact with the retry policy? Does the new tool violate the context budget under the existing retry schedule? The combinatorics explode, and practitioners fall back on "test it and hope." (We've all been there. I've been there.)
+
+Category theory offers a different posture. Instead of listing every valid interaction, you define the *structure* that makes an interaction valid, and then the valid interactions fall out as theorems. It's the same move that made functional programming "correct by construction" after the lambda calculus was formalised (Barendregt, 1981). We're making the analogous move for harness design.
+
+This post builds directly on the series' prior results. Our [five-level autonomy spectrum](/posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/) gives the *levels* at which a harness can operate. The [rate-distortion analysis](/posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/) quantifies the *cost* of each transition. The [dialectical framing](/posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/) explains *why* scaffolding is generative rather than parasitic. The [percolation-theoretic account](/posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/) identifies *where* autonomy emerges in discrete jumps. The [gauge-symmetry reduction](/posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/) collapses the design space into inequivalent classes. The [free-energy bound](/posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/) sets the *ceiling* on sustainable autonomy. The [information-geometric view](/posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/) gives the *cost of moving* between configurations.
+
+What's missing from all of those? A single algebraic language in which "safe refactor" actually has a definition. That's what we supply here.
+
+---
+
+## 2. Defining the Category **Harness**
+
+### 2.1 Objects
+
+An **object** of **Harness** is a 5-tuple
+
+$$H = (T,\; C,\; M,\; P,\; B)$$
+
+where:
+
+- $T = \{t_1, \dots, t_n\}$ is the finite set of *tools* exposed to the agent (e.g., `file_read`, `shell_exec`, `web_search`);
+- $C$ is the set of *constraints* (prompt-level rules, JSON-schema validators, rate limits);
+- $M$ is the *memory configuration* (window size, retrieval strategy, summarisation policy);
+- $P$ is the *policy layer* (retry schedules, escalation rules, human-in-the-loop triggers);
+- $B$ is the *budget vector* (max tokens per step, max concurrent tool calls, wall-clock ceiling).
+
+We require that $C$ is *satisfiable with respect to* $T \cup M \cup P \cup B$. That is, there exists at least one agent trajectory that obeys all constraints while using the available tools within budget. This is a well-definedness condition; without it, the object is incoherent (see § 6 on pathologies).
+
+### 2.2 Morphisms: Autonomy-Preserving Refactors
+
+A **morphism** $f: H \to H'$ in **Harness** is a 5-tuple $(f_T, f_C, f_M, f_P, f_B)$ of structure-preserving maps satisfying three autonomy-preservation axioms:
+
+> **AP-1 (Tool inclusion).** $f_T$ is an *inclusion*: every tool in $T$ has a corresponding tool in $T'$. Formally, $T \subseteq T'$ under the identification induced by $f_T$.
+
+> **AP-2 (Constraint projection).** $f_C$ maps each constraint in $C$ to a constraint in $C'$, and the image set $f_C(C) \subseteq C'$ is *no stronger* than $C$ in the sense that every trajectory valid under $C$ is also valid under $f_C(C)$.
+
+> **AP-3 (Budget monotonicity).** $f_B$ is component-wise non-decreasing: the post-refactor budget is at least as permissive as the pre-refactor budget.
+
+**In plain English:** you may add tools, you may *relax* constraints (but not tighten them), and you may *increase* budgets (but not decrease them). You may never remove a capability the agent previously had, never impose a new restriction it did not face, and never shrink the resources it could draw on. Simple, right? The subtlety is in proving that "simple" is also *complete*—which is what the next few sections do.
+
+### 2.3 A Concrete Worked Example
+
+Consider a minimal harness $H_0$ with:
+
+- $T_0 = \{\texttt{file\_read},\; \texttt{file\_write},\; \texttt{shell\_exec}\}$
+- $C_0 = \{$"no execution of `rm -rf`", "output must be valid JSON"\}
+- $M_0 = \{$8\text{K-token window, FIFO eviction}\}$
+- $P_0 = \{$1\text{ retry on timeout, escalate after 2 failures}\}$
+- $B_0 = \{$4096\text{ tokens/step, 3 concurrent calls, 30 s ceiling}\}$
+
+Now propose a refactor $H_1$ that adds a `web_search` tool, relaxes the JSON constraint to "output must be parseable as JSON *or* Markdown," widens the window to 16 K tokens, keeps the retry policy, and leaves budgets unchanged.
+
+Check AP-1: $T_0 \subset T_1$. ✓ (Three original tools present; one added.)
+
+Check AP-2: The "no `rm -rf`" constraint is unchanged. The JSON constraint is *relaxed* (Markdown is now also acceptable). Every trajectory valid under $C_0$ is valid under $C_1$. ✓
+
+Check AP-3: Window increases from 8 K to 16 K. All other budgets unchanged. ✓
+
+The morphism $f: H_0 \to H_1$ is a valid arrow in **Harness**. Autonomy is preserved.
+
+Now consider a *different* refactor $H_2$ that removes `shell_exec` and tightens the constraint to "output must be *strictly* valid JSON (no trailing commas)." AP-1 fails (a tool was removed). AP-2 fails (a constraint was tightened). This is **not** a morphism in **Harness**; it's an autonomy-degrading operation. The categorical framework tells you this *before* you deploy, not after the post-mortem at 2 a.m. on a Tuesday.
+
+```{mermaid}
+flowchart LR
+  subgraph "H₀ (pre-refactor)"
+    T0["T = {file_read, file_write, shell_exec}"]
+    C0["C = {no rm -rf, valid JSON}"]
+    M0["M = 8K window, FIFO"]
+  end
+
+  subgraph "H₁ (safe refactor)"
+    T1["T = {file_read, file_write, shell_exec, web_search}"]
+    C1["C = {no rm -rf, JSON or Markdown}"]
+    M1["M = 16K window, FIFO"]
+  end
+
+  subgraph "H₂ (unsafe refactor)"
+    T2["T = {file_read, file_write}"]
+    C2["C = {no rm -rf, strict JSON only}"]
+    M2["M = 8K window, FIFO"]
+  end
+
+  T0 -->|"AP-1 ✓ (superset)"| T1
+  C0 -->|"AP-2 ✓ (relaxed)"| C1
+  M0 -->|"AP-3 ✓ (expanded)"| M1
+
+  T0 -.->|"AP-1 ✗ (tool removed)"| T2
+  C0 -.->|"AP-2 ✗ (tightened)"| C2
+
+  style T2 stroke-dasharray: 5
+  style C2 stroke-dasharray: 5
+```
+
+The solid arrows constitute the morphism $f: H_0 \to H_1$. The dashed arrows to $H_2$ violate the axioms and are therefore *not* morphisms in **Harness**.
+
+---
+
+## 3. Natural Transformations as the Safety Criterion
+
+### 3.1 The Hom-Functor
+
+Fix an object $H$. The **Hom-functor** $\text{Hom}(-, H)$ maps each object $K$ to the set of valid morphisms $K \to H$, and each morphism $f: K \to K'$ to the post-composition map $\text{Hom}(K', H) \to \text{Hom}(K, H)$.
+
+Intuitively: $\text{Hom}(K, H)$ is the set of all ways to *refactor $K$ into $H$ while preserving autonomy*. The Yoneda lemma will tell us that knowing all such refactors, for all $K$, is equivalent to knowing $H$ itself. (Yes, it sounds almost tautological. It isn't, and the non-tautology is where the power lives.)
+
+### 3.2 Definition: Natural Refactor
+
+Let $\mathcal{F}, \mathcal{G}: \mathbf{Harness} \to \mathbf{Set}$ be two functors (e.g., $\mathcal{F}(H) = T$ extracts the tool set; $\mathcal{G}(H) = C$ extracts the constraint set). A **natural transformation** $\eta: \mathcal{F} \Rightarrow \mathcal{G}$ assigns to each object $H$ a function $\eta_H: \mathcal{F}(H) \to \mathcal{G}(H)$ such that for every morphism $f: H \to H'$, the square
+
+$$\mathcal{F}(H) \xrightarrow{\eta_H} \mathcal{G}(H)$$
+$$\downarrow{\mathcal{F}(f)} \qquad\qquad \downarrow{\mathcal{G}(f)}$$
+$$\mathcal{F}(H') \xrightarrow{\eta_{H'}} \mathcal{G}(H')$$
+
+commutes. In harness terms: the way you "translate" tools into constraints must be *independent of which harness you are in*. The translation rule does not depend on the specific configuration.
+
+**In plain English:** if your safety mapping from "which tools are available" to "which constraints must fire" is the *same rule* no matter what tools you have, then the rule is natural. If the rule changes depending on whether you have `shell_exec` or not, it's non-natural, and a refactor that adds or removes `shell_exec` will silently change your safety guarantees. (This is, I think, where most real-world harness bugs actually live.)
+
+### 3.3 Theorem 1 (Safe-Refactor Characterisation)
+
+> *A morphism $f: H \to H'$ in **Harness** is a safe refactor if and only if it is a natural transformation in the above sense, i.e., it commutes with every Hom-functor on **Harness**.*
+
+**Definition + Claim (with key algebraic step).** The "if" direction is immediate from the axioms: AP-1, AP-2, AP-3 are precisely the commutativity conditions for the tool, constraint, and budget functors. The "only-if" direction requires showing that any morphism satisfying AP-1 through AP-3 automatically commutes with *all* Hom-functors, not just the three named ones. The key step is:
+
+Given any functor $\mathcal{F}: \mathbf{Harness} \to \mathbf{Set}$, $\mathcal{F}(H)$ is a function of the 5-tuple $(T, C, M, P, B)$. Under $f$, each component transforms via its respective $f_i$. Because AP-1 ensures $T \subseteq T'$, AP-2 ensures $C$ projects into $C'$, and AP-3 ensures $B \leq B'$, the induced map $\mathcal{F}(f): \mathcal{F}(H) \to \mathcal{F}(H')$ is well-defined for *any* $\mathcal{F}$ that respects the partial order on components. Since every Hom-functor is of this form, commutativity holds. $\square$
+
+Look, this isn't a deep theorem in the number-theoretic sense. It's a *structural* theorem. Its value is practical: it replaces an open-ended list of "things to check" with a single closure condition. You stop maintaining a wiki page of gotchas and start checking one thing.
+
+---
+
+## 4. The Yoneda Lemma and the Completeness Criterion
+
+### 4.1 Statement
+
+The **Yoneda lemma** (Mac Lane, 1971; Awodey, 2010) states that for any category $\mathbf{C}$ and object $X \in \mathbf{C}$, the natural isomorphism
+
+$$\text{Nat}(\text{Hom}(-, X),\; F) \;\cong\; F(X)$$
+
+holds for every functor $F: \mathbf{C}^{\text{op}} \to \mathbf{Set}$. In words: to know $X$, it suffices to know *how every other object maps into $X$*. That's it. The whole object is encoded in its relationships.
+
+### 4.2 The Completeness Criterion for Harnesses
+
+Specialising to **Harness**: a harness $H$ is **fully determined** by the collection $\{\text{Hom}(K, H)\}_{K \in \mathbf{Harness}}$. Two harnesses $H, H'$ that admit exactly the same set of valid refactors *from every* $K$ are the same object.
+
+**Practical corollary.** You do not need to inspect the internal code of a harness to know whether a refactor is safe. You need only verify that the *external interaction profile*—the set of tools, the set of constraints, the budget vector, the memory contract, the policy layer—has not changed in any autonomy-reducing direction. This is the algebraic justification for the "black-box testing" intuition that many practitioners already follow, now made precise. (It validates the gut feeling. Nice.)
+
+### 4.3 A (Qualified) Finite Procedure
+
+In principle, the Yoneda fingerprint is the full set $\text{Hom}(K, H)$ for all $K$. In practice, this set is combinatorially explosive: the number of possible harnesses grows super-exponentially in $|T| + |C| + |M|$.
+
+**Qualified claim.** For *local* safety checks—verifying that a single proposed refactor $f: H \to H'$ is a morphism—it suffices to evaluate AP-1, AP-2, AP-3 on the *specific* pair $(H, H')$. This is a finite procedure: check the tool set inclusion, check the constraint projection, check the budget component-wise. The full Yoneda fingerprint is needed only for *global* questions (e.g., "does there exist *any* sequence of refactors that takes $H$ to $H'$ while preserving autonomy at every step?"), and even then, a small probe set of canonical $K$ values (the "basis" harnesses with one tool, one constraint, one memory slot) typically suffices, as our [gauge-symmetry analysis](/posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/) shows that most of the design space collapses into a small number of inequivalent classes.
+
+---
+
+## 5. Unifying the Prior Results
+
+The categorical framework doesn't replace the earlier posts in this series; it *subsumes* them. Each prior result becomes a theorem or corollary about functors or natural transformations on **Harness**:
+
+- **Rate-distortion (Shannon, 1948; Cover & Thomas, 2006).** The rate-distortion function $R(D)$ quantifies the minimum "bits" of constraint information you must transmit to keep distortion below $D$. In categorical terms, $R(D)$ is the cardinality of the image of the constraint functor $\mathcal{C}: \mathbf{Harness} \to \mathbf{Set}$ under the optimal encoding. Functor composition is associative, so the bits you spend to implement a refactor add up linearly across a chain of refactors. *In short: the cost of refactoring is additive, just as functor composition is associative.*
+
+- **Percolation (Stauffer & Aharony, 1994).** Autonomy emerges in discrete jumps as constraint density crosses a critical threshold. Categorically, this is a *phase transition in the Hom-sets*: below the threshold, $\text{Hom}(K, H)$ is empty for most $K$ (no valid refactors exist); above it, the Hom-set suddenly becomes non-trivial. The percolation cluster is the connected component of the Hom-graph. *In short: you do not gradually lose autonomy; you lose it all at once when the constraint graph disconnects.*
+
+- **Gauge symmetry.** The gauge-symmetry reduction shows that many harness configurations related by "gauge transformations" (relabeling tools, reordering constraints) are physically the same. Categorically, these are *isomorphisms* in **Harness**. The quotient by isomorphism gives the set of inequivalent autonomy structures. *In short: the label you put on your tools does not matter; only the structure of their interactions does.*
+
+- **Free-energy bound.** The variational free-energy bound $F(H) = \mathbb{E}_{p_H}[\log p_H / \log q]$ is a *functorial* quantity: it is natural in $H$, meaning it is preserved under morphisms. A safe refactor cannot increase the free energy. *In short: you cannot refactor your way to more autonomy than the bound allows; the bound is a natural invariant.*
+
+- **Information geometry (Amari, 2016).** The Riemannian metric on the space of harnesses is the Fisher information metric on the distribution of agent trajectories. Geodesics are the "minimum-effort" refactors. A natural transformation is a geodesic that is *straight* in the categorical sense: it does not curve through configurations that violate AP-1 through AP-3. *In short: the safest refactor is the one that follows a straight line in the space of constraints, and the Yoneda criterion tells you when your path has bent.*
+
+---
+
+## 6. Pathologies and Limitations
+
+Intellectual honesty requires naming the cases where the framework breaks. Here they are:
+
+**Undecidable satisfiability.** AP-2 requires that $C$ is satisfiable with respect to $T \cup M \cup P \cup B$. If $C$ contains constraints expressible in a language with undecidable satisfiability (e.g., full first-order logic over the agent's action space), then the well-definedness check for the object $H$ is itself undecidable. In practice, harnesses use decidable fragments (regular expressions, JSON Schema, linear inequalities), so this is a theoretical rather than practical obstruction. But it means the category **Harness** is not *all* harnesses; it's the full subcategory of *decidably-specified* harnesses.
+
+**Partial tool schemas.** If a tool's input/output schema is only partially specified (e.g., "accepts a file path" but the path grammar is undefined), the Hom-set $\text{Hom}(K, H)$ may be ill-defined: we cannot check AP-2 because we do not know what "valid" means for that tool. The categorical framework requires *total* specifications. Partially-specified harnesses live in a *pre-category* where associativity of composition may fail.
+
+**Non-well-behaved functors.** The Yoneda lemma requires the functors to be set-valued. If your harness has *infinitely many* constraints (e.g., a constraint that is a real-valued cost function over an infinite action space), the Hom-set is a proper class, not a set, and the standard Yoneda lemma does not apply directly. One can work in a 2-categorical or topos-theoretic setting, but the practical checkability is lost.
+
+**The "finite" claim, restated honestly.** The local AP-1/2/3 check is finite *for a given pair* $(H, H')$. The global Yoneda fingerprint is finite *in principle* (the category has finitely many objects if $|T|, |C|, |M|, |P|, |B|$ are all finite) but combinatorially intractable *in practice* for realistic harness sizes. The gauge-symmetry reduction helps, but does not eliminate, the combinatorial explosion. I'd rather flag that upfront than pretend the procedure scales to 500 tools.
+
+---
+
+## 7. Related Work
+
+Our categorical approach is adjacent to, but distinct from, several existing formalisms. The typed effect-system literature (Lindley, 2012; Vázquez et al., 2023) provides a type-theoretic account of which side-effects an agent action may produce; our AP-2 constraint is a coarser, behavioural version of their effect typing. The formal-verification work on LLM safety (e.g., the work on provable safety bounds for tool-use sequences, 2024–2025) verifies *individual* agent trajectories; our framework verifies *refactors between harnesses*, which is a one-level-up question. The recent line on constitutional AI and reward-model alignment (Bai et al., 2022) addresses the *policy* $P$ in our 5-tuple; we treat $P$ as a given and focus on the structural invariants that survive its modification.
+
+---
+
+## 8. Practical Design Calculus
+
+Okay, back to the Monday-morning question: *what do I actually check in my codebase?*
+
+**LangChain.** In `AgentExecutor`, the tool set $T$ is the `tools` list. AP-1: after your refactor, assert `set(old_tools) ⊆ set(new_tools)`. AP-2: the `output_parser` class must not become more restrictive (e.g., do not swap `PydanticOutputParser` for a stricter schema). AP-3: `max_iterations` and `max_execution_time` must not decrease.
+
+**CrewAI.** The tool set is the `tools` attribute on each `Agent`. AP-1: same superset check. AP-2: the `task.expected_output` and `task.context` contracts must be invariant or relaxed. AP-3: `max_rpm` and `max_rpm`-equivalents must not shrink.
+
+**AutoGen.** The tool set is the registered `Function` objects in the `AssistantAgent`. AP-1: superset check on the function registry. AP-2: the `system_message` constraints must not gain new prohibitions. AP-3: `max_consecutive_auto_reply` and `lifecycle` budgets must not decrease.
+
+**A concrete failure mode.** A common mistake in LangChain is to add a new tool and *simultaneously* tighten the system prompt to "only use the first three tools." AP-1 holds (the old tools are still present), but AP-2 fails (the prompt constraint now *excludes* the new tool, effectively removing it). The categorical check catches this because the constraint projection $f_C$ maps the old constraint set to a *stronger* set, violating the "no stronger" requirement. You'd never catch that by eyeballing the tool list.
+
+---
+
+## 9. Discussion
+
+A critic might object that the entire apparatus is overkill: "I just check my tool list and my prompt, and it works." Fair point. And the framework is *designed* to be invisible in the simple case. When your harness has three tools and two constraints, AP-1 through AP-3 are trivially checkable by eye, and the categorical language adds nothing. You'd be right to skip it.
+
+The framework earns its keep at the margins. When you have twenty tools, a nested constraint hierarchy, a memory subsystem with its own budget, and a policy layer with escalation rules that interact with the retry schedule—the pairwise interaction space is $O(n^2)$ or worse. The categorical condition "the morphism is natural" collapses this to a single commutativity check per functor, and the Yoneda criterion tells you that checking the *external* profile is sufficient. You do not need to reason about the internal wiring.
+
+Another objection, and a good one: the axioms AP-1 through AP-3 are *sufficient* but not *necessary* for autonomy preservation. There may be refactors that tighten a constraint in one dimension while relaxing it in another, with a net autonomy gain. The categorical framework does not capture this, because it works with a *partial order* on components, not a *lexicographic* or *weighted* one. Extending the framework to a partially-ordered monoid on the constraint space (where some constraints can trade off against others) is an open direction, and it's where the 2-categorical / enriched-category generalisation mentioned in the Conclusion becomes necessary.
+
+---
+
+## 10. Conclusion
+
+We've defined a category **Harness** whose objects are coding-agent harness configurations and whose morphisms are autonomy-preserving refactors. The Yoneda lemma yields a completeness criterion: a harness is determined by its external interactions, so safety is a property of the *interface*, not the *implementation*. Safe refactors are exactly the natural transformations; unsafe ones are the non-natural morphisms that silently degrade autonomy.
+
+This categorical lens unifies the ad-hoc heuristics, the rate-distortion bounds, the percolation thresholds, the gauge-symmetry reductions, the free-energy ceilings, and the information-geometric cost functions that we've developed across this series into a single algebraic framework. It doesn't replace them; it gives them a common syntax.
+
+The next step is to enrich the category. The current **Harness** is a 1-category: morphisms are either valid or invalid. A 2-category would allow *morphisms between morphisms*—that is, a "refactor of a refactor"—and the 2-cells would encode *how much* autonomy is preserved at each step. This is the enriched-category programme, and it will be the subject of a follow-up post in this series.
+
+*Coming next: the enriched category of harness refactors, where the 2-cells measure the "autonomy curvature" of a refactor path and the Yoneda lemma generalises to a 2-Yoneda embedding.*
+
+---
+
+## References
+
+- Amari, S. (2016). *Information Geometry and Its Applications*. Springer.
+- Awodey, S. (2010). *Category Theory: A Quick Tour*. Oxford University Press.
+- Bai, Y., et al. (2022). Training a helpful and harmless assistant with reinforcement learning from human feedback. *arXiv:2204.05862*.
+- Barendregt, H. (1981). The lambda calculus: Its syntax and semantics. *North-Holland*.
+- Cover, T. M., & Thomas, J. A. (2006). *Elements of Information Theory* (2nd ed.). Wiley.
+- Lindley, J. (2012). Algebraic effects and continuations. *Journal of Functional Programming*, 22(2), 113–148.
+- Mac Lane, S. (1971). *Categories for the Working Mathematician*. Springer.
+- Shannon, C. E. (1948). A mathematical theory of communication. *Bell System Technical Journal*, 27, 379–423, 623–656.
+- Stauffer, D., & Aharony, A. (1994). *Introduction to Percolation Theory* (2nd ed.). Taylor & Francis.
+- Vázquez, M., et al. (2023). Typed effect systems for agent action verification. *Proceedings of POPL '23*, ACM.
+
+---
+
+*This post is part of a series building, step by step, a complete autonomous coding-agent harness. For the foundational autonomy spectrum, see [The Autonomy Imperative](/posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/). For the quantitative cost model, see [The Autonomy Channel](/posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/). For the philosophical grounding, see [Scaffolding to Sovereignty](/posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/). For the emergence dynamics, see [Percolation of Autonomy](/posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/). For the design-space reduction, see [Gauge Symmetry and the Invariant Core](/posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/). For the upper bound, see [Free Energy Bounds](/posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/). For the cost-of-transition model, see [Autonomy as Geodesic](/posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/).*
