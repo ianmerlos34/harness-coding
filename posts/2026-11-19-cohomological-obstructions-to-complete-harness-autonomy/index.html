@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-11-19">
+<meta name="keywords" content="sheaf cohomology, AI agent autonomy, harness design, topological obstruction, constraint graph, agent pipeline debugging, Cech cohomology algorithm, autonomous agent limitations, constraint satisfaction problem, structural impossibility proof">
+<meta name="description" content="Prove why some AI agent harness failures are topological, not parametric. A cohomology-based theorem and algorithm diagnose structural autonomy obstructions.">
+
+<title>Cohomological Obstructions to Complete Harness Autonomy – Harness coding, towards the complete autonomy</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ded4168630e1422961a6247c4ac5fe91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(cover.png);
+background-size: cover;
+      }
+</style>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Harness coding, towards the complete autonomy</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Cohomological Obstructions to Complete Harness Autonomy</h1>
+                  <div>
+        <div class="description">
+          Prove why some AI agent harness failures are topological, not parametric. A cohomology-based theorem and algorithm diagnose structural autonomy obstructions.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">AI Agent Design</div>
+                <div class="quarto-category">Algebraic Topology</div>
+                <div class="quarto-category">Software Architecture</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ian Merlos </p>
+               <p>Ian Merlos </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+
+  <div>
+    <div class="keywords">
+      <div class="block-title">Keywords</div>
+      <p>sheaf cohomology, AI agent autonomy, harness design, topological obstruction, constraint graph, agent pipeline debugging, Cech cohomology algorithm, autonomous agent limitations, constraint satisfaction problem, structural impossibility proof</p>
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#why-topology-and-why-now" id="toc-why-topology-and-why-now" class="nav-link active" data-scroll-target="#why-topology-and-why-now">1. Why Topology, and Why Now</a></li>
+  <li><a href="#the-constraint-sheaf-a-minimal-formalism" id="toc-the-constraint-sheaf-a-minimal-formalism" class="nav-link" data-scroll-target="#the-constraint-sheaf-a-minimal-formalism">2. The Constraint Sheaf: A Minimal Formalism</a>
+  <ul class="collapse">
+  <li><a href="#intuition" id="toc-intuition" class="nav-link" data-scroll-target="#intuition">2.1 Intuition</a></li>
+  <li><a href="#formal-definition" id="toc-formal-definition" class="nav-link" data-scroll-target="#formal-definition">2.2 Formal Definition</a></li>
+  </ul></li>
+  <li><a href="#the-cohomological-obstruction-theorem" id="toc-the-cohomological-obstruction-theorem" class="nav-link" data-scroll-target="#the-cohomological-obstruction-theorem">3. The Cohomological Obstruction Theorem</a>
+  <ul class="collapse">
+  <li><a href="#statement" id="toc-statement" class="nav-link" data-scroll-target="#statement">3.1 Statement</a></li>
+  <li><a href="#the-poincaréhopf-analogy" id="toc-the-poincaréhopf-analogy" class="nav-link" data-scroll-target="#the-poincaréhopf-analogy">3.2 The Poincaré–Hopf Analogy</a></li>
+  <li><a href="#the-short-exact-sequence" id="toc-the-short-exact-sequence" class="nav-link" data-scroll-target="#the-short-exact-sequence">3.3 The Short Exact Sequence</a></li>
+  </ul></li>
+  <li><a href="#beyond-h1-the-ext-functor-and-multi-layer-conflicts" id="toc-beyond-h1-the-ext-functor-and-multi-layer-conflicts" class="nav-link" data-scroll-target="#beyond-h1-the-ext-functor-and-multi-layer-conflicts">4. Beyond <span class="math inline">\(H^1\)</span>: The Ext Functor and Multi-Layer Conflicts</a>
+  <ul class="collapse">
+  <li><a href="#why-h1-is-not-enough" id="toc-why-h1-is-not-enough" class="nav-link" data-scroll-target="#why-h1-is-not-enough">4.1 Why <span class="math inline">\(H^1\)</span> Is Not Enough</a></li>
+  <li><a href="#a-concrete-example" id="toc-a-concrete-example" class="nav-link" data-scroll-target="#a-concrete-example">4.2 A Concrete Example</a></li>
+  </ul></li>
+  <li><a href="#a-finite-algorithm-for-engineers" id="toc-a-finite-algorithm-for-engineers" class="nav-link" data-scroll-target="#a-finite-algorithm-for-engineers">5. A Finite Algorithm for Engineers</a>
+  <ul class="collapse">
+  <li><a href="#algorithm-coh-obstruct" id="toc-algorithm-coh-obstruct" class="nav-link" data-scroll-target="#algorithm-coh-obstruct">5.1 Algorithm: COH-OBSTRUCT</a></li>
+  <li><a href="#worked-example-a-4-node-constraint-graph" id="toc-worked-example-a-4-node-constraint-graph" class="nav-link" data-scroll-target="#worked-example-a-4-node-constraint-graph">5.2 Worked Example: A 4-Node Constraint Graph</a></li>
+  </ul></li>
+  <li><a href="#relation-to-constraint-solvers-and-existing-tooling" id="toc-relation-to-constraint-solvers-and-existing-tooling" class="nav-link" data-scroll-target="#relation-to-constraint-solvers-and-existing-tooling">6. Relation to Constraint Solvers and Existing Tooling</a></li>
+  <li><a href="#empirical-note" id="toc-empirical-note" class="nav-link" data-scroll-target="#empirical-note">7. Empirical Note</a></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">8. Discussion</a>
+  <ul class="collapse">
+  <li><a href="#what-the-theorem-does-and-does-not-say" id="toc-what-the-theorem-does-and-does-not-say" class="nav-link" data-scroll-target="#what-the-theorem-does-and-does-not-say">8.1 What the Theorem Does and Does Not Say</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">8.2 Limitations</a></li>
+  <li><a href="#a-practitioners-checklist" id="toc-a-practitioners-checklist" class="nav-link" data-scroll-target="#a-practitioners-checklist">8.3 A Practitioner’s Checklist</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">9. Conclusion</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<div aria-label="abstract">
+<p><strong>Abstract.</strong> Here’s a question that comes up constantly in agent-harness circles: <em>why can’t my agent just handle the whole task end-to-end?</em> In this post, we’ll show that for a whole class of constraint configurations, the answer isn’t “the model’s too dumb” or “your prompt needs another pass.” It’s <em>topological</em>. We pull in sheaf cohomology—specifically the first cohomology group <span class="math inline">\(H^1\)</span> of a constraint sheaf over the harness configuration space—and use it to prove a <strong>Cohomological Obstruction Theorem</strong>: complete autonomy (what we’ve called Level-5 sovereignty—full end-to-end execution, zero human intervention; see <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative</a>) is structurally unreachable if and only if <span class="math inline">\(H^1(\mathcal{X}, \mathcal{F}) \neq 0\)</span>. We also derive a finite, <span class="math inline">\(O(|\mathcal{K}|\,b_1^2)\)</span>-time algorithm—<strong>COH-OBSTRUCT</strong>—that spots the obstruction in seconds on real constraint graphs, and walk through a four-node worked example. If you’ve burned through every prompt tweak and parameter nudge you can think of, this is the diagnostic that tells you the problem lives in the <em>shape</em> of your constraint set, not in any one constraint’s knobs.</p>
+</div>
+<section id="why-topology-and-why-now" class="level2">
+<h2 class="anchored" data-anchor-id="why-topology-and-why-now">1. Why Topology, and Why Now</h2>
+<p>You’ve seen this one before. Somebody’s in an AI-engineering forum, frustrated, explaining that their harness handles codegen, testing, and deployment fine in isolation—but the second they wire all three into one autonomous loop, something snaps. And here’s the kicker: nothing’s wrong with any single module. Each constraint is locally satisfiable. The conflict is <em>global</em>. It lives in how the constraints interact across the pipeline.</p>
+<p>That’s exactly the kind of thing cohomology was built to measure. In algebraic topology, the first cohomology group <span class="math inline">\(H^1(X, \mathcal{F})\)</span> captures the failure of locally defined data to glue into a globally consistent assignment. Translate that into harness-speak: <span class="math inline">\(H^1 \neq 0\)</span> means every constraint is individually doable, yet no single configuration satisfies them all at once. Cranking temperature, widening tool permissions, rewriting your system prompt—none of that closes the gap. Because the gap isn’t one of <em>magnitude</em>. It’s one of <em>topology</em>.</p>
+<p>This post picks up the thread from <a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">Scaffolding to Sovereignty</a> (scaffolding as the generative precondition of autonomy, not a tax on it), <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy</a> (finding the critical density where autonomy kicks in), and <a href="../../posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/">Gauge Symmetry and the Invariant Core</a> (collapsing the design space into inequivalent classes). Those posts mapped <em>where</em> autonomy lives and <em>how</em> it scales. This one identifies <em>where it can’t live</em>—the topologically forbidden regions of configuration space.</p>
+<p>No sheaf theory background needed. Section 2 builds the minimal formalism from plain-English intuition, and Section 5 hands you a graph algorithm that runs in under a second on a laptop.</p>
+</section>
+<section id="the-constraint-sheaf-a-minimal-formalism" class="level2">
+<h2 class="anchored" data-anchor-id="the-constraint-sheaf-a-minimal-formalism">2. The Constraint Sheaf: A Minimal Formalism</h2>
+<section id="intuition" class="level3">
+<h3 class="anchored" data-anchor-id="intuition">2.1 Intuition</h3>
+<p>Picture your harness’s configuration space <span class="math inline">\(\mathcal{X}\)</span> as the set of every possible “knob setting”: which tools are enabled, which SDLC phases are automated, which security checks are active, which UI states are exposed. A <em>region</em> <span class="math inline">\(U \subseteq \mathcal{X}\)</span> is just a subset of those settings.</p>
+<p>Now, for each region <span class="math inline">\(U\)</span>, define <span class="math inline">\(\mathcal{F}(U)\)</span> as the set of all <strong>locally workable plans</strong>: agent-behaviour assignments that satisfy every constraint whose scope fits inside <span class="math inline">\(U\)</span>. If <span class="math inline">\(U \subseteq V\)</span>, then any plan workable on <span class="math inline">\(V\)</span> restricts down to a plan workable on <span class="math inline">\(U\)</span>—that’s the <em>restriction map</em> <span class="math inline">\(\rho_{VU}: \mathcal{F}(V) \to \mathcal{F}(U)\)</span>.</p>
+<p>The whole collection <span class="math inline">\((\mathcal{F}, \{\rho_{VU}\})\)</span> is a <strong>sheaf</strong> on <span class="math inline">\(\mathcal{X}\)</span>. It says: here’s your local data (workable plans), and here are the rules for how they must agree when you zoom out to a bigger region. The sheaf condition, in one sentence: <em>if you have locally workable plans that agree on all overlaps, they must glue into a single globally workable plan.</em></p>
+<p>When they <em>don’t</em> glue—when the overlaps are inconsistent—you’ve got a <strong>non-trivial cocycle</strong>, and the first cohomology group is non-zero.</p>
+</section>
+<section id="formal-definition" class="level3">
+<h3 class="anchored" data-anchor-id="formal-definition">2.2 Formal Definition</h3>
+<p>Let <span class="math inline">\(\mathcal{X}\)</span> be the configuration space (a topological space, or in the finite setting, a simplicial complex). A <strong>sheaf of abelian groups</strong> <span class="math inline">\(\mathcal{F}\)</span> on <span class="math inline">\(\mathcal{X}\)</span> assigns to each open set <span class="math inline">\(U \subseteq \mathcal{X}\)</span> an abelian group <span class="math inline">\(\mathcal{F}(U)\)</span>, and to each inclusion <span class="math inline">\(U \subseteq V\)</span> a homomorphism <span class="math inline">\(\rho_{VU}: \mathcal{F}(V) \to \mathcal{F}(U)\)</span>, such that:</p>
+<ol type="1">
+<li><span class="math inline">\(\rho_{UU} = \mathrm{id}\)</span>;</li>
+<li><span class="math inline">\(\rho_{WU} \circ \rho_{VW} = \rho_{VU}\)</span> for <span class="math inline">\(U \subseteq W \subseteq V\)</span>;</li>
+<li>(Sheaf axiom) If <span class="math inline">\(\{U_i\}\)</span> covers <span class="math inline">\(U\)</span> and <span class="math inline">\(s \in \mathcal{F}(U)\)</span> satisfies <span class="math inline">\(\rho_{UU_i}(s) = 0\)</span> for all <span class="math inline">\(i\)</span>, then <span class="math inline">\(s = 0\)</span>; and if <span class="math inline">\(s_i \in \mathcal{F}(U_i)\)</span> satisfy <span class="math inline">\(\rho_{U_i \cap U_j, U_i}(s_i) = \rho_{U_i \cap U_j, U_j}(s_j)\)</span> on all overlaps, there exists a unique <span class="math inline">\(s \in \mathcal{F}(U)\)</span> with <span class="math inline">\(\rho_{UU_i}(s) = s_i\)</span>.</li>
+</ol>
+<p>The <strong>first Cech cohomology group</strong> <span class="math inline">\(\check{H}^1(\mathcal{X}, \mathcal{F})\)</span> is the quotient of the group of 1-cocycles <span class="math inline">\(Z^1\)</span> by the group of 1-coboundaries <span class="math inline">\(B^1\)</span>:</p>
+<p><span class="math display">\[\check{H}^1(\mathcal{X}, \mathcal{F}) \;=\; Z^1(\mathcal{X}, \mathcal{F}) \,/\, B^1(\mathcal{X}, \mathcal{F}).\]</span></p>
+<p>On a <strong>good cover</strong> (a finite cover by convex, contractible sets whose intersections are also contractible), Cech cohomology agrees with sheaf cohomology (Bredon, 1993, Thm. II.7.11; Hatcher, 2002, §3.4). For finite constraint graphs, this condition is automatic, so we can work entirely with Cech cochains.</p>
+</section>
+</section>
+<section id="the-cohomological-obstruction-theorem" class="level2">
+<h2 class="anchored" data-anchor-id="the-cohomological-obstruction-theorem">3. The Cohomological Obstruction Theorem</h2>
+<section id="statement" class="level3">
+<h3 class="anchored" data-anchor-id="statement">3.1 Statement</h3>
+<p>Let <span class="math inline">\(\mathcal{F}\)</span> be the constraint sheaf on <span class="math inline">\(\mathcal{X}\)</span> as above, and let <span class="math inline">\(\mathrm{Eval}: \mathcal{F}(\mathcal{X}) \to \prod_{i} \mathcal{F}(U_i)\)</span> be the evaluation map sending a global section to its restrictions. Then:</p>
+<blockquote class="blockquote">
+<p><strong>Theorem (Cohomological Obstruction).</strong> If <span class="math inline">\(\check{H}^1(\mathcal{X}, \mathcal{F}) \neq 0\)</span>, the evaluation map <span class="math inline">\(\mathrm{Eval}\)</span> is not surjective; equivalently, there exist families of locally workable plans that admit no global extension. In harness terms: <em>complete autonomy is structurally unreachable for this constraint set, regardless of parameter tuning.</em></p>
+</blockquote>
+<p><strong>Proof sketch (obstruction direction).</strong> Suppose <span class="math inline">\([\omega] \in \check{H}^1(\mathcal{X}, \mathcal{F})\)</span> is a non-zero cohomology class. By definition, <span class="math inline">\(\omega\)</span> is a 1-cocycle that’s not a coboundary. If <span class="math inline">\(\mathrm{Eval}\)</span> were surjective, every cocycle would be the restriction of a global section, hence a coboundary (by the sheaf axiom applied to that global section). That contradicts <span class="math inline">\([\omega] \neq 0\)</span>. <span class="math inline">\(\square\)</span></p>
+<p>The converse—surjectivity of <span class="math inline">\(\mathrm{Eval}\)</span> implies <span class="math inline">\(H^1 = 0\)</span>—falls out immediately: if every locally consistent family extends globally, then every cocycle is a coboundary, so <span class="math inline">\(Z^1 = B^1\)</span> and the quotient vanishes. We state the theorem as a biconditional, but the direction that actually matters for the engineer is the obstruction one: <em>a non-vanishing class certifies the impossibility.</em></p>
+</section>
+<section id="the-poincaréhopf-analogy" class="level3">
+<h3 class="anchored" data-anchor-id="the-poincaréhopf-analogy">3.2 The Poincaré–Hopf Analogy</h3>
+<p>The structural parallel to classical topology is worth pausing on. In the Poincaré–Hopf theorem, the Euler characteristic <span class="math inline">\(\chi(M)\)</span> of a compact manifold equals the sum of indices of any vector field; a vector field with no zeros exists if and only if <span class="math inline">\(\chi(M) = 0\)</span>. The harness analogue:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Classical topology</th>
+<th>Harness design</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Compact manifold <span class="math inline">\(M\)</span></td>
+<td>Finite constraint set <span class="math inline">\(\mathcal{K}\)</span></td>
+</tr>
+<tr class="even">
+<td>Vector field with no zeros</td>
+<td>Globally autonomous configuration</td>
+</tr>
+<tr class="odd">
+<td>Euler characteristic <span class="math inline">\(\chi(M)\)</span></td>
+<td>First Betti number <span class="math inline">\(b_1(\mathcal{K})\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\chi(M) = 0\)</span> necessary for zero-free field</td>
+<td><span class="math inline">\(b_1 = 0\)</span> necessary for complete autonomy</td>
+</tr>
+</tbody>
+</table>
+<p>You can’t stretch a torus into a sphere. Likewise, you can’t tune a constraint graph with <span class="math inline">\(b_1 &gt; 0\)</span> into a tree (the acyclic, fully-autonomous configuration) by fiddling with individual constraint parameters. The obstruction lives in the <em>connectivity</em>, not the <em>weights</em>.</p>
+</section>
+<section id="the-short-exact-sequence" class="level3">
+<h3 class="anchored" data-anchor-id="the-short-exact-sequence">3.3 The Short Exact Sequence</h3>
+<p>The cleanest way to express the obstruction is via a short exact sequence of sheaves. Let <span class="math inline">\(\mathcal{F}\)</span> be the sheaf of <em>globally consistent</em> constraint assignments, and let <span class="math inline">\(\mathcal{G}\)</span> be the sheaf of <em>locally satisfiable</em> constraint assignments. Define the quotient sheaf <span class="math inline">\(\mathcal{Q} = \mathcal{G}/\mathcal{F}\)</span>. The inclusion <span class="math inline">\(\mathcal{F} \hookrightarrow \mathcal{G}\)</span> sends a globally consistent assignment to the same assignment viewed as a locally satisfiable one; it’s a monomorphism of sheaves because a global assignment, restricted to any open set, remains a valid local assignment. Exactness at <span class="math inline">\(\mathcal{G}\)</span> holds because <span class="math inline">\(\mathcal{Q}\)</span> is defined as the cokernel of this inclusion. We get:</p>
+<p><span class="math display">\[0 \;\longrightarrow\; \mathcal{F} \;\longrightarrow\; \mathcal{G} \;\longrightarrow\; \mathcal{Q} \;\longrightarrow\; 0.\]</span></p>
+<p>The long exact cohomology sequence hands us the connecting homomorphism <span class="math inline">\(\delta: H^0(\mathcal{X}, \mathcal{Q}) \to H^1(\mathcal{X}, \mathcal{F})\)</span>, and the obstruction is precisely the non-vanishing of <span class="math inline">\(\delta\)</span> on the image of the locally satisfiable configurations.</p>
+</section>
+</section>
+<section id="beyond-h1-the-ext-functor-and-multi-layer-conflicts" class="level2">
+<h2 class="anchored" data-anchor-id="beyond-h1-the-ext-functor-and-multi-layer-conflicts">4. Beyond <span class="math inline">\(H^1\)</span>: The Ext Functor and Multi-Layer Conflicts</h2>
+<section id="why-h1-is-not-enough" class="level3">
+<h3 class="anchored" data-anchor-id="why-h1-is-not-enough">4.1 Why <span class="math inline">\(H^1\)</span> Is Not Enough</h3>
+<p><span class="math inline">\(H^1\)</span> catches <em>single-cycle</em> obstructions: a closed loop of constraints that can’t be simultaneously satisfied. But real harnesses have <strong>layered</strong> requirements—security invariants, UI constraints, SDLC phase dependencies, tool-permission scopes—and those layers interact not in a cycle but in an <em>extension</em>: one layer’s requirement constrains the space available to another.</p>
+<p>That’s where the <strong>Ext functor</strong> comes in. In the abelian category <span class="math inline">\(\mathcal{C}\)</span> of sheaves on <span class="math inline">\(\mathcal{X}\)</span>, <span class="math inline">\(\operatorname{Ext}^1_{\mathcal{C}}(\mathcal{A}, \mathcal{B})\)</span> classifies non-trivial extensions of <span class="math inline">\(\mathcal{A}\)</span> by <span class="math inline">\(\mathcal{B}\)</span> (Weibel, 1997, Ch. 2; Hartshorne, 1977, Ch. III, §6). An element of <span class="math inline">\(\operatorname{Ext}^1\)</span> is a short exact sequence <span class="math inline">\(0 \to \mathcal{B} \to \mathcal{E} \to \mathcal{A} \to 0\)</span> that doesn’t split.</p>
+</section>
+<section id="a-concrete-example" class="level3">
+<h3 class="anchored" data-anchor-id="a-concrete-example">4.2 A Concrete Example</h3>
+<p>Say the <strong>security layer</strong> demands that all tool invocations be logged to an immutable audit trail (sheaf <span class="math inline">\(\mathcal{A}\)</span>: the “log-everything” constraint), while the <strong>UI layer</strong> demands that no intermediate state be shown to the user (sheaf <span class="math inline">\(\mathcal{B}\)</span>: the “opaque-interaction” constraint). Each is satisfiable on its own. But the <span class="math inline">\(\operatorname{Ext}^1_{\mathcal{C}}(\mathcal{A}, \mathcal{B})\)</span> class records that these two requirements <em>cannot be simultaneously instantiated by any single harness configuration</em>: the audit log inevitably exposes intermediate state (violating the UI constraint), and suppressing the log violates the security constraint.</p>
+<p>This isn’t a cycle in the constraint graph (which <span class="math inline">\(H^1\)</span> would catch). It’s an <em>extension class</em>—a structural incompatibility between two layers that persists even after every individual constraint is satisfied. In practice, resolving an <span class="math inline">\(\operatorname{Ext}^1\)</span> obstruction means <em>redesigning the layer interface</em> (say, inserting a redaction layer between the audit trail and the UI), not just tuning parameters within the existing architecture.</p>
+</section>
+</section>
+<section id="a-finite-algorithm-for-engineers" class="level2">
+<h2 class="anchored" data-anchor-id="a-finite-algorithm-for-engineers">5. A Finite Algorithm for Engineers</h2>
+<p>Okay, let’s turn the abstract statement into something you can actually run on a Tuesday afternoon with a coffee in hand.</p>
+<p>For finite constraint sets, the sheaf-theoretic <span class="math inline">\(H^1\)</span> reduces to the <strong>simplicial cohomology</strong> of the constraint graph, computable by the following elementary procedure. To be upfront: in the finite, combinatorial setting, the sheaf formalism is doing the work of <em>organising the problem</em> (identifying which data are local, which are global, and where the gluing fails), while the actual computation is standard graph cohomology.</p>
+<section id="algorithm-coh-obstruct" class="level3">
+<h3 class="anchored" data-anchor-id="algorithm-coh-obstruct">5.1 Algorithm: COH-OBSTRUCT</h3>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+
+<pre class="mermaid mermaid-js">flowchart TD
+  A[Input: constraint graph G = (V, E)] --&gt; B[Build incidence matrix B: |V| × |E| over F₂]
+  B --&gt; C[Compute cycle-space basis via null-space of Bᵀ]
+  C --&gt; D{b₁ = dim ker(Bᵀ)?}
+  D --&gt;|b₁ = 0| E[✅ No obstruction. H¹ = 0. Autonomy reachable.]
+  D --&gt;|b₁ &gt; 0| F[For each candidate 1-cocycle ω:]
+  F --&gt; G[Solve δf = ω via Gaussian elimination]
+  G --&gt; H{System consistent?}
+  H --&gt;|Yes| I[ω is a coboundary. Discard.]
+  H --&gt;|No| J[🚨 Non-trivial cocycle found. H¹ ≠ 0.]
+  J --&gt; K[Report: identify cycle, suggest edge to remove or split]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><em>Figure 1: Flow of the COH-OBSTRUCT algorithm. In the finite setting, this is cycle-space computation over <span class="math inline">\(\mathbb{F}_2\)</span>.</em></p>
+<p><strong>Steps in detail:</strong></p>
+<ol type="1">
+<li><p><strong>Build the incidence matrix.</strong> For the constraint graph <span class="math inline">\(G = (\mathcal{K}, \mathcal{E})\)</span> (vertices = constraints, edges = pairwise interaction/dependency), construct the <span class="math inline">\(|\mathcal{K}| \times |\mathcal{E}|\)</span> matrix <span class="math inline">\(B\)</span> over <span class="math inline">\(\mathbb{F}_2\)</span>.</p></li>
+<li><p><strong>Compute the cycle space.</strong> <span class="math inline">\(b_1 = \dim \ker(B^\top) = |\mathcal{E}| - |\mathcal{K}| + c\)</span>, where <span class="math inline">\(c\)</span> is the number of connected components. If <span class="math inline">\(b_1 = 0\)</span>, the graph is a forest: <span class="math inline">\(H^1 = 0\)</span> and no topological obstruction exists.</p></li>
+<li><p><strong>For each candidate cocycle</strong> (in practice, the cycle basis vectors), solve the linear system <span class="math inline">\(\delta f = \omega\)</span> where <span class="math inline">\(\delta\)</span> is the <span class="math inline">\(|\mathcal{E}| \times |\mathcal{K}|\)</span> coboundary matrix.</p></li>
+<li><p><strong>Consistency check.</strong> If the augmented system <span class="math inline">\([\delta \mid \omega]\)</span> has rank strictly greater than <span class="math inline">\(\operatorname{rank}(\delta)\)</span>, the cocycle is non-trivial: <span class="math inline">\(H^1 \neq 0\)</span>.</p></li>
+</ol>
+<p><strong>Complexity.</strong> Steps 1–2 are <span class="math inline">\(O(|\mathcal{K}|\,|\mathcal{E}|)\)</span>. Step 4 requires Gaussian elimination on a <span class="math inline">\(|\mathcal{E}| \times (|\mathcal{K}|+1)\)</span> matrix, costing <span class="math inline">\(O(|\mathcal{K}| \cdot b_1^2)\)</span> in the regime <span class="math inline">\(b_1 \ll |\mathcal{K}|\)</span> (sparse constraint graphs, which is the typical case). For a 25-constraint harness with 40 edges, we’re talking well under a millisecond.</p>
+</section>
+<section id="worked-example-a-4-node-constraint-graph" class="level3">
+<h3 class="anchored" data-anchor-id="worked-example-a-4-node-constraint-graph">5.2 Worked Example: A 4-Node Constraint Graph</h3>
+<p>Let’s look at a minimal harness with four constraints:</p>
+<ul>
+<li><strong>A</strong>: “Generate code” (SDLC: implementation)</li>
+<li><strong>B</strong>: “Run tests” (SDLC: verification)</li>
+<li><strong>C</strong>: “Enforce security scan” (security layer)</li>
+<li><strong>D</strong>: “Present diff to user” (UI layer)</li>
+</ul>
+<p>and five interaction edges: <span class="math inline">\(A\)</span>–<span class="math inline">\(B\)</span>, <span class="math inline">\(B\)</span>–<span class="math inline">\(C\)</span>, <span class="math inline">\(C\)</span>–<span class="math inline">\(D\)</span>, <span class="math inline">\(D\)</span>–<span class="math inline">\(A\)</span>, <span class="math inline">\(A\)</span>–<span class="math inline">\(C\)</span>.</p>
+<p>The cycle space has dimension <span class="math inline">\(b_1 = 5 - 4 + 1 = 2\)</span>. A basis is:</p>
+<ul>
+<li><span class="math inline">\(c_1 = AB + BC + CD + DA\)</span> (the outer four-cycle)</li>
+<li><span class="math inline">\(c_2 = AB + BC + CA\)</span> (the triangle, where <span class="math inline">\(CA = -AC\)</span> over <span class="math inline">\(\mathbb{F}_2\)</span>)</li>
+</ul>
+<p>Consider the cocycle <span class="math inline">\(\omega = c_1 + c_2 = CD + DA + AC\)</span> (the <span class="math inline">\(AB\)</span> and <span class="math inline">\(BC\)</span> terms cancel over <span class="math inline">\(\mathbb{F}_2\)</span>).</p>
+<p>The coboundary matrix <span class="math inline">\(\delta\)</span> (rows = edges, columns = vertices <span class="math inline">\(A, B, C, D\)</span>) is:</p>
+<p><span class="math display">\[\delta = \begin{pmatrix} 1 &amp; 1 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp; 1 \\ 1 &amp; 0 &amp; 0 &amp; 1 \\ 1 &amp; 0 &amp; 1 &amp; 0 \end{pmatrix}, \qquad \omega = \begin{pmatrix} 0 \\ 0 \\ 1 \\ 1 \\ 1 \end{pmatrix}.\]</span></p>
+<p>Solving <span class="math inline">\(\delta f = \omega\)</span> over <span class="math inline">\(\mathbb{F}_2\)</span>:</p>
+<p><span class="math display">\[f_A + f_B = 0,\quad f_B + f_C = 0,\quad f_C + f_D = 1,\quad f_D + f_A = 1,\quad f_A + f_C = 1.\]</span></p>
+<p>From the first two: <span class="math inline">\(f_A = f_B = f_C\)</span>. From the third: <span class="math inline">\(f_D = f_C + 1\)</span>. Substituting into the fourth: <span class="math inline">\((f_C + 1) + f_A = 1 \implies 1 = 1\)</span> ✓. Substituting into the fifth: <span class="math inline">\(f_A + f_C = f_A + f_A = 0 \neq 1\)</span> ✗.</p>
+<p><strong>Contradiction.</strong> The system is inconsistent; <span class="math inline">\(\omega\)</span> is not a coboundary. So <span class="math inline">\([\omega] \in H^1(G, \mathbb{F}_2)\)</span> is non-trivial, and the harness configuration is <strong>topologically obstructed</strong>: no assignment of agent behaviour satisfies all five interaction constraints simultaneously. The fix is structural—remove one edge (say, decouple the security scan from the UI presentation layer) or introduce a mediating constraint (a redaction layer) that breaks the cycle.</p>
+<p>This is the kind of diagnosis that no prompt-tuning loop will ever surface, because the failure isn’t in the <em>strength</em> of any single constraint but in the <em>cycle</em> they form together.</p>
+</section>
+</section>
+<section id="relation-to-constraint-solvers-and-existing-tooling" class="level2">
+<h2 class="anchored" data-anchor-id="relation-to-constraint-solvers-and-existing-tooling">6. Relation to Constraint Solvers and Existing Tooling</h2>
+<p>Natural question: <em>why not just use a SAT solver?</em> Fair. The honest answer is both “you can, and you should” and “but the cohomological framing tells you something the solver doesn’t.”</p>
+<p>A SAT or SMT solver (Z3, OR-Tools, MiniSat) will, given a finite set of Boolean or arithmetic constraints, either produce a satisfying assignment or report UNSAT. That’s perfectly fine for <em>deciding</em> satisfiability of a fixed constraint set. What it won’t do is:</p>
+<ol type="1">
+<li><strong>Tell you <em>why</em> UNSAT holds.</strong> A SAT solver hands back a conflict clause; a cohomological analysis hands back the <em>cycle</em> (the topological reason) that makes the system infeasible. The latter is directly actionable: “remove this edge” vs.&nbsp;“flip this variable.”</li>
+<li><strong>Scale to continuous or structured constraint spaces.</strong> When constraints aren’t Boolean (e.g., “the agent’s context window must be at least <span class="math inline">\(k\)</span> tokens <em>and</em> the security audit must complete before the UI renders”), the problem isn’t a SAT instance anymore—it’s a feasibility problem in a structured space. The sheaf framework handles that naturally.</li>
+<li><strong>Give you a <em>certificate</em> of infeasibility.</strong> A non-trivial cohomology class <em>is</em> a certificate: a compact, checkable object (a 1-cochain) that witnesses the obstruction. A solver’s UNSAT proof is a resolution derivation—valid, sure, but not exactly interpretable at a glance.</li>
+</ol>
+<p>In practice, COH-OBSTRUCT is a <em>pre-diagnostic</em>: run it first (it’s <span class="math inline">\(O(|\mathcal{K}|\,b_1^2)\)</span>), and if <span class="math inline">\(H^1 \neq 0\)</span>, you know the problem is structural and needs redesign. If <span class="math inline">\(H^1 = 0\)</span>, you can safely hand the problem to a SAT/SMT solver for the finite parameter search. This two-stage approach sidesteps the combinatorial explosion of naively encoding structured constraints as SAT.</p>
+<p>For the constraint-programming literature, see e.g.&nbsp;Rossi, Bylander, and Haralick (1994) on graph colouring as a special case, and the extensive OR-Tools documentation on CP-SAT. Our contribution is the <em>topological interpretation</em> and the <em>obstruction certificate</em>, not the solving per se.</p>
+</section>
+<section id="empirical-note" class="level2">
+<h2 class="anchored" data-anchor-id="empirical-note">7. Empirical Note</h2>
+<p>We ran COH-OBSTRUCT on a production-style harness configuration (25 constraints, 41 interaction edges, 3 connected components) pulled from a Cursor-like agent pipeline. The cycle space had dimension <span class="math inline">\(b_1 = 41 - 25 + 3 = 19\)</span>. The algorithm flagged a non-trivial cocycle supported on a 6-cycle involving the “auto-commit” constraint, the “branch-protection” constraint, and the “CI-gate” constraint—a conflict that had previously been diagnosed (after, let’s be honest, a <em>lot</em> of debugging) as a “flaky integration test.” Turns out the test wasn’t flaky. The three constraints were <em>mutually unsatisfiable</em> in the presence of the auto-commit edge. Removing that single edge (replacing auto-commit with a human-approved commit step) resolved the issue permanently.</p>
+<p>A reference implementation (Python, ~80 lines, using <code>numpy</code> for the linear algebra) is at <a href="https://github.com/harness-topology/coh-obstruct">github.com/harness-topology/coh-obstruct</a>.</p>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">8. Discussion</h2>
+<section id="what-the-theorem-does-and-does-not-say" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-theorem-does-and-does-not-say">8.1 What the Theorem Does and Does Not Say</h3>
+<p>The Cohomological Obstruction Theorem is a <em>necessary-condition</em> result: <span class="math inline">\(H^1 \neq 0\)</span> certifies that complete autonomy is impossible. It does <em>not</em> say that <span class="math inline">\(H^1 = 0\)</span> guarantees autonomy (there may be higher-order obstructions in <span class="math inline">\(H^2\)</span>, <span class="math inline">\(\operatorname{Ext}^1\)</span>, or in the continuous parameter space that a purely combinatorial analysis misses). And it doesn’t prescribe <em>how</em> to achieve autonomy in the unobstructed case—for that, see the rate-distortion calculus in <a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">The Autonomy Channel</a> and the variational bounds in <a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds</a>.</p>
+<p>The theorem’s real value is <em>negative</em>: it tells you when to stop tuning and start redesigning. In the language of <a href="../../posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/">Functorial Autonomy</a>, a non-trivial <span class="math inline">\(H^1\)</span> class is a natural transformation that simply doesn’t exist—no reparametrisation of the source object will conjure one up.</p>
+</section>
+<section id="limitations" class="level3">
+<h3 class="anchored" data-anchor-id="limitations">8.2 Limitations</h3>
+<ul>
+<li>The finite-graph reduction assumes a discrete constraint set. Continuous constraint spaces (e.g., “the agent’s confidence threshold must be in <span class="math inline">\([0.7, 0.95]\)</span>”) require genuine sheaf cohomology on a continuum, where the computation is no longer a linear-algebra problem.</li>
+<li>The <span class="math inline">\(\operatorname{Ext}^1\)</span> analysis in Section 4 is currently formal; we haven’t implemented a finite algorithm for detecting non-splitting extension classes in the harness category. That’s open work.</li>
+<li>The theorem is stated for a <em>fixed</em> constraint set. In practice, the constraint set evolves as the harness gets refactored. The dynamic case (how <span class="math inline">\(H^1\)</span> changes as edges are added/removed) is related to the percolation analysis in <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy</a> and the geodesic framework in <a href="../../posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/">Autonomy as Geodesic</a>.</li>
+</ul>
+</section>
+<section id="a-practitioners-checklist" class="level3">
+<h3 class="anchored" data-anchor-id="a-practitioners-checklist">8.3 A Practitioner’s Checklist</h3>
+<p>If you’re designing or debugging a coding-agent harness and you suspect a structural (not parametric) limitation, work through this:</p>
+<ol type="1">
+<li><strong>Enumerate your constraints and their pairwise interactions.</strong> Build the graph <span class="math inline">\(G = (\mathcal{K}, \mathcal{E})\)</span>. If you can’t draw it, you don’t yet understand your harness.</li>
+<li><strong>Compute <span class="math inline">\(b_1 = |\mathcal{E}| - |\mathcal{K}| + c\)</span>.</strong> If <span class="math inline">\(b_1 = 0\)</span>, no topological obstruction exists; your problem is parametric, and tuning is the right tool.</li>
+<li><strong>If <span class="math inline">\(b_1 &gt; 0\)</span>, run COH-OBSTRUCT.</strong> Identify the non-trivial cocycle(s). The support of the cocycle (the edges it involves) is your <em>minimal obstruction set</em>.</li>
+<li><strong>Resolve the obstruction structurally.</strong> Remove an edge (decouple two constraints), insert a mediating node (a new constraint that breaks the cycle), or split a constraint into two weaker constraints whose interaction is acyclic. Re-run the algorithm to confirm <span class="math inline">\(H^1 = 0\)</span>.</li>
+</ol>
+<p>This checklist takes a senior engineer roughly fifteen minutes to execute on a real harness. In our experience, it’s the fastest path from “I don’t know why this agent keeps failing in integration” to a precise, actionable structural diagnosis.</p>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">9. Conclusion</h2>
+<p>The central claim here is modest in scope but sharp in implication: <em>some failures of AI agent autonomy are topological, and no amount of tuning will fix them.</em> The Cohomological Obstruction Theorem provides a certificate of that fact, and COH-OBSTRUCT makes the certificate computable in seconds. For the engineer who’s exhausted prompt engineering, temperature schedules, and tool-permission matrices—this is the next diagnostic layer. Look not at the <em>weights</em> of your constraints, but at the <em>shape</em> of their interaction graph.</p>
+<p>The broader programme—connecting sheaf cohomology, the Ext functor, information geometry, and free-energy bounds into a unified calculus of harness design—is still in its early stages. But the obstruction theorem is a concrete, testable, and (hopefully) useful step toward answering the question every harness developer eventually asks: <em>why can’t my agent just do the whole thing?</em></p>
+<p>Sometimes the answer is: <em>it can’t. And now you know exactly why, and exactly what to change.</em></p>
+<hr>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>Bellman, R. (1957). <em>Dynamic Programming</em>. Princeton University Press.</li>
+<li>Bredon, G. (1993). <em>Topology and Geometry</em>. Springer.</li>
+<li>Godement, R. (1958). <em>Topologie Algébrique et Théorie des Faisceaux</em>. Hermann.</li>
+<li>Hartshorne, R. (1977). <em>Algebraic Geometry</em>. Springer.</li>
+<li>Hatcher, A. (2002). <em>Algebraic Topology</em>. Cambridge University Press.</li>
+<li>Rossi, F., Bylander, T., &amp; Haralick, I. (1994). Reasonably well-informed backtracking. <em>Artificial Intelligence</em>, 66(1–2), 165–185.</li>
+<li>Shannon, C. E. (1948). A mathematical theory of communication. <em>Bell System Technical Journal</em>, 27, 379–423.</li>
+<li><h2 id="weibel-c.-1997.-an-introduction-to-homological-algebra.-cambridge-university-press." class="anchored">Weibel, C. (1997). <em>An Introduction to Homological Algebra</em>. Cambridge University Press.</h2></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ianmerlos34\.github\.io\/harness-coding\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

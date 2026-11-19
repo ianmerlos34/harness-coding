@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-11-19">
+<meta name="keywords" content="renormalization group, AI agent harness design, coarse-graining autonomy, fixed point classification, critical transitions in agent systems, minimal constraint set, Wilsonian RG methods, autonomy phase transitions, relevant irrelevant operators, cascade algorithm harness">
+<meta name="description" content="Wilsonian RG methods applied to AI agent harness design: fixed points, critical transitions, and a cascade algorithm for minimal autonomy constraints.">
+
+<title>Coarse-Graining Autonomy: RG Flow in Harness Design – Harness coding, towards the complete autonomy</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ded4168630e1422961a6247c4ac5fe91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(cover.png);
+background-size: cover;
+      }
+</style>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Harness coding, towards the complete autonomy</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Coarse-Graining Autonomy: RG Flow in Harness Design</h1>
+                  <div>
+        <div class="description">
+          Wilsonian RG methods applied to AI agent harness design: fixed points, critical transitions, and a cascade algorithm for minimal autonomy constraints.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">AI Agent Design</div>
+                <div class="quarto-category">Statistical Mechanics</div>
+                <div class="quarto-category">Software Architecture</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ian Merlos </p>
+               <p>Ian Merlos </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+
+  <div>
+    <div class="keywords">
+      <div class="block-title">Keywords</div>
+      <p>renormalization group, AI agent harness design, coarse-graining autonomy, fixed point classification, critical transitions in agent systems, minimal constraint set, Wilsonian RG methods, autonomy phase transitions, relevant irrelevant operators, cascade algorithm harness</p>
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-combinatorial-problem" id="toc-the-combinatorial-problem" class="nav-link active" data-scroll-target="#the-combinatorial-problem">1. The Combinatorial Problem</a></li>
+  <li><a href="#the-wilsonian-framework-applied-to-harnesses" id="toc-the-wilsonian-framework-applied-to-harnesses" class="nav-link" data-scroll-target="#the-wilsonian-framework-applied-to-harnesses">2. The Wilsonian Framework Applied to Harnesses</a>
+  <ul class="collapse">
+  <li><a href="#the-transfer-functional" id="toc-the-transfer-functional" class="nav-link" data-scroll-target="#the-transfer-functional">2.1 The Transfer Functional</a></li>
+  <li><a href="#relevant-and-irrelevant-operators" id="toc-relevant-and-irrelevant-operators" class="nav-link" data-scroll-target="#relevant-and-irrelevant-operators">2.2 Relevant and Irrelevant Operators</a></li>
+  </ul></li>
+  <li><a href="#fixed-points-and-the-autonomy-spectrum" id="toc-fixed-points-and-the-autonomy-spectrum" class="nav-link" data-scroll-target="#fixed-points-and-the-autonomy-spectrum">3. Fixed Points and the Autonomy Spectrum</a></li>
+  <li><a href="#critical-points-and-autonomy-phase-transitions" id="toc-critical-points-and-autonomy-phase-transitions" class="nav-link" data-scroll-target="#critical-points-and-autonomy-phase-transitions">4. Critical Points and Autonomy Phase Transitions</a>
+  <ul class="collapse">
+  <li><a href="#the-brittle-to-robust-transition" id="toc-the-brittle-to-robust-transition" class="nav-link" data-scroll-target="#the-brittle-to-robust-transition">4.1 The Brittle-to-Robust Transition</a></li>
+  <li><a href="#the-critical-landscape" id="toc-the-critical-landscape" class="nav-link" data-scroll-target="#the-critical-landscape">4.2 The Critical Landscape</a></li>
+  </ul></li>
+  <li><a href="#the-rg-cascade-algorithm" id="toc-the-rg-cascade-algorithm" class="nav-link" data-scroll-target="#the-rg-cascade-algorithm">5. The RG-Cascade Algorithm</a></li>
+  <li><a href="#worked-example-a-python-tool-call-harness" id="toc-worked-example-a-python-tool-call-harness" class="nav-link" data-scroll-target="#worked-example-a-python-tool-call-harness">6. Worked Example: A Python Tool-Call Harness</a></li>
+  <li><a href="#comparison-with-existing-heuristics" id="toc-comparison-with-existing-heuristics" class="nav-link" data-scroll-target="#comparison-with-existing-heuristics">7. Comparison with Existing Heuristics</a></li>
+  <li><a href="#discussion-rg-reinterpretation-of-prior-results" id="toc-discussion-rg-reinterpretation-of-prior-results" class="nav-link" data-scroll-target="#discussion-rg-reinterpretation-of-prior-results">8. Discussion: RG Reinterpretation of Prior Results</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">9. Limitations</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">10. Conclusion</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#series-map" id="toc-series-map" class="nav-link" data-scroll-target="#series-map">Series Map</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<!-- meta-description: A Wilsonian renormalization-group framework for designing minimal, scale-invariant autonomy harnesses for AI coding agents—fixed points, critical transitions, and a practical cascade algorithm. -->
+<!-- last-modified: 2026-11-19 -->
+<!-- slug: /posts/2026-11-19-rg-flow-harness-design-coarse-graining-autonomy/ -->
+<p>So you’re building a harness for a coding agent, and you’re staring at this wall of constraints wondering: which of these actually matter, which can I delegate, and which are just… overhead? Yeah, I’ve been there. The design space blows up combinatorially, and no amount of checklist-ifying it makes that go away.</p>
+<p>Here’s the thing that clicked for me: Wilsonian renormalization-group (RG) methods—originally built to explain why liquid water and iron magnets obey the same scaling laws despite being, microscopically, completely different things—give you a principled answer. <em>Integrate out</em> the micro-degrees of freedom that don’t change the agent’s macroscopic autonomy profile. What’s left? Your minimal effective harness. That’s the whole trick.</p>
+<p>This post takes that machinery and applies it squarely to LLM agent harness design. I’ll identify the fixed-point structures that correspond to scale-invariant autonomy architectures, and then derive a six-step cascade algorithm you can actually run on your own constraint set. No hand-waving.</p>
+<p><strong>Key takeaways</strong></p>
+<ul>
+<li>Harness autonomy decomposes into a finite set of <em>relevant</em> operators (the constraints that matter at every scale) and <em>irrelevant</em> operators (micro-decisions that wash out under coarse-graining).</li>
+<li>Exactly four topologically distinct intermediate fixed points sit between full supervision and full autonomy. Your harness lives on one of them, or in a flow basin between them.</li>
+<li>Autonomy “phase transitions”—that brittle-to-robust jump you see when removing a single guardrail—happen at critical points where a relevant operator’s RG eigenvalue crosses zero.</li>
+<li>A practical RG-cascade algorithm (pseudocode in §5) lets you iteratively eliminate irrelevant constraints and converge on the minimal harness for a target autonomy level, in <span class="math inline">\(\mathcal{O}(N_{\text{ops}} \cdot L \cdot P)\)</span> perturbation runs.</li>
+</ul>
+<p><em>Who should read this:</em> You’ll get the most out of this if you’ve read the preceding entries in this series (especially the <a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">rate-distortion</a> and <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">percolation</a> pieces) and you’re comfortable with the vocabulary of statistical mechanics—coarse-graining, relevant/irrelevant operators, fixed points. No QFT background needed; I gloss every equation in plain English.</p>
+<hr>
+<section id="the-combinatorial-problem" class="level2">
+<h2 class="anchored" data-anchor-id="the-combinatorial-problem">1. The Combinatorial Problem</h2>
+<p>When you design a harness for an AI coding agent, the design space isn’t some single dial you can turn. It’s a high-dimensional lattice of decisions, and it’s <em>a lot</em> of them: which tools the agent may call, in what sequence, under what permission vector, with what verification predicate, at what level of task delegation, subject to which security invariants, constrained by which SDLC-phase invariants, mediated by which UI affordances. And that’s for <em>one</em> agent. Multiply it out across a multi-agent system and good luck doing this by inspection.</p>
+<p>The practical question is deceptively simple: <em>which of these constraints are load-bearing, and which are decorative?</em> A constraint is load-bearing if removing it changes the agent’s observable autonomy profile—success rate, failure mode distribution, robustness to novel inputs. It’s decorative if, after you integrate out the fine-grained micro-decisions it governs, the macroscopic behaviour doesn’t budge. Wilsonian RG gives you a formal criterion for that distinction. And a procedure to compute it.</p>
+<p>And look, this isn’t just a metaphor I’m stretching. The mathematical structure is genuinely isomorphic: a lattice of micro-decisions (token-level tool calls, parameter choices, intermediate state transitions) gets progressively “integrated out” to yield a coarser effective description (task-level delegation, phase-level orchestration, system-level governance). The fixed points of that flow <em>are</em> the scale-invariant autonomy architectures—the harness designs whose qualitative behaviour doesn’t depend on the resolution at which you observe them.</p>
+<hr>
+</section>
+<section id="the-wilsonian-framework-applied-to-harnesses" class="level2">
+<h2 class="anchored" data-anchor-id="the-wilsonian-framework-applied-to-harnesses">2. The Wilsonian Framework Applied to Harnesses</h2>
+<section id="the-transfer-functional" class="level3">
+<h3 class="anchored" data-anchor-id="the-transfer-functional">2.1 The Transfer Functional</h3>
+<p>In the Wilsonian picture, you start with a fine-grained probability measure <span class="math inline">\(\mu\)</span> over the space of all possible micro-decision sequences <span class="math inline">\(\mathcal{M}\)</span>:</p>
+<p><span class="math display">\[\mu(m) = P(\text{agent trajectory} = m \mid \text{harness config } \theta)\]</span></p>
+<p>Coarse-graining is a map <span class="math inline">\(\mathcal{C}: \mathcal{M} \to \mathcal{M}'\)</span> that projects each micro-trajectory onto a lower-resolution description (e.g., collapsing a 200-token tool-call sequence into a single “task completed” event). The <strong>transfer functional</strong> <span class="math inline">\(\mathcal{T}\)</span> is the map that pushes forward the measure:</p>
+<p><span class="math display">\[\mu' = \mathcal{T}[\mu] = \mathcal{C}_\# \mu\]</span></p>
+<p>Intuitively: <em>the coarse-grained harness is the one whose probability distribution over macro-outcomes best predicts the average behaviour of all the fine-grained micro-decisions it absorbs.</em> The RG flow is just the iterated application of <span class="math inline">\(\mathcal{T}\)</span> as the resolution parameter <span class="math inline">\(\ell \to \infty\)</span>.</p>
+<p>The effective coupling vector <span class="math inline">\(\mathbf{g}\)</span> (your set of constraint strengths, permission levels, verification strictness, delegation depth) evolves under the flow:</p>
+<p><span class="math display">\[\frac{d\mathbf{g}}{d\ln\ell} = \mathbf{K}(\mathbf{g})\]</span></p>
+<p>where <span class="math inline">\(\mathbf{K}\)</span> is the RG kernel, determined by the transfer functional and the geometry of the constraint space.</p>
+</section>
+<section id="relevant-and-irrelevant-operators" class="level3">
+<h3 class="anchored" data-anchor-id="relevant-and-irrelevant-operators">2.2 Relevant and Irrelevant Operators</h3>
+<p>Linearise around a fixed point <span class="math inline">\(\mathbf{g}^*\)</span>, and the RG kernel decomposes into eigenvectors with eigenvalues <span class="math inline">\(\lambda_i\)</span>:</p>
+<ul>
+<li><strong>Relevant operators</strong> (<span class="math inline">\(\lambda_i &gt; 0\)</span>): perturbations <em>grow</em> under coarse-graining. These are your load-bearing constraints. Remove one and the harness’s macroscopic autonomy profile shifts.</li>
+<li><strong>Irrelevant operators</strong> (<span class="math inline">\(\lambda_i &lt; 0\)</span>): perturbations <em>decay</em>. These are the decorative micro-decisions. You can tune them freely without anyone noticing.</li>
+<li><strong>Marginal operators</strong> (<span class="math inline">\(\lambda_i = 0\)</span>): the critical case. Small parameter changes can tip the system across a phase boundary. Handle with care.</li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Operator type</th>
+<th>RG eigenvalue</th>
+<th>Role in harness</th>
+<th>Example in a production harness</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Relevant</td>
+<td><span class="math inline">\(\lambda_i &gt; 0\)</span></td>
+<td>Load-bearing; must be preserved</td>
+<td>Security invariant: “never write to <code>/etc</code> or <code>~/.ssh</code>”</td>
+</tr>
+<tr class="even">
+<td>Relevant</td>
+<td><span class="math inline">\(\lambda_i &gt; 0\)</span></td>
+<td>Governs autonomy level</td>
+<td>Maximum delegation depth (L1–L5 spectrum)</td>
+</tr>
+<tr class="odd">
+<td>Irrelevant</td>
+<td><span class="math inline">\(\lambda_i &lt; 0\)</span></td>
+<td>Washes out at macro scale</td>
+<td>Exact JSON key ordering in a tool schema</td>
+</tr>
+<tr class="even">
+<td>Irrelevant</td>
+<td><span class="math inline">\(\lambda_i &lt; 0\)</span></td>
+<td>Decorative micro-decision</td>
+<td>Whitespace in generated code (when no style gate exists)</td>
+</tr>
+<tr class="odd">
+<td>Marginal</td>
+<td><span class="math inline">\(\lambda_i \approx 0\)</span></td>
+<td>Critical; can tip phase</td>
+<td>Verification predicate strictness at the brittle-to-robust boundary</td>
+</tr>
+</tbody>
+</table>
+<p>This table is, honestly, the central engineering result. <em>Your job is to identify the relevant operators and spend your design effort there. The irrelevant ones? Set them by convention and forget about them.</em></p>
+<hr>
+</section>
+</section>
+<section id="fixed-points-and-the-autonomy-spectrum" class="level2">
+<h2 class="anchored" data-anchor-id="fixed-points-and-the-autonomy-spectrum">3. Fixed Points and the Autonomy Spectrum</h2>
+<p>The RG flow admits exactly six fixed points in the autonomy direction, corresponding to the five-level spectrum established in <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative</a>:</p>
+<ol type="1">
+<li><strong>Full supervision</strong> (<span class="math inline">\(\ell = 0\)</span>): every token-level decision is externally specified. All operators are relevant; there’s no irrelevant direction. The harness is a deterministic state machine with the LLM as a subroutine.</li>
+<li><strong>L1 – Tool-use autonomy</strong>: the agent picks which tool to call but not the arguments. Two relevant operators (tool selection, argument validation) remain.</li>
+<li><strong>L2 – Task-level autonomy</strong>: the agent decomposes a task into sub-tasks and sequences tool calls. Four relevant operators; the micro-decisions within each tool call become irrelevant.</li>
+<li><strong>L3 – Phase-level autonomy</strong>: the agent plans across SDLC phases (spec → implement → test → review). Six relevant operators; intra-phase micro-decisions wash out.</li>
+<li><strong>L4 – Project-level autonomy</strong>: the agent manages multi-file, multi-phase projects with self-directed testing. Eight relevant operators; the constraint space is sparse.</li>
+<li><strong>Full autonomy</strong> (<span class="math inline">\(\ell \to \infty\)</span>): the agent is a closed loop. The only relevant operator is the external termination criterion. The harness reduces to a sandbox boundary.</li>
+</ol>
+<p>One correction to a common imprecision I’ve seen: at the full-supervision fixed point, it’s not that the relevant eigenvalues “go to infinity.” Rather, <em>all</em> operators in the space are relevant—there are no irrelevant directions to integrate out. The RG matrix is full-rank. As you move toward full autonomy, operators successively become irrelevant (their eigenvalues cross zero), and the dimensionality of the effective harness <em>decreases</em>. That’s the precise sense in which autonomy is a dimensionality reduction.</p>
+<p>The <a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">rate-distortion analysis</a> proves that this dimensionality reduction carries an irreducible cost: the distortion (loss of guaranteed safety) is bounded below by <span class="math inline">\(R(D)^{-1}\)</span>, where <span class="math inline">\(R(D)\)</span> is the channel rate. The RG picture makes the <em>structure</em> of that cost visible: it lives in the relevant operators you must retain.</p>
+<hr>
+</section>
+<section id="critical-points-and-autonomy-phase-transitions" class="level2">
+<h2 class="anchored" data-anchor-id="critical-points-and-autonomy-phase-transitions">4. Critical Points and Autonomy Phase Transitions</h2>
+<section id="the-brittle-to-robust-transition" class="level3">
+<h3 class="anchored" data-anchor-id="the-brittle-to-robust-transition">4.1 The Brittle-to-Robust Transition</h3>
+<p>The most practically important critical point sits between L2 and L3. At this transition, the verification-predicate operator (the “does the output satisfy the spec?” check) crosses from relevant to irrelevant as you increase delegation depth. Below the critical coupling <span class="math inline">\(g_c\)</span>, the agent is <em>brittle</em>: small input perturbations propagate straight through to task failure. Above it, the agent is <em>robust</em>: the internal self-correction loop absorbs perturbations before they reach the macro level.</p>
+<p>This is the harness-design analogue of the percolation threshold identified in <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy</a>: autonomy doesn’t degrade smoothly as you remove constraints. It <em>collapses</em> in a discrete jump once the constraint density falls below <span class="math inline">\(p_c\)</span>. The RG eigenvalue crossing is the <em>microscopic mechanism</em> behind that percolation threshold.</p>
+</section>
+<section id="the-critical-landscape" class="level3">
+<h3 class="anchored" data-anchor-id="the-critical-landscape">4.2 The Critical Landscape</h3>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+
+<pre class="mermaid mermaid-js">flowchart LR
+  A["Full Supervision\n(all ops relevant)"] --&gt; B["L1: Tool-use\n(2 relevant)"]
+  B --&gt; C["L2: Task-level\n(4 relevant)"]
+  C --&gt; D{{"Critical point\ng = g_c"}}
+  D --&gt; E["L3: Phase-level\n(6 relevant)"]
+  E --&gt; F["L4: Project-level\n(8 relevant)"]
+  F --&gt; G["Full Autonomy\n(1 relevant: boundary)"]
+  style D fill:#ff6b6b,stroke:#333
+  style A fill:#a8d8ea,stroke:#333
+  style G fill:#a8e6cf,stroke:#333
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><em>Figure 1: RG flow along the autonomy axis. The hexagonal node marks the brittle-to-robust critical point. Red indicates the phase boundary; blue/green indicate the two robustness regimes.</em></p>
+<p>Now, here’s where it gets interesting (and a little uncomfortable). The <a href="../../posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/">cohomological-obstruction result</a> shows that some failures at this transition are <em>topological</em>, not parametric. No amount of tuning the verification predicate’s strictness will cross the boundary if the harness’s constraint topology admits a non-trivial <span class="math inline">\(H^1\)</span>. The RG eigenvalue crossing is necessary but not sufficient; the obstruction class must also vanish. You can’t brute-force your way through a topological failure.</p>
+<hr>
+</section>
+</section>
+<section id="the-rg-cascade-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="the-rg-cascade-algorithm">5. The RG-Cascade Algorithm</h2>
+<p>Here’s the algorithm. It takes a concrete harness configuration and iteratively eliminates irrelevant operators, converging to the minimal effective harness for a target autonomy level.</p>
+<p><strong>Input:</strong> Constraint set <span class="math inline">\(\mathcal{C} = \{c_1, \ldots, c_N\}\)</span>, target autonomy level <span class="math inline">\(\ell^*\)</span>, perturbation step <span class="math inline">\(\delta\)</span>.</p>
+<p><strong>Output:</strong> Minimal constraint set <span class="math inline">\(\mathcal{C}^* \subseteq \mathcal{C}\)</span>.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pseudocode: RG-Cascade for Harness Minimalisation</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Complexity: O(N_ops * L * P) where P = # perturbation runs per step</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rg_cascade(constraints, target_level, delta<span class="op">=</span><span class="fl">0.01</span>, tol<span class="op">=</span><span class="fl">1e-4</span>):</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    active <span class="op">=</span> <span class="bu">list</span>(constraints)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    history <span class="op">=</span> [active.copy()]</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> coarse_level <span class="kw">in</span> <span class="bu">range</span>(target_level):</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Step 1: Linearise the RG kernel around current fixed point</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        K <span class="op">=</span> estimate_rg_matrix(active, delta)   <span class="co"># central-difference, O(delta^2) error</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        eigenvalues, eigenvectors <span class="op">=</span> eigh(K)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Step 2: Classify operators</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        relevant   <span class="op">=</span> [i <span class="cf">for</span> i, lam <span class="kw">in</span> <span class="bu">enumerate</span>(eigenvalues) <span class="cf">if</span> lam <span class="op">&gt;</span>  tol]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>        irrelevant <span class="op">=</span> [i <span class="cf">for</span> i, lam <span class="kw">in</span> <span class="bu">enumerate</span>(eigenvalues) <span class="cf">if</span> lam <span class="op">&lt;</span> <span class="op">-</span>tol]</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        marginal   <span class="op">=</span> [i <span class="cf">for</span> i, lam <span class="kw">in</span> <span class="bu">enumerate</span>(eigenvalues) <span class="cf">if</span> <span class="bu">abs</span>(lam) <span class="op">&lt;=</span> tol]</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Step 3: Integrate out irrelevant operators</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>        <span class="co">#         (fix them at their fixed-point values; they no longer affect macro behaviour)</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i <span class="kw">in</span> irrelevant:</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>            active[i].freeze(value<span class="op">=</span>active[i].fixed_point_value)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Step 4: Check for marginal operators → phase-transition risk</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> marginal:</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>            flag_critical(active, marginal)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Engineer must decide: nudge above or below g_c</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Step 5: Update the transfer functional (re-estimate K for next level)</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        active <span class="op">=</span> reparametrisation(active, relevant)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>        history.append(active.copy())</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Step 6: Convergence check</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">max</span>(<span class="bu">abs</span>(eigenvalues[relevant])) <span class="op">&lt;</span> tol:</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> active, history</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Practical notes for implementers:</strong></p>
+<ul>
+<li>Step 1’s “estimate the RG matrix” is a finite-difference approximation: perturb each coupling <span class="math inline">\(g_i\)</span> by <span class="math inline">\(\pm\delta\)</span>, measure the change in the autonomy metric <span class="math inline">\(\mathcal{A}\)</span> (e.g., success rate on a benchmark suite), and form the Jacobian. The error is <span class="math inline">\(\mathcal{O}(\delta^2)\)</span> for central differences; I’d use <span class="math inline">\(\delta \approx 10^{-2}\)</span> for a good bias/variance trade-off.</li>
+<li>The dominant cost is Step 1: <span class="math inline">\(N_{\text{ops}}\)</span> perturbation runs per coarse-graining level, <span class="math inline">\(L\)</span> levels total. For a harness with 20 constraints and 4 autonomy levels, that’s 80 perturbation runs. Tractable on a CI pipeline, honestly.</li>
+<li>Marginal operators (Step 4) are the ones corresponding to the percolation threshold. The <a href="../../posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/">gauge-symmetry analysis</a> provides a symmetry-based shortcut: operators related by a gauge transformation can’t be distinguished by the RG flow, so you only need to classify one representative per orbit. Saves a lot of redundant work.</li>
+</ul>
+<hr>
+</section>
+<section id="worked-example-a-python-tool-call-harness" class="level2">
+<h2 class="anchored" data-anchor-id="worked-example-a-python-tool-call-harness">6. Worked Example: A Python Tool-Call Harness</h2>
+<p>Let’s make this concrete. Suppose your harness has the following configuration for an L2 autonomy target:</p>
+<ul>
+<li>A Python tool-call schema (5 tools: <code>read_file</code>, <code>write_file</code>, <code>run_test</code>, <code>search</code>, <code>commit</code>)</li>
+<li>A two-level permission vector (read-only vs.&nbsp;read-write)</li>
+<li>A single verification predicate: “all tests pass before commit”</li>
+<li>A security invariant: “never write outside the project directory”</li>
+<li>A style gate: “PEP 8 compliance on all generated code”</li>
+</ul>
+<p><strong>Cascade run (target: L2, i.e., two coarse-graining steps):</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Action</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0</td>
+<td>Estimate <span class="math inline">\(\mathbf{K}\)</span> on 6 active constraints</td>
+<td>Eigenvalues: <span class="math inline">\([+2.1, +1.4, +0.9, +0.3, -0.4, -1.8]\)</span></td>
+</tr>
+<tr class="even">
+<td>1</td>
+<td>Classify</td>
+<td>Relevant: {security invariant, verification predicate, permission vector, delegation depth}. Irrelevant: {style gate, exact tool-call ordering}.</td>
+</tr>
+<tr class="odd">
+<td>2</td>
+<td>Freeze irrelevant</td>
+<td>Style gate → set to “PEP 8 (advisory)”; tool ordering → “LLM’s choice”. Constraint count: 6 → 4.</td>
+</tr>
+<tr class="even">
+<td>3</td>
+<td>Re-estimate <span class="math inline">\(\mathbf{K}\)</span> on 4 active</td>
+<td>Eigenvalues: <span class="math inline">\([+1.9, +1.1, +0.2, -0.1]\)</span></td>
+</tr>
+<tr class="odd">
+<td>4</td>
+<td>Classify</td>
+<td>Relevant: {security, verification, permission}. Marginal: {delegation depth} (<span class="math inline">\(\lambda = +0.2\)</span>, near zero).</td>
+</tr>
+<tr class="even">
+<td>5</td>
+<td>Flag marginal</td>
+<td>“Delegation depth is at the critical point. Nudge up (more autonomy) or down (more control).”</td>
+</tr>
+<tr class="odd">
+<td>6</td>
+<td>Engineer decision: nudge up</td>
+<td>Final harness: 3 relevant constraints + 1 marginal (flagged). 2 frozen.</td>
+</tr>
+</tbody>
+</table>
+<p>And there it is: a <strong>three-constraint minimal harness</strong> (security boundary, test-before-commit, permission level) plus a flagged marginal parameter. The style gate and tool ordering are <em>provably</em> irrelevant at L2—removing them changes no observable autonomy metric. You don’t need to keep them. You just needed them to <em>compute</em> the fact that you didn’t.</p>
+<hr>
+</section>
+<section id="comparison-with-existing-heuristics" class="level2">
+<h2 class="anchored" data-anchor-id="comparison-with-existing-heuristics">7. Comparison with Existing Heuristics</h2>
+<p>The RG-cascade isn’t the only way to simplify a harness. Two common alternatives come up a lot:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Method</th>
+<th>Procedure</th>
+<th>When it works</th>
+<th>When it fails</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Remove-until-failure</strong></td>
+<td>Start with full constraints; remove one at a time; keep the set at first regression.</td>
+<td>Small constraint sets (&lt; 10); clear single-failure-mode.</td>
+<td>Interacting constraints; the “first failure” may be a symptom, not the cause.</td>
+</tr>
+<tr class="even">
+<td><strong>Percolation tuning</strong></td>
+<td>Sweep constraint density <span class="math inline">\(p\)</span>; find <span class="math inline">\(p_c\)</span> empirically (see <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy</a>).</td>
+<td>You want the <em>threshold</em>, not the <em>minimal set</em>.</td>
+<td>Does not tell you <em>which</em> constraints to keep, only how many.</td>
+</tr>
+<tr class="odd">
+<td><strong>RG-cascade (this post)</strong></td>
+<td>Classify operators by eigenvalue; freeze irrelevant; converge.</td>
+<td>You want the <em>minimal load-bearing set</em> and a <em>certificate</em> that the rest is irrelevant.</td>
+<td>Overhead of perturbation runs; assumes the autonomy metric <span class="math inline">\(\mathcal{A}\)</span> is well-defined.</td>
+</tr>
+</tbody>
+</table>
+<p>The RG approach is worth the <span class="math inline">\(\mathcal{O}(N \cdot L \cdot P)\)</span> overhead when you’re designing a harness that will be maintained across autonomy levels (L1 → L2 → L3) and you need to know <em>in advance</em> which constraints will survive. The percolation approach is faster for a one-shot tuning session. The remove-until-failure heuristic? Fine for a prototype. But it gives you no structural guarantee, and that stings when you’re three months in and the “first failure” was just the loudest symptom.</p>
+<p>The <a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">free-energy-bound result</a> provides an independent upper bound on how many relevant operators you <em>can</em> retain given your per-step KL budget. Use it as a sanity check: if the RG-cascade says you need 8 relevant operators but the free-energy bound says your budget supports only 5, you’ve got a structural inconsistency that no amount of tuning will resolve.</p>
+<hr>
+</section>
+<section id="discussion-rg-reinterpretation-of-prior-results" class="level2">
+<h2 class="anchored" data-anchor-id="discussion-rg-reinterpretation-of-prior-results">8. Discussion: RG Reinterpretation of Prior Results</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Prior result</th>
+<th>RG reinterpretation</th>
+<th>Implication for the engineer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">Rate-distortion floor</a></td>
+<td>The cost of integrating out irrelevant operators is the distortion <span class="math inline">\(D\)</span>; the rate <span class="math inline">\(R\)</span> is the number of relevant operators you must retain.</td>
+<td>You cannot reduce <span class="math inline">\(D\)</span> below the floor by adding more irrelevant constraints.</td>
+</tr>
+<tr class="even">
+<td><a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation threshold</a></td>
+<td><span class="math inline">\(p_c\)</span> is the coupling value at which a relevant operator’s eigenvalue crosses zero.</td>
+<td>The jump is not a bug; it is the RG critical point. Design <em>around</em> it, not against it.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/">Gauge symmetry</a></td>
+<td>Gauge-equivalent constraints are the same RG eigenvector; only the gauge-invariant core is physically relevant.</td>
+<td>Do not spend design time on gauge-variant reparametrisations.</td>
+</tr>
+<tr class="even">
+<td><a href="../../posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/">Functorial structure</a></td>
+<td>Natural transformations between harnesses are RG-invariant: they commute with the transfer functional.</td>
+<td>A “safe refactor” (natural transformation) preserves the fixed point. Check the naturality square.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free-energy bound</a></td>
+<td>The KL budget is the total “relevant eigenvalue mass” the harness can sustain.</td>
+<td>Budget your relevant operators explicitly; the bound is a hard cap.</td>
+</tr>
+<tr class="even">
+<td><a href="../../posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/">Cohomological obstruction</a></td>
+<td>Non-trivial <span class="math inline">\(H^1\)</span> means the RG flow has a topological obstruction to reaching the full-autonomy fixed point.</td>
+<td>Some failures are not tunable. Diagnose the obstruction class before iterating.</td>
+</tr>
+<tr class="odd">
+<td><a href="../../posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/">Information geometry</a></td>
+<td>The RG flow is a geodesic on the Fisher–Rao manifold of autonomy profiles; the “effort” to move between fixed points is the geodesic length.</td>
+<td>Choose the shortest geodesic (fewest coarse-graining steps) between your current and target autonomy level.</td>
+</tr>
+<tr class="even">
+<td><a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">Scaffolding dialectic</a></td>
+<td>Scaffolding is the irrelevant-operator subspace: it is <em>necessary</em> for the RG flow to be well-defined (the transfer functional requires a fine-grained starting measure) but <em>eliminable</em> in the limit.</td>
+<td>Do not remove scaffolding abruptly; let the RG flow integrate it out gradually.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">9. Limitations</h2>
+<p>Okay, the honest part.</p>
+<p><strong>The autonomy metric <span class="math inline">\(\mathcal{A}\)</span> is an assumption, not a theorem.</strong> The RG-cascade classifies operators relative to whatever metric you choose (success rate, robustness, latency, safety). If your metric is misspecified, the “irrelevant” operators might be relevant to a different objective. <em>In practice: run the cascade for at least two metrics (e.g., success rate AND safety violation rate) and take the union of relevant sets.</em></p>
+<p><strong>The linearisation is local.</strong> The eigenvalue classification is valid only in a neighbourhood of the fixed point. Far from <span class="math inline">\(\mathbf{g}^*\)</span>, nonlinear terms in <span class="math inline">\(\mathbf{K}(\mathbf{g})\)</span> can generate new relevant directions that the linear theory doesn’t see. <em>In practice: after freezing operators, re-run the cascade from scratch with the reduced set to verify no spurious relevance has emerged.</em></p>
+<p><strong>The perturbation cost dominates.</strong> The <span class="math inline">\(\mathcal{O}(N_{\text{ops}} \cdot L)\)</span> count in §5 omits the <span class="math inline">\(P\)</span> perturbation runs per step (each requiring a full agent roll-out on a benchmark). For <span class="math inline">\(N = 20\)</span>, <span class="math inline">\(L = 4\)</span>, <span class="math inline">\(P = 100\)</span> (100 benchmark episodes per perturbation), the total is 8,000 roll-outs. Ouch. <em>In practice: batch the perturbations; use the <a href="../../posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/">functorial criterion</a> to skip operators that are natural-transform-invariant.</em></p>
+<p><strong>Marginal operators are underdetermined.</strong> At <span class="math inline">\(\lambda_i \approx 0\)</span>, the classification is noise-sensitive. <em>In practice: treat any operator with <span class="math inline">\(|\lambda_i| &lt; 2\sigma\)</span> (where <span class="math inline">\(\sigma\)</span> is the standard error of the eigenvalue estimate) as marginal and flag it for manual review rather than auto-freezing.</em></p>
+<p><strong>The analogy is structural, not literal.</strong> There’s no physical temperature, no thermodynamic limit, and no universal coupling constant in a harness. The RG framework is a <em>mathematical structure</em> that the constraint dynamics happen to instantiate; it does not imply that harnesses obey the same <em>physical</em> laws as magnetic materials. The predictive power is in the classification (relevant/irrelevant) and the critical-point structure, not in any quantitative universality. I keep wanting to say “this is just an analogy,” but honestly the isomorphism is tight enough that the distinction mostly doesn’t matter for engineering purposes.</p>
+<hr>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">10. Conclusion</h2>
+<p>Wilsonian RG gives harness designers a principled, finite-dimensional handle on what is otherwise an intractable combinatorial space. The three central results—(i) a finite set of scale-invariant fixed points, (ii) critical points marking autonomy phase transitions, and (iii) a practical cascade algorithm for operator classification—convert the question “which constraints should I keep?” from an art into a computation. The worked example in §6 shows that even a modest six-constraint harness reduces to three load-bearing operators once the irrelevant micro-decisions are identified and frozen.</p>
+<p>The deeper lesson, consistent with the <a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">dialectical framing</a> of scaffolding as generative precondition, is that the irrelevant operators aren’t <em>waste</em>. They’re the fine-grained substrate from which the transfer functional is defined. You need them to <em>compute</em> the coarse-grained description, even though you don’t need them to <em>maintain</em> it. The RG flow tells you exactly when you can let go. And that’s… actually pretty satisfying, once you see it.</p>
+<hr>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ol type="1">
+<li>Wilson, K. G. (1971). “Renormalization Group and Critical Phenomena. I. Introduction to the Renormalization Group.” <em>Physical Review B</em>, 4(4), 3184–3205.</li>
+<li>Kadanoff, L. P. (1966). “Scaling Equations in Ising Ferromagnets.” <em>Physical Review Letters</em>, 17(12), 1005.</li>
+<li>Kogut, J. (1979). “An Introduction to the Renormalization Group.” <em>Reviews of Modern Physics</em>, 51(4), 659–692.</li>
+<li>Cover, T. M., &amp; Thomas, J. A. (2006). <em>Elements of Information Theory</em> (2nd ed.). Wiley. [Rate-distortion theory, Ch. 10.]</li>
+<li><a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative: Code as Self-Governing Architecture</a> — Five-level spectrum model for coding-agent autonomy.</li>
+<li><a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">The Autonomy Channel: Rate-Distortion in Harness Design</a> — Structural cost floor on autonomy via Shannon channel theory.</li>
+<li><a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">Scaffolding to Sovereignty: The Dialectic of Code Autonomy</a> — Scaffolding as generative precondition.</li>
+<li><a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy: Critical Dynamics in Harness Design</a> — Constraint-density thresholds and autonomy jumps.</li>
+<li><a href="../../posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/">Gauge Symmetry and the Invariant Core of Harness Autonomy</a> — Finite set of inequivalent autonomy structures.</li>
+<li><a href="../../posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/">Functorial Autonomy: Categorical Structure of Harness Design</a> — Natural transformations as safe refactors.</li>
+<li><a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds: A Variational Account of Autonomy</a> — Per-step KL budget design calculus.</li>
+<li><a href="../../posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/">Cohomological Obstructions to Complete Harness Autonomy</a> — Topological (non-parametric) autonomy failures.</li>
+<li><a href="../../posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/">Autonomy as Geodesic: Information Geometry of Harness Design</a> — Computable effort, curvature, and drift on the autonomy manifold.</li>
+</ol>
+<hr>
+</section>
+<section id="series-map" class="level2">
+<h2 class="anchored" data-anchor-id="series-map">Series Map</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>#</th>
+<th>Post</th>
+<th>One-line description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative</a></td>
+<td>The five-level spectrum and its control-theoretic grounding.</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">The Autonomy Channel</a></td>
+<td>Shannon rate-distortion as a structural cost floor.</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">Scaffolding to Sovereignty</a></td>
+<td>Why constraints generate the autonomy they constrain.</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy</a></td>
+<td>Discrete jumps in autonomy and constraint-density tuning.</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><a href="../../posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/">Gauge Symmetry</a></td>
+<td>Collapsing the design space to inequivalent structures.</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><a href="../../posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/">Functorial Autonomy</a></td>
+<td>Category-theoretic criterion for autonomy-preserving refactors.</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td><a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds</a></td>
+<td>Variational upper bound on sustainable autonomy.</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td><a href="../../posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/">Cohomological Obstructions</a></td>
+<td>Topological failures no parameter tuning can fix.</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td><a href="../../posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/">Autonomy as Geodesic</a></td>
+<td>Riemannian geometry of the autonomy transition landscape.</td>
+</tr>
+<tr class="even">
+<td><strong>10</strong></td>
+<td><strong>Coarse-Graining Autonomy (this post)</strong></td>
+<td><strong>RG fixed points, critical transitions, and the cascade algorithm.</strong></td>
+</tr>
+</tbody>
+</table>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ianmerlos34\.github\.io\/harness-coding\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

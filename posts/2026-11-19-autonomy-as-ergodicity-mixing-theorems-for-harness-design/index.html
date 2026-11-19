@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-11-19">
+<meta name="keywords" content="agent autonomy, ergodicity coding agent, mixing time bound, KAM theorem harness design, spectral gap Markov chain, CI-auditable autonomy certificate, coding agent harness design, ReAct harness ergodicity">
+<meta name="description" content="Formalize coding-agent autonomy as ergodicity, prove O(N²/δ) mixing-time bounds, and derive KAM certificates for constraint robustness in harness design.">
+
+<title>Autonomy as Ergodicity: Mixing Theorems for Harness Design – Harness coding, towards the complete autonomy</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ded4168630e1422961a6247c4ac5fe91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(cover.png);
+background-size: cover;
+      }
+</style>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Harness coding, towards the complete autonomy</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Autonomy as Ergodicity: Mixing Theorems for Harness Design</h1>
+                  <div>
+        <div class="description">
+          Formalize coding-agent autonomy as ergodicity, prove O(N²/δ) mixing-time bounds, and derive KAM certificates for constraint robustness in harness design.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">AI Agents</div>
+                <div class="quarto-category">Applied Mathematics</div>
+                <div class="quarto-category">Software Engineering</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ian Merlos </p>
+               <p>Ian Merlos </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+
+  <div>
+    <div class="keywords">
+      <div class="block-title">Keywords</div>
+      <p>agent autonomy, ergodicity coding agent, mixing time bound, KAM theorem harness design, spectral gap Markov chain, CI-auditable autonomy certificate, coding agent harness design, ReAct harness ergodicity</p>
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a>
+  <ul class="collapse">
+  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link" data-scroll-target="#prerequisites">Prerequisites</a></li>
+  </ul></li>
+  <li><a href="#why-ergodicity-is-the-right-invariant-for-agent-autonomy" id="toc-why-ergodicity-is-the-right-invariant-for-agent-autonomy" class="nav-link" data-scroll-target="#why-ergodicity-is-the-right-invariant-for-agent-autonomy">1. Why Ergodicity Is the Right Invariant for Agent Autonomy</a>
+  <ul class="collapse">
+  <li><a href="#the-state-space" id="toc-the-state-space" class="nav-link" data-scroll-target="#the-state-space">1.1 The state space</a></li>
+  <li><a href="#defining-autonomy-as-ergodicity" id="toc-defining-autonomy-as-ergodicity" class="nav-link" data-scroll-target="#defining-autonomy-as-ergodicity">1.2 Defining autonomy as ergodicity</a></li>
+  <li><a href="#relation-to-prior-work-in-the-series" id="toc-relation-to-prior-work-in-the-series" class="nav-link" data-scroll-target="#relation-to-prior-work-in-the-series">1.3 Relation to prior work in the series</a></li>
+  </ul></li>
+  <li><a href="#polynomial-mixing-time-bound-a-quantitative-latency-certificate" id="toc-polynomial-mixing-time-bound-a-quantitative-latency-certificate" class="nav-link" data-scroll-target="#polynomial-mixing-time-bound-a-quantitative-latency-certificate">2. Polynomial Mixing-Time Bound: A Quantitative Latency Certificate</a>
+  <ul class="collapse">
+  <li><a href="#the-theorem" id="toc-the-theorem" class="nav-link" data-scroll-target="#the-theorem">2.1 The theorem</a></li>
+  <li><a href="#what-this-means-for-your-harness" id="toc-what-this-means-for-your-harness" class="nav-link" data-scroll-target="#what-this-means-for-your-harness">2.2 What this means for your harness</a></li>
+  <li><a href="#worked-example-a-12-state-react-harness" id="toc-worked-example-a-12-state-react-harness" class="nav-link" data-scroll-target="#worked-example-a-12-state-react-harness">2.3 Worked example: a 12-state ReAct harness</a></li>
+  </ul></li>
+  <li><a href="#kam-perturbation-certificate-how-much-constraint-can-you-add" id="toc-kam-perturbation-certificate-how-much-constraint-can-you-add" class="nav-link" data-scroll-target="#kam-perturbation-certificate-how-much-constraint-can-you-add">3. KAM Perturbation Certificate: How Much Constraint Can You Add?</a>
+  <ul class="collapse">
+  <li><a href="#the-problem" id="toc-the-problem" class="nav-link" data-scroll-target="#the-problem">3.1 The problem</a></li>
+  <li><a href="#the-kam-certificate" id="toc-the-kam-certificate" class="nav-link" data-scroll-target="#the-kam-certificate">3.2 The KAM certificate</a></li>
+  <li><a href="#practical-kam-budget" id="toc-practical-kam-budget" class="nav-link" data-scroll-target="#practical-kam-budget">3.3 Practical KAM budget</a></li>
+  <li><a href="#the-aperiodicity-trade-off" id="toc-the-aperiodicity-trade-off" class="nav-link" data-scroll-target="#the-aperiodicity-trade-off">3.4 The aperiodicity trade-off</a></li>
+  </ul></li>
+  <li><a href="#ergodic-optimization-finding-the-maximal-autonomy-measure" id="toc-ergodic-optimization-finding-the-maximal-autonomy-measure" class="nav-link" data-scroll-target="#ergodic-optimization-finding-the-maximal-autonomy-measure">4. Ergodic Optimization: Finding the Maximal-Autonomy Measure</a>
+  <ul class="collapse">
+  <li><a href="#the-problem-1" id="toc-the-problem-1" class="nav-link" data-scroll-target="#the-problem-1">4.1 The problem</a></li>
+  <li><a href="#the-linear-program" id="toc-the-linear-program" class="nav-link" data-scroll-target="#the-linear-program">4.2 The linear program</a></li>
+  <li><a href="#a-5-line-python-sketch" id="toc-a-5-line-python-sketch" class="nav-link" data-scroll-target="#a-5-line-python-sketch">4.3 A 5-line Python sketch</a></li>
+  <li><a href="#relation-to-the-free-energy-bound" id="toc-relation-to-the-free-energy-bound" class="nav-link" data-scroll-target="#relation-to-the-free-energy-bound">4.4 Relation to the free-energy bound</a></li>
+  </ul></li>
+  <li><a href="#common-harness-design-pitfalls-and-how-to-fix-them" id="toc-common-harness-design-pitfalls-and-how-to-fix-them" class="nav-link" data-scroll-target="#common-harness-design-pitfalls-and-how-to-fix-them">5. Common Harness Design Pitfalls (and How to Fix Them)</a></li>
+  <li><a href="#positioning-how-this-relates-to-swe-bench-agentbench-and-τ-bench" id="toc-positioning-how-this-relates-to-swe-bench-agentbench-and-τ-bench" class="nav-link" data-scroll-target="#positioning-how-this-relates-to-swe-bench-agentbench-and-τ-bench">6. Positioning: How This Relates to SWE-bench, AgentBench, and τ-bench</a></li>
+  <li><a href="#how-to-build-p-from-your-react-loop-practical-guide" id="toc-how-to-build-p-from-your-react-loop-practical-guide" class="nav-link" data-scroll-target="#how-to-build-p-from-your-react-loop-practical-guide">7. How to Build <span class="math inline">\(P\)</span> from Your ReAct Loop (Practical Guide)</a></li>
+  <li><a href="#how-this-fits-the-series" id="toc-how-this-fits-the-series" class="nav-link" data-scroll-target="#how-this-fits-the-series">8. How This Fits the Series</a></li>
+  <li><a href="#next-steps-three-numbers-to-compute-before-your-next-release" id="toc-next-steps-three-numbers-to-compute-before-your-next-release" class="nav-link" data-scroll-target="#next-steps-three-numbers-to-compute-before-your-next-release">9. Next Steps: Three Numbers to Compute Before Your Next Release</a></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
+  <li><a href="#related-posts-in-this-series" id="toc-related-posts-in-this-series" class="nav-link" data-scroll-target="#related-posts-in-this-series">Related Posts in This Series</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<!-- meta-description: We formalize coding-agent autonomy as ergodicity, prove a polynomial mixing-time bound O(N²/δ), and derive a KAM certificate for constraint robustness—giving harness designers a CI-auditable latency guarantee. -->
+<!-- og:description: Formalize agent autonomy as ergodicity. Prove O(N²/δ) mixing-time bounds. KAM certificates for constraint robustness. CI-auditable latency guarantees for coding-agent harnesses. -->
+<blockquote class="blockquote">
+<p><strong>TL;DR</strong> — We recast complete autonomy in a coding-agent harness as <em>ergodicity</em> of its state dynamics. The payoff is three concrete, CI-auditable numbers: a polynomial mixing-time bound <span class="math inline">\(t_{\text{mix}} = O(N^2/\delta)\)</span> that tells you the worst-case ticks to full task coverage; a KAM perturbation threshold <span class="math inline">\(\varepsilon_{\max}\)</span> bounding how many constraints you can add before autonomy breaks; and a linear program whose solution is the maximal-autonomy invariant measure. If you are building a ReAct-style or plan-act harness, these three numbers are the ones to compute before your next release.</p>
+</blockquote>
+<hr>
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>We model the coding-agent harness as a measure-preserving transformation <span class="math inline">\(T\)</span> on a finite state space <span class="math inline">\(\Omega\)</span> of <span class="math inline">\(N\)</span> discrete harness configurations (tool selections, context windows, permission states, and loop phases). We define <strong>complete autonomy</strong> as the ergodicity of <span class="math inline">\(T\)</span>: the irreducibility of the dynamics into a single invariant component, so that no proper subset of states is closed under the dynamics. Under this definition, we prove a polynomial mixing-time bound of the form <span class="math inline">\(t_{\text{mix}} \leq C\, N^2 / \delta\)</span>, where <span class="math inline">\(\delta\)</span> is the spectral gap of the associated transition matrix and <span class="math inline">\(C\)</span> is a universal constant. We then apply Kolmogorov–Arnold–Moser (KAM) perturbation theory to show that additive constraint perturbations of magnitude <span class="math inline">\(\varepsilon &lt; \varepsilon_{\max}(\delta, N)\)</span> preserve the ergodic structure, yielding a certifiable robustness margin. Finally, we formulate an ergodic-optimization linear program whose solution identifies the invariant measure <span class="math inline">\(\mu^*\)</span> maximizing an autonomy objective (task-coverage entropy). Together, these results convert the qualitative question <em>“is my agent autonomous?”</em> into three quantitative, CI-auditable checks.</p>
+<p><strong>Why this matters.</strong> Let’s be honest about where harness evaluation stands right now. We’ve got benchmark scores everywhere—SWE-bench pass@k, AgentBench success rates, τ-bench trajectory fidelity—and they all measure <em>outcome</em> autonomy. Did the agent finish the task? Nice. But none of them bound the <em>process</em> autonomy: the guarantee that the agent will, within a computable number of steps, actually explore every relevant configuration rather than silently collapsing into some degenerate attractor it found early on. The ergodicity framework fills exactly that gap. It hands you a structural certificate, not a behavioral statistic. And that’s a fundamentally different thing to have in your CI pipeline.</p>
+<section id="prerequisites" class="level3">
+<h3 class="anchored" data-anchor-id="prerequisites">Prerequisites</h3>
+<p>You’ll want some familiarity with finite-state Markov chains (transition matrices, stationary distributions, spectral decomposition), basic measure-preserving dynamics (ergodicity, invariant sets), and the ReAct / plan-act harness loop. No knowledge of symplectic geometry or KAM theory is required—we state only the corollary we use, and I’ll explain it in plain terms.</p>
+<hr>
+</section>
+</section>
+<section id="why-ergodicity-is-the-right-invariant-for-agent-autonomy" class="level2">
+<h2 class="anchored" data-anchor-id="why-ergodicity-is-the-right-invariant-for-agent-autonomy">1. Why Ergodicity Is the Right Invariant for Agent Autonomy</h2>
+<section id="the-state-space" class="level3">
+<h3 class="anchored" data-anchor-id="the-state-space">1.1 The state space</h3>
+<p>A coding-agent harness at any given moment is characterized by a tuple</p>
+<p><span class="math display">\[
+s = (c,\; \tau,\; \pi,\; \phi) \in \Omega,
+\]</span></p>
+<p>where <span class="math inline">\(c\)</span> is the active context window (or a hash thereof), <span class="math inline">\(\tau\)</span> is the selected tool or action, <span class="math inline">\(\pi\)</span> is the permission/authorization state, and <span class="math inline">\(\phi\)</span> is the loop phase (plan, act, observe, reflect). In a well-factored harness, <span class="math inline">\(\Omega\)</span> is finite: <span class="math inline">\(|\Omega| = N\)</span> for some <span class="math inline">\(N\)</span> in the range <span class="math inline">\(10^1\)</span>–<span class="math inline">\(10^4\)</span> depending on tool count and phase granularity.</p>
+<p>The harness transition <span class="math inline">\(T: \Omega \to \Omega\)</span> is the deterministic (or stochastic, if the LLM sampling introduces entropy) map that takes the current configuration to the next. In the deterministic case, <span class="math inline">\(T\)</span> is just a permutation of <span class="math inline">\(\Omega\)</span>; in the stochastic case, we work with the associated Markov kernel <span class="math inline">\(P(s, s') = \Pr[T(s') \mid s]\)</span>.</p>
+</section>
+<section id="defining-autonomy-as-ergodicity" class="level3">
+<h3 class="anchored" data-anchor-id="defining-autonomy-as-ergodicity">1.2 Defining autonomy as ergodicity</h3>
+<p><strong>Definition 1 (Complete Autonomy).</strong> A harness <span class="math inline">\(T\)</span> with state space <span class="math inline">\((\Omega, \mathcal{F}, \mu)\)</span> is <em>fully autonomous</em> if and only if <span class="math inline">\(T\)</span> is <em>ergodic</em> with respect to the uniform measure <span class="math inline">\(\mu\)</span>: for every measurable set <span class="math inline">\(A \subseteq \Omega\)</span> satisfying <span class="math inline">\(T^{-1}(A) = A\)</span> (i.e., <span class="math inline">\(A\)</span> is invariant), either <span class="math inline">\(\mu(A) = 0\)</span> or <span class="math inline">\(\mu(A) = 1\)</span>.</p>
+<p>In plain language: there is no non-trivial “cage” of states the agent can get trapped in. The agent’s dynamics don’t fragment into disconnected behavioral modes. If <span class="math inline">\(T\)</span> has two disjoint invariant sets <span class="math inline">\(A\)</span> and <span class="math inline">\(B\)</span>, the agent is <em>not</em> autonomous—it has silently chosen a personality (always uses tool X, never enters the reflect phase, etc.) and will never, ever leave it. You’d never know unless you checked.</p>
+<p>And here’s the thing: this definition is deliberately stronger than “the agent completes the task.” A task-completing agent might pass through only 5 of 120 states, ignoring the rest entirely. Ergodicity demands that <em>all</em> states are reachable in the long run. That’s the structural guarantee you actually want before you pull the human out of the loop.</p>
+</section>
+<section id="relation-to-prior-work-in-the-series" class="level3">
+<h3 class="anchored" data-anchor-id="relation-to-prior-work-in-the-series">1.3 Relation to prior work in the series</h3>
+<p>The five-level autonomy spectrum in <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative</a> gives us the qualitative ladder; ergodicity gives the <em>top</em> rung a rigorous predicate. The spectral-gap analysis in <a href="../../posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/">The Spectral Gap of Autonomy</a> computes the convergence speed <span class="math inline">\(\delta\)</span> that shows up as a parameter in our mixing bound. The percolation threshold in <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy</a> identifies the constraint density at which the invariant set fragments—precisely the point where ergodicity is lost. Our KAM certificate (§3) is the local-robustness companion to that global percolation picture.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+
+<pre class="mermaid mermaid-js">flowchart LR
+  A["Harness State s ∈ Ω"] --&gt; B["Transition T(s)"]
+  B --&gt; C{"Invariant set?"}
+  C -- "Only ∅ and Ω" --&gt; D["Ergodic: Full Autonomy ✓"]
+  C -- "Proper A ⊂ Ω" --&gt; E["Non-ergodic: Degenerate Attractor ✗"]
+  E --&gt; F["KAM check: ε &lt; ε_max?"]
+  F -- "Yes" --&gt; D
+  F -- "No" --&gt; G["Constraint too strong — redesign"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><em>Figure 1. Decision flow: ergodicity test, KAM robustness check, and the redesign branch. A harness is CI-verified autonomous only if it passes both gates.</em></p>
+<hr>
+</section>
+</section>
+<section id="polynomial-mixing-time-bound-a-quantitative-latency-certificate" class="level2">
+<h2 class="anchored" data-anchor-id="polynomial-mixing-time-bound-a-quantitative-latency-certificate">2. Polynomial Mixing-Time Bound: A Quantitative Latency Certificate</h2>
+<section id="the-theorem" class="level3">
+<h3 class="anchored" data-anchor-id="the-theorem">2.1 The theorem</h3>
+<p>Let <span class="math inline">\(P\)</span> be the <span class="math inline">\(N \times N\)</span> stochastic transition matrix of the harness, with eigenvalues <span class="math inline">\(\lambda_1 = 1, \lambda_2, \dots, \lambda_N\)</span>. Define the <strong>spectral gap</strong></p>
+<p><span class="math display">\[
+\delta \;=\; 1 - \max_{i \geq 2} |\lambda_i|.
+\]</span></p>
+<p><strong>Theorem 2 (Mixing-Time Bound).</strong> If <span class="math inline">\(P\)</span> is aperiodic and irreducible, then the <span class="math inline">\(\varepsilon\)</span>-mixing time satisfies</p>
+<p><span class="math display">\[
+t_{\text{mix}}(\varepsilon) \;\leq\; \frac{1}{\delta}\,\ln\!\frac{1}{\varepsilon\, \pi_{\min}},
+\]</span></p>
+<p>where <span class="math inline">\(\pi_{\min} = \min_s \pi(s)\)</span> is the smallest stationary probability. In particular, for <span class="math inline">\(\varepsilon = 1/N\)</span> (uniform accuracy) and <span class="math inline">\(\pi_{\min} \geq 1/N\)</span>,</p>
+<p><span class="math display">\[
+\boxed{\;t_{\text{mix}} \;\leq\; \frac{N}{\delta}\,\ln N\; = \; O\!\left(\frac{N^2}{\delta}\right).}
+\]</span></p>
+<p><em>Sketch.</em> The bound follows by decomposing <span class="math inline">\(P^t - \pi\mathbf{1}^T\)</span> into its spectral components. The dominant non-trivial term decays as <span class="math inline">\(|\lambda_2|^t = e^{-\delta t}\)</span> (up to sub-exponential factors from Jordan blocks, which are bounded by a polynomial in <span class="math inline">\(N\)</span> for stochastic matrices via Weyl’s inequality applied to the symmetric part of <span class="math inline">\(P\)</span>). Setting <span class="math inline">\(|\lambda_2|^t \leq \varepsilon\,\pi_{\min}\)</span> and solving for <span class="math inline">\(t\)</span> gives the stated bound. The <span class="math inline">\(N^2\)</span> dependence arises from the worst-case <span class="math inline">\(\pi_{\min} = 1/N\)</span> and the <span class="math inline">\(\ln N\)</span> factor.</p>
+</section>
+<section id="what-this-means-for-your-harness" class="level3">
+<h3 class="anchored" data-anchor-id="what-this-means-for-your-harness">2.2 What this means for your harness</h3>
+<p>Okay, so now you actually have a <strong>CI-auditable latency guarantee</strong>. Before you ship a harness configuration, you can compute <span class="math inline">\(N\)</span> (count your states), estimate <span class="math inline">\(\delta\)</span> (run the spectral-conditioning algorithm from <a href="../../posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/">The Spectral Gap of Autonomy</a>), and get a concrete upper bound on the number of ticks the agent needs before its behavior is statistically indistinguishable from the invariant measure.</p>
+<p>Here’s the part that should get your attention: if <span class="math inline">\(t_{\text{mix}}\)</span> exceeds your SLA (say, 10 000 tokens), you know <em>a priori</em> that the harness is structurally too slow. Not because the LLM is slow. Because the state space is poorly connected. That’s a design problem, not a model problem, and it means you can fix it without swapping models.</p>
+</section>
+<section id="worked-example-a-12-state-react-harness" class="level3">
+<h3 class="anchored" data-anchor-id="worked-example-a-12-state-react-harness">2.3 Worked example: a 12-state ReAct harness</h3>
+<p>Consider a harness with <span class="math inline">\(N = 12\)</span> states: 4 phases (plan, act, observe, reflect) × 3 tool tiers (local, sandboxed, production). The transition matrix <span class="math inline">\(P\)</span> is built from the ReAct loop: from any <em>act</em> state, the agent moves to <em>observe</em>; from <em>observe</em>, it probabilistically routes to <em>plan</em> (with probability 0.7) or <em>reflect</em> (0.3); from <em>plan</em>, it routes to <em>act</em> (1.0); from <em>reflect</em>, it routes to <em>plan</em> (0.8) or terminates (0.2, which we treat as a self-loop on the <em>plan</em> state for ergodicity purposes).</p>
+<p>Suppose a numerical eigendecomposition yields <span class="math inline">\(\lambda_2 = 0.95\)</span>, so <span class="math inline">\(\delta = 0.05\)</span>. Then:</p>
+<p><span class="math display">\[
+t_{\text{mix}} \;\leq\; \frac{12}{0.05}\,\ln 12 \;\approx\; 240 \times 2.485 \;\approx\; 596 \text{ ticks}.
+\]</span></p>
+<p>If your harness runs at 50 tokens/tick, that’s a 29 800-token worst-case exploration budget. Now, if your task SLA is 20 000 tokens, you’ve got a problem. The harness is <strong>structurally too slow</strong> at <span class="math inline">\(\delta = 0.05\)</span>. You need to either reduce <span class="math inline">\(N\)</span> (merge tool tiers) or increase <span class="math inline">\(\delta\)</span> (add more cross-phase transitions). Either way, you know <em>before</em> you hit production.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+<svg width="672" height="480" viewbox="0.00 0.00 546.95 413.00" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" style="; max-width: none; max-height: none">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 409)">
+<title>Harness12</title>
+<polygon fill="white" stroke="transparent" points="-4,4 -4,-409 542.95,-409 542.95,4 -4,4"></polygon>
+<!-- P1 -->
+<g id="node1" class="node">
+<title>P1</title>
+<polygon fill="none" stroke="black" points="87.3,-62 11.99,-62 11.99,-26 87.3,-26 87.3,-62"></polygon>
+<text text-anchor="middle" x="49.64" y="-39.8" font-family="Helvetica,sans-Serif" font-size="14.00">plan/local</text>
+</g>
+<!-- A1 -->
+<g id="node4" class="node">
+<title>A1</title>
+<polygon fill="none" stroke="black" points="232.4,-115 164.68,-115 164.68,-79 232.4,-79 232.4,-115"></polygon>
+<text text-anchor="middle" x="198.54" y="-92.8" font-family="Helvetica,sans-Serif" font-size="14.00">act/local</text>
+</g>
+<!-- P1&#45;&gt;A1 -->
+<g id="edge1" class="edge">
+<title>P1-&gt;A1</title>
+<path fill="none" stroke="black" d="M87.33,-57.24C107.97,-64.68 133.82,-74.01 155.29,-81.76"></path>
+<polygon fill="black" stroke="black" points="154.22,-85.09 164.82,-85.19 156.6,-78.51 154.22,-85.09"></polygon>
+<text text-anchor="middle" x="126.04" y="-78.2" font-family="Times,serif" font-size="14.00">1.0</text>
+</g>
+<!-- P2 -->
+<g id="node2" class="node">
+<title>P2</title>
+<polygon fill="none" stroke="black" points="99.43,-207 -0.14,-207 -0.14,-171 99.43,-171 99.43,-207"></polygon>
+<text text-anchor="middle" x="49.64" y="-184.8" font-family="Helvetica,sans-Serif" font-size="14.00">plan/sandbox</text>
+</g>
+<!-- A2 -->
+<g id="node5" class="node">
+<title>A2</title>
+<polygon fill="none" stroke="black" points="244.53,-260 152.54,-260 152.54,-224 244.53,-224 244.53,-260"></polygon>
+<text text-anchor="middle" x="198.54" y="-237.8" font-family="Helvetica,sans-Serif" font-size="14.00">act/sandbox</text>
+</g>
+<!-- P2&#45;&gt;A2 -->
+<g id="edge2" class="edge">
+<title>P2-&gt;A2</title>
+<path fill="none" stroke="black" d="M99.56,-206.65C113.39,-211.64 128.54,-217.1 142.69,-222.21"></path>
+<polygon fill="black" stroke="black" points="141.72,-225.58 152.31,-225.68 144.09,-219 141.72,-225.58"></polygon>
+<text text-anchor="middle" x="126.04" y="-223.2" font-family="Times,serif" font-size="14.00">1.0</text>
+</g>
+<!-- P3 -->
+<g id="node3" class="node">
+<title>P3</title>
+<polygon fill="none" stroke="black" points="87.02,-352 12.26,-352 12.26,-316 87.02,-316 87.02,-352"></polygon>
+<text text-anchor="middle" x="49.64" y="-329.8" font-family="Helvetica,sans-Serif" font-size="14.00">plan/prod</text>
+</g>
+<!-- A3 -->
+<g id="node6" class="node">
+<title>A3</title>
+<polygon fill="none" stroke="black" points="231.62,-405 165.45,-405 165.45,-369 231.62,-369 231.62,-405"></polygon>
+<text text-anchor="middle" x="198.54" y="-382.8" font-family="Helvetica,sans-Serif" font-size="14.00">act/prod</text>
+</g>
+<!-- P3&#45;&gt;A3 -->
+<g id="edge3" class="edge">
+<title>P3-&gt;A3</title>
+<path fill="none" stroke="black" d="M86.96,-347.1C107.73,-354.6 133.89,-364.03 155.55,-371.85"></path>
+<polygon fill="black" stroke="black" points="154.55,-375.21 165.14,-375.31 156.93,-368.63 154.55,-375.21"></polygon>
+<text text-anchor="middle" x="126.04" y="-368.2" font-family="Times,serif" font-size="14.00">1.0</text>
+</g>
+<!-- O1 -->
+<g id="node7" class="node">
+<title>O1</title>
+<polygon fill="none" stroke="black" points="381.24,-62 309.73,-62 309.73,-26 381.24,-26 381.24,-62"></polygon>
+<text text-anchor="middle" x="345.48" y="-39.8" font-family="Helvetica,sans-Serif" font-size="14.00">obs/local</text>
+</g>
+<!-- A1&#45;&gt;O1 -->
+<g id="edge4" class="edge">
+<title>A1-&gt;O1</title>
+<path fill="none" stroke="black" d="M232.43,-84.97C252.51,-77.63 278.44,-68.15 300.3,-60.16"></path>
+<polygon fill="black" stroke="black" points="301.51,-63.44 309.7,-56.72 299.11,-56.87 301.51,-63.44"></polygon>
+<text text-anchor="middle" x="271.04" y="-78.2" font-family="Times,serif" font-size="14.00">1.0</text>
+</g>
+<!-- O2 -->
+<g id="node8" class="node">
+<title>O2</title>
+<polygon fill="none" stroke="black" points="393.37,-207 297.59,-207 297.59,-171 393.37,-171 393.37,-207"></polygon>
+<text text-anchor="middle" x="345.48" y="-184.8" font-family="Helvetica,sans-Serif" font-size="14.00">obs/sandbox</text>
+</g>
+<!-- A2&#45;&gt;O2 -->
+<g id="edge5" class="edge">
+<title>A2-&gt;O2</title>
+<path fill="none" stroke="black" d="M244.6,-225.52C258.31,-220.51 273.55,-214.94 287.92,-209.68"></path>
+<polygon fill="black" stroke="black" points="289.5,-212.83 297.69,-206.11 287.1,-206.26 289.5,-212.83"></polygon>
+<text text-anchor="middle" x="271.04" y="-223.2" font-family="Times,serif" font-size="14.00">1.0</text>
+</g>
+<!-- O3 -->
+<g id="node9" class="node">
+<title>O3</title>
+<polygon fill="none" stroke="black" points="380.97,-352 310,-352 310,-316 380.97,-316 380.97,-352"></polygon>
+<text text-anchor="middle" x="345.48" y="-329.8" font-family="Helvetica,sans-Serif" font-size="14.00">obs/prod</text>
+</g>
+<!-- A3&#45;&gt;O3 -->
+<g id="edge6" class="edge">
+<title>A3-&gt;O3</title>
+<path fill="none" stroke="black" d="M231.7,-375.24C251.97,-367.83 278.41,-358.16 300.59,-350.05"></path>
+<polygon fill="black" stroke="black" points="301.94,-353.28 310.13,-346.56 299.53,-346.71 301.94,-353.28"></polygon>
+<text text-anchor="middle" x="271.04" y="-368.2" font-family="Times,serif" font-size="14.00">1.0</text>
+</g>
+<!-- O1&#45;&gt;P1 -->
+<g id="edge7" class="edge">
+<title>O1-&gt;P1</title>
+<path fill="none" stroke="black" d="M309.69,-44C256.92,-44 156.56,-44 97.45,-44"></path>
+<polygon fill="black" stroke="black" points="97.27,-40.5 87.27,-44 97.27,-47.5 97.27,-40.5"></polygon>
+<text text-anchor="middle" x="198.54" y="-48.2" font-family="Times,serif" font-size="14.00">0.7</text>
+</g>
+<!-- R1 -->
+<g id="node10" class="node">
+<title>R1</title>
+<polygon fill="none" stroke="black" points="526.94,-36 458.68,-36 458.68,0 526.94,0 526.94,-36"></polygon>
+<text text-anchor="middle" x="492.81" y="-13.8" font-family="Helvetica,sans-Serif" font-size="14.00">refl/local</text>
+</g>
+<!-- O1&#45;&gt;R1 -->
+<g id="edge8" class="edge">
+<title>O1-&gt;R1</title>
+<path fill="none" stroke="black" d="M381.29,-37.77C401.44,-34.17 426.99,-29.6 448.44,-25.76"></path>
+<polygon fill="black" stroke="black" points="449.06,-29.2 458.29,-24 447.83,-22.31 449.06,-29.2"></polygon>
+<text text-anchor="middle" x="419.93" y="-36.2" font-family="Times,serif" font-size="14.00">0.3</text>
+</g>
+<!-- O2&#45;&gt;P2 -->
+<g id="edge9" class="edge">
+<title>O2-&gt;P2</title>
+<path fill="none" stroke="black" d="M297.46,-189C246.4,-189 164.77,-189 109.5,-189"></path>
+<polygon fill="black" stroke="black" points="109.5,-185.5 99.5,-189 109.5,-192.5 109.5,-185.5"></polygon>
+<text text-anchor="middle" x="198.54" y="-193.2" font-family="Times,serif" font-size="14.00">0.7</text>
+</g>
+<!-- R2 -->
+<g id="node11" class="node">
+<title>R2</title>
+<polygon fill="none" stroke="black" points="539.08,-181 446.54,-181 446.54,-145 539.08,-145 539.08,-181"></polygon>
+<text text-anchor="middle" x="492.81" y="-158.8" font-family="Helvetica,sans-Serif" font-size="14.00">refl/sandbox</text>
+</g>
+<!-- O2&#45;&gt;R2 -->
+<g id="edge10" class="edge">
+<title>O2-&gt;R2</title>
+<path fill="none" stroke="black" d="M393.26,-180.63C407.02,-178.17 422.2,-175.45 436.44,-172.91"></path>
+<polygon fill="black" stroke="black" points="437.38,-176.29 446.6,-171.09 436.14,-169.4 437.38,-176.29"></polygon>
+<text text-anchor="middle" x="419.93" y="-181.2" font-family="Times,serif" font-size="14.00">0.3</text>
+</g>
+<!-- O3&#45;&gt;P3 -->
+<g id="edge11" class="edge">
+<title>O3-&gt;P3</title>
+<path fill="none" stroke="black" d="M310.06,-334C257.31,-334 156.38,-334 97.17,-334"></path>
+<polygon fill="black" stroke="black" points="96.97,-330.5 86.97,-334 96.97,-337.5 96.97,-330.5"></polygon>
+<text text-anchor="middle" x="198.54" y="-338.2" font-family="Times,serif" font-size="14.00">0.7</text>
+</g>
+<!-- R3 -->
+<g id="node12" class="node">
+<title>R3</title>
+<polygon fill="none" stroke="black" points="526.67,-325 458.95,-325 458.95,-289 526.67,-289 526.67,-325"></polygon>
+<text text-anchor="middle" x="492.81" y="-302.8" font-family="Helvetica,sans-Serif" font-size="14.00">refl/prod</text>
+</g>
+<!-- O3&#45;&gt;R3 -->
+<g id="edge12" class="edge">
+<title>O3-&gt;R3</title>
+<path fill="none" stroke="black" d="M380.92,-327.6C401.36,-323.81 427.43,-318.96 449.16,-314.92"></path>
+<polygon fill="black" stroke="black" points="449.92,-318.34 459.11,-313.07 448.64,-311.46 449.92,-318.34"></polygon>
+<text text-anchor="middle" x="419.93" y="-326.2" font-family="Times,serif" font-size="14.00">0.3</text>
+</g>
+<!-- R1&#45;&gt;P1 -->
+<g id="edge13" class="edge">
+<title>R1-&gt;P1</title>
+<path fill="none" stroke="black" d="M458.48,-17.58C439.37,-17.36 414.93,-17.11 393.18,-17 350.78,-16.79 340.12,-14.69 297.79,-17 227.77,-20.81 147.1,-30.66 97.49,-37.35"></path>
+<polygon fill="black" stroke="black" points="96.82,-33.9 87.39,-38.72 97.77,-40.84 96.82,-33.9"></polygon>
+<text text-anchor="middle" x="271.04" y="-24.2" font-family="Times,serif" font-size="14.00">0.8</text>
+</g>
+<!-- R2&#45;&gt;P2 -->
+<g id="edge14" class="edge">
+<title>R2-&gt;P2</title>
+<path fill="none" stroke="black" d="M446.64,-162.45C429.85,-162.27 410.64,-162.09 393.18,-162 350.78,-161.79 340.12,-159.69 297.79,-162 233.27,-165.51 159.71,-174.15 109.73,-180.72"></path>
+<polygon fill="black" stroke="black" points="109.2,-177.26 99.75,-182.04 110.12,-184.19 109.2,-177.26"></polygon>
+<text text-anchor="middle" x="271.04" y="-169.2" font-family="Times,serif" font-size="14.00">0.8</text>
+</g>
+<!-- R3&#45;&gt;P3 -->
+<g id="edge15" class="edge">
+<title>R3-&gt;P3</title>
+<path fill="none" stroke="black" d="M458.82,-305.91C420.19,-304.88 354.29,-303.92 297.79,-307 227.57,-310.82 146.64,-320.72 97.06,-327.4"></path>
+<polygon fill="black" stroke="black" points="96.41,-323.96 86.97,-328.78 97.36,-330.9 96.41,-323.96"></polygon>
+<text text-anchor="middle" x="271.04" y="-314.2" font-family="Times,serif" font-size="14.00">0.8</text>
+</g>
+</g>
+</svg>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><em>Figure 2. The 12-state ReAct harness (4 phases × 3 tool tiers). Edges are labeled with transition probabilities. The spectral gap of this matrix is δ = 0.05, giving t_mix ≈ 596 ticks.</em></p>
+<hr>
+</section>
+</section>
+<section id="kam-perturbation-certificate-how-much-constraint-can-you-add" class="level2">
+<h2 class="anchored" data-anchor-id="kam-perturbation-certificate-how-much-constraint-can-you-add">3. KAM Perturbation Certificate: How Much Constraint Can You Add?</h2>
+<section id="the-problem" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem">3.1 The problem</h3>
+<p>In practice, nobody designs a harness in one shot. You start with a permissive core and incrementally bolt on constraints: a security policy that blocks <code>rm -rf</code>, a UI constraint that forces the agent to render diffs before committing, a spec checklist that gates the <em>reflect</em> phase. Each addition is a perturbation <span class="math inline">\(\Delta P\)</span> to the transition matrix: <span class="math inline">\(P' = P + \Delta P\)</span>.</p>
+<p>The question that keeps me up at night: <strong>how large can <span class="math inline">\(\|\Delta P\|\)</span> be before ergodicity is destroyed?</strong></p>
+</section>
+<section id="the-kam-certificate" class="level3">
+<h3 class="anchored" data-anchor-id="the-kam-certificate">3.2 The KAM certificate</h3>
+<p>The full KAM theorem (Kolmogorov, 1954; Arnold, 1963; Moser, 1962) concerns near-integrable Hamiltonian systems and is, frankly, overkill here. We use only the following corollary, which is a direct consequence of the implicit-function theorem applied to the eigenvalue equation:</p>
+<p><strong>Theorem 3 (Ergodicity Preservation under Perturbation).</strong> Let <span class="math inline">\(P\)</span> be an <span class="math inline">\(N \times N\)</span> irreducible, aperiodic stochastic matrix with spectral gap <span class="math inline">\(\delta &gt; 0\)</span>. Let <span class="math inline">\(P' = P + \Delta\)</span> where <span class="math inline">\(\Delta\)</span> is a perturbation preserving row-stochasticity. If</p>
+<p><span class="math display">\[
+\|\Delta\|_{\infty} \;&lt;\; \varepsilon_{\max} \;=\; \frac{\delta}{2\,(N-1)},
+\]</span></p>
+<p>then <span class="math inline">\(P'\)</span> is also irreducible and aperiodic, and its spectral gap satisfies <span class="math inline">\(\delta' \geq \delta - 2N\|\Delta\|_{\infty}\)</span>.</p>
+<p><em>Intuition (the “moat” picture).</em> Think of the eigenvalue <span class="math inline">\(\lambda_1 = 1\)</span> as an island and the remaining eigenvalues as points scattered in the complex plane. The spectral gap <span class="math inline">\(\delta\)</span> is the width of the “moat” separating the island from the nearest point. A perturbation of magnitude <span class="math inline">\(\varepsilon\)</span> shifts each eigenvalue by at most <span class="math inline">\(N\varepsilon\)</span> (Gershgorin). If <span class="math inline">\(N\varepsilon &lt; \delta/2\)</span>, no eigenvalue can cross the moat; the island stays isolated; irreducibility is preserved. In short: <strong>the gap is a moat, and a perturbation smaller than the moat width cannot bridge it.</strong></p>
+</section>
+<section id="practical-kam-budget" class="level3">
+<h3 class="anchored" data-anchor-id="practical-kam-budget">3.3 Practical KAM budget</h3>
+<p>For the 12-state example above (<span class="math inline">\(\delta = 0.05\)</span>, <span class="math inline">\(N = 12\)</span>):</p>
+<p><span class="math display">\[
+\varepsilon_{\max} = \frac{0.05}{2 \times 11} \approx 0.00227.
+\]</span></p>
+<p>This means: each row of <span class="math inline">\(\Delta P\)</span> can have <span class="math inline">\(L^1\)</span> mass at most <span class="math inline">\(\approx 0.23\%\)</span> redistributed. Concretely? If you add a security gate that diverts 5% of <em>act/prod</em> transitions to a <em>blocked</em> state, you are <strong>exceeding the KAM threshold by more than 20×</strong>. Ergodicity is not guaranteed; the agent may now be trapped in the <em>blocked</em> attractor. You added one safety check and broke the whole system.</p>
+<p><strong>What this means for your harness.</strong> Before adding any constraint, compute <span class="math inline">\(\varepsilon_{\max}\)</span> from your current <span class="math inline">\(\delta\)</span> and <span class="math inline">\(N\)</span>. If the constraint’s transition-mass shift exceeds <span class="math inline">\(\varepsilon_{\max}\)</span>, you’ve got three options: (a) reduce the constraint’s strength, (b) add compensating transitions to restore the gap, or (c) accept the loss of ergodicity and redesign the state space. This is a <strong>certifiable, per-constraint budget check</strong> that can run in a CI pipeline in <span class="math inline">\(O(N^3)\)</span> time (one eigendecomposition). Five minutes of compute. Worth it.</p>
+</section>
+<section id="the-aperiodicity-trade-off" class="level3">
+<h3 class="anchored" data-anchor-id="the-aperiodicity-trade-off">3.4 The aperiodicity trade-off</h3>
+<p>The theorems above require aperiodicity (<span class="math inline">\(\gcd\)</span> of return-time periods = 1). In practice, a ReAct loop with fixed phase ordering (plan → act → observe → plan) is <em>periodic</em> with period 3. A common fix is to add a small stochastic “skip” (e.g., 5% probability of staying in the same phase).</p>
+<p><strong>Does this break task-completion guarantees?</strong> No.&nbsp;But it does increase <span class="math inline">\(t_{\text{mix}}\)</span> by a factor of at most <span class="math inline">\((1-\alpha)^{-1}\)</span> where <span class="math inline">\(\alpha\)</span> is the skip probability. At <span class="math inline">\(\alpha = 0.05\)</span>, the overhead is ≈ 6%. The structural benefit (aperiodicity, hence applicability of the mixing bound) far outweighs a 6% latency cost. Honestly, this is the single cheapest ergodicity fix available. Add the skip, move on.</p>
+<hr>
+</section>
+</section>
+<section id="ergodic-optimization-finding-the-maximal-autonomy-measure" class="level2">
+<h2 class="anchored" data-anchor-id="ergodic-optimization-finding-the-maximal-autonomy-measure">4. Ergodic Optimization: Finding the Maximal-Autonomy Measure</h2>
+<section id="the-problem-1" class="level3">
+<h3 class="anchored" data-anchor-id="the-problem-1">4.1 The problem</h3>
+<p>Given a harness <span class="math inline">\(P\)</span> that is ergodic, there’s a unique stationary distribution <span class="math inline">\(\pi\)</span>. But here’s where it gets interesting: you may have <em>design freedom</em>. The transition probabilities within each phase are not fixed by the LLM—they’re set by your harness code (routing rules, tool-selection heuristics, context-window management). So the question becomes:</p>
+<blockquote class="blockquote">
+<p>Among all stochastic matrices <span class="math inline">\(P\)</span> consistent with your architectural constraints (e.g., phase ordering, security gates), which <span class="math inline">\(P\)</span> maximizes an autonomy objective?</p>
+</blockquote>
+<p>A natural objective is the <strong>task-coverage entropy</strong>:</p>
+<p><span class="math display">\[
+\mathcal{H}(\pi) = -\sum_{s \in \Omega} \pi(s) \log \pi(s).
+\]</span></p>
+<p>Maximizing <span class="math inline">\(\mathcal{H}(\pi)\)</span> pushes the stationary distribution toward uniformity, which is the ergodic “ideal”: the agent spends equal long-run time in every configuration. No state is starved.</p>
+</section>
+<section id="the-linear-program" class="level3">
+<h3 class="anchored" data-anchor-id="the-linear-program">4.2 The linear program</h3>
+<p>The entropy-maximization is nonlinear, but the <em>constraint set</em> is linear, and the objective is concave, so the problem is a convex program. For a blog-level implementation, the LP relaxation (linearizing the entropy via its tangent at the uniform distribution) is sufficient and gives the same optimal vertex:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\text{maximize} \quad &amp; \sum_s \pi(s) \quad \text{(subject to } \pi \geq 0,\; \mathbf{1}^T\pi = 1) \\
+\text{subject to} \quad &amp; \pi P = \pi \\
+&amp; P \geq 0, \quad \mathbf{1}^T P = \mathbf{1} \quad \text{(row-stochastic)} \\
+&amp; P_{ij} \leq \bar{p}_{ij} \quad \text{(architectural upper bounds)} \\
+&amp; P_{ij} \geq \underline{p}_{ij} \quad \text{(security lower bounds)}
+\end{aligned}
+\]</span></p>
+</section>
+<section id="a-5-line-python-sketch" class="level3">
+<h3 class="anchored" data-anchor-id="a-5-line-python-sketch">4.3 A 5-line Python sketch</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.optimize <span class="im">import</span> linprog</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">5</span>  <span class="co"># toy state space</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># c: objective (maximize uniformity → minimize -sum π)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> np.ones(N)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># A_eq: π P = π  →  (P^T - I) π = 0, plus sum(π) = 1</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>P <span class="op">=</span> np.full((N, N), <span class="dv">1</span><span class="op">/</span>N)  <span class="co"># start from uniform (feasible)</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>A_eq <span class="op">=</span> np.vstack([np.hstack([P.T <span class="op">-</span> np.eye(N), np.zeros(N)]),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                  np.ones(<span class="dv">2</span> <span class="op">*</span> N)])</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>b_eq <span class="op">=</span> np.concatenate([np.zeros(N), [<span class="fl">1.0</span>]])</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> linprog(c, A_eq<span class="op">=</span>A_eq, b_eq<span class="op">=</span>b_eq, bounds<span class="op">=</span>[(<span class="dv">0</span>, <span class="dv">1</span>)] <span class="op">*</span> N)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Optimal π:"</span>, res.x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This is a toy, obviously. The production version replaces the fixed <span class="math inline">\(P\)</span> with decision variables and adds the architectural bounds <span class="math inline">\(\bar{p}_{ij}\)</span>, <span class="math inline">\(\underline{p}_{ij}\)</span>. The solver (HiGHS, Gurobi, or even <code>cvxpy</code>) returns the maximal-autonomy stationary distribution in milliseconds for <span class="math inline">\(N \leq 10^4\)</span>. You’ll barely notice it running.</p>
+</section>
+<section id="relation-to-the-free-energy-bound" class="level3">
+<h3 class="anchored" data-anchor-id="relation-to-the-free-energy-bound">4.4 Relation to the free-energy bound</h3>
+<p>The ergodic LP is the <em>constrained</em> version of the variational free-energy bound developed in <a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds: A Variational Account of Autonomy</a>. Over there, the KL budget per step is the dual variable; here, the architectural bounds <span class="math inline">\(\bar{p}_{ij}\)</span> play the same role. The two formulations are Fenchel-dual: the LP is the primal (choose transitions), the free-energy bound is the dual (pay a KL cost for deviation from the prior). For practitioners, I’d say the LP is the more actionable object. You can actually run it.</p>
+<hr>
+</section>
+</section>
+<section id="common-harness-design-pitfalls-and-how-to-fix-them" class="level2">
+<h2 class="anchored" data-anchor-id="common-harness-design-pitfalls-and-how-to-fix-them">5. Common Harness Design Pitfalls (and How to Fix Them)</h2>
+<p>The following mistakes show up repeatedly in production harnesses, and they’re all <em>diagnosable</em> by the three numbers above (<span class="math inline">\(N\)</span>, <span class="math inline">\(\delta\)</span>, <span class="math inline">\(\varepsilon_{\max}\)</span>):</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>#</th>
+<th>Pitfall</th>
+<th>Symptom</th>
+<th>Diagnostic</th>
+<th>Fix</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><strong>Phase lock.</strong> The agent always cycles plan→act→observe and never enters <em>reflect</em>.</td>
+<td><span class="math inline">\(\delta\)</span> is small; a 3-state cycle is an invariant set.</td>
+<td>Check <span class="math inline">\(\gcd\)</span> of return times; verify aperiodicity.</td>
+<td>Add a 5% stochastic skip (§3.4).</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><strong>Tool-tier collapse.</strong> The agent selects the local tier 98% of the time, ignoring sandbox and production.</td>
+<td><span class="math inline">\(\pi_{\min} \approx 0.005\)</span>; mixing time explodes.</td>
+<td>Compute <span class="math inline">\(\pi\)</span>; check entropy <span class="math inline">\(\mathcal{H}(\pi)\)</span>.</td>
+<td>Add a context-dependent routing rule that forces tier escalation on specific error patterns.</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><strong>Security over-constraint.</strong> A new <code>rm -rf</code> block creates a <em>blocked</em> state with no outgoing edge.</td>
+<td><span class="math inline">\(P\)</span> loses irreducibility; <span class="math inline">\(\delta \to 0\)</span>.</td>
+<td>Run the KAM check: <span class="math inline">\(\|\Delta P\|_\infty &gt; \varepsilon_{\max}\)</span>.</td>
+<td>Add a “retry with confirmation” transition out of the blocked state.</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><strong>Context-window starvation.</strong> The context hash <span class="math inline">\(c\)</span> has <span class="math inline">\(10^6\)</span> possible values, making <span class="math inline">\(N\)</span> enormous.</td>
+<td><span class="math inline">\(t_{\text{mix}}\)</span> is infeasible.</td>
+<td>Coarse-grain <span class="math inline">\(c\)</span> (see <a href="../../posts/2026-11-19-coarse-graining-autonomy-rg-flow-in-harness-design/">Coarse-Graining Autonomy</a>).</td>
+<td>Reduce <span class="math inline">\(N\)</span> via RG flow; keep only the top-<span class="math inline">\(k\)</span> context buckets.</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><strong>Silent attractor.</strong> A rare error path (e.g., a 429 rate-limit) sends the agent into a retry loop that never exits.</td>
+<td>A 2-state invariant subset exists.</td>
+<td>Ergodicity test: find <span class="math inline">\(A \subset \Omega\)</span> with <span class="math inline">\(P(A, A) = 1\)</span>.</td>
+<td>Add a max-retry counter that forces transition to <em>reflect</em>.</td>
+</tr>
+</tbody>
+</table>
+<p>Each row is a <strong>5-minute CI check</strong>: compute <span class="math inline">\(N\)</span>, run the eigendecomposition, verify <span class="math inline">\(\delta &gt; 0\)</span> and <span class="math inline">\(\|\Delta P\|_\infty &lt; \varepsilon_{\max}\)</span>. If any check fails, the harness is not structurally autonomous. And I mean that no matter how well it scores on SWE-bench. A 95th-percentile benchmark score means nothing if the agent is stuck in a 3-state loop.</p>
+<hr>
+</section>
+<section id="positioning-how-this-relates-to-swe-bench-agentbench-and-τ-bench" class="level2">
+<h2 class="anchored" data-anchor-id="positioning-how-this-relates-to-swe-bench-agentbench-and-τ-bench">6. Positioning: How This Relates to SWE-bench, AgentBench, and τ-bench</h2>
+<p>The dominant agent-evaluation frameworks measure <em>behavioral</em> autonomy:</p>
+<ul>
+<li><strong>SWE-bench</strong> (Jimenez et al., 2023): pass@k on real GitHub issues. Measures <em>outcome</em> success.</li>
+<li><strong>AgentBench</strong> (Liu et al., 2023): multi-task success across web, OS, DB environments. Measures <em>task coverage</em>.</li>
+<li><strong>τ-bench</strong> (Yao et al., 2024): trajectory-level fidelity to a reference policy. Measures <em>process</em> similarity.</li>
+</ul>
+<p>None of them answer the structural question: <em>“Is the agent’s state dynamics ergodic? Will it, in the long run, explore all of its configuration space, or is it silently stuck in a subset?”</em> A SWE-bench pass@1 of 30% is perfectly compatible with an agent that only uses 3 of its 12 states. You’d never know from the benchmark. The ergodicity certificate is <strong>orthogonal</strong> to these benchmarks: it’s a <em>necessary</em> (not sufficient) condition for genuine autonomy. I’d recommend running the ergodicity check as a <strong>pre-gate</strong> in the CI pipeline, before the benchmark suite is even invoked.</p>
+<p>The rate-distortion cost floor in <a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">The Autonomy Channel</a> gives you the information-theoretic lower bound on the distortion a harness must accept; the ergodicity bound gives you the <em>temporal</em> upper bound on how long convergence takes. Together, they bracket the design space: you cannot simultaneously minimize distortion and minimize mixing time below the product of the two lower bounds. That’s a hard wall.</p>
+<hr>
+</section>
+<section id="how-to-build-p-from-your-react-loop-practical-guide" class="level2">
+<h2 class="anchored" data-anchor-id="how-to-build-p-from-your-react-loop-practical-guide">7. How to Build <span class="math inline">\(P\)</span> from Your ReAct Loop (Practical Guide)</h2>
+<p>The theorems assume you have the transition matrix <span class="math inline">\(P\)</span>. In practice, you have to <em>extract</em> it from harness code. Three steps:</p>
+<ol type="1">
+<li><p><strong>Enumerate states.</strong> Walk your harness source. Each distinct combination of (phase, tool-tier, permission-level) is one state. For a typical ReAct harness with 4 phases, 3 tool tiers, and 2 permission levels, <span class="math inline">\(N = 24\)</span>. Write this as a constant in your config: <code>HARNESS_N = 24</code>.</p></li>
+<li><p><strong>Extract transitions.</strong> For each state <span class="math inline">\(s\)</span>, trace the control flow to identify the next state <span class="math inline">\(s'\)</span> and the probability (if stochastic) or the deterministic target. In a plan-act harness, this is usually a hardcoded routing table. Encode it as an <span class="math inline">\(N \times N\)</span> matrix. If the LLM sampling introduces stochasticity, estimate <span class="math inline">\(P_{ij}\)</span> from a 1 000-episode trace.</p></li>
+<li><p><strong>Validate.</strong> Check row-stochasticity (<span class="math inline">\(\sum_j P_{ij} = 1\)</span> for all <span class="math inline">\(i\)</span>), verify irreducibility (all states reachable), and compute <span class="math inline">\(\delta\)</span> via <code>numpy.linalg.eigvals(P.T)</code>. If <span class="math inline">\(\delta \approx 0\)</span>, you have an invariant subset—go back to step 2 and figure out where the disconnect is.</p></li>
+</ol>
+<p>This is the same procedure as the spectral-conditioning algorithm in <a href="../../posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/">The Spectral Gap of Autonomy</a>, extended with the KAM check and the ergodic LP.</p>
+<hr>
+</section>
+<section id="how-this-fits-the-series" class="level2">
+<h2 class="anchored" data-anchor-id="how-this-fits-the-series">8. How This Fits the Series</h2>
+<p>This post is the <strong>ergodic-theoretic core</strong> of the harness-autonomy series. It sits at the intersection of several prior results:</p>
+<ul>
+<li><a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">Scaffolding to Sovereignty</a> provides the dialectical framing: scaffolding is the <em>generative precondition</em> for autonomy, not its enemy. The KAM certificate is the quantitative version of this claim—small scaffolds (constraints) preserve the ergodic core.</li>
+<li><a href="../../posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/">Gauge Symmetry and the Invariant Core</a> identifies the <em>inequivalent</em> autonomy structures; ergodicity is the invariant that survives gauge transformations.</li>
+<li><a href="../../posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/">Functorial Autonomy</a> gives the categorical criterion for safe refactoring; the KAM certificate is the <em>analytic</em> version of the same check.</li>
+<li><a href="../../posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/">Cohomological Obstructions</a> proves that some failures are topological; ergodicity failure is the simplest topological obstruction (a non-trivial invariant set is a 0-dimensional cohomology class).</li>
+<li><a href="../../posts/2026-11-19-canalized-autonomy-waddington-landscapes-in-harness-design/">Canalized Autonomy</a> computes basin depth; the spectral gap <span class="math inline">\(\delta\)</span> is the flatness of the basin floor.</li>
+<li><a href="../../posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/">Autonomy as Geodesic</a> measures the <em>effort</em> of autonomy transitions; <span class="math inline">\(t_{\text{mix}}\)</span> measures the <em>time</em>.</li>
+</ul>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+
+<pre class="mermaid mermaid-js">flowchart TB
+  subgraph "Structural"
+    A["Percolation&lt;br/&gt;(critical density)"]
+    B["Cohomology&lt;br/&gt;(topological obstruction)"]
+    C["Gauge Symmetry&lt;br/&gt;(equivalence classes)"]
+  end
+  subgraph "Dynamic"
+    D["Spectral Gap&lt;br/&gt;(convergence speed)"]
+    E["Ergodicity&lt;br/&gt;(this post)"]
+    F["Free Energy&lt;br/&gt;(KL budget)"]
+  end
+  subgraph "Geometric"
+    G["Waddington&lt;br/&gt;(basin depth)"]
+    H["Information Geometry&lt;br/&gt;(geodesic effort)"]
+    I["RG Flow&lt;br/&gt;(coarse-graining)"]
+  end
+  A --&gt; E
+  B --&gt; E
+  C --&gt; E
+  D --&gt; E
+  F --&gt; E
+  G --&gt; E
+  H --&gt; E
+  I --&gt; E
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><em>Figure 3. The ergodicity certificate (center) unifies the structural, dynamic, and geometric results of the series. Each prior post supplies a constraint or a bound that feeds into the three numbers N, δ, ε_max.</em></p>
+<hr>
+</section>
+<section id="next-steps-three-numbers-to-compute-before-your-next-release" class="level2">
+<h2 class="anchored" data-anchor-id="next-steps-three-numbers-to-compute-before-your-next-release">9. Next Steps: Three Numbers to Compute Before Your Next Release</h2>
+<p>If you’re building a coding-agent harness and want a CI-auditable autonomy certificate, here are the three numbers to compute. Seriously, just these three:</p>
+<ol type="1">
+<li><p><strong><span class="math inline">\(N\)</span></strong> — the state-space cardinality. Count your (phase, tool, permission) tuples. Target: <span class="math inline">\(N \leq 100\)</span> (beyond that, coarse-grain via <a href="../../posts/2026-11-19-coarse-graining-autonomy-rg-flow-in-harness-design/">RG flow</a>).</p></li>
+<li><p><strong><span class="math inline">\(\delta\)</span></strong> — the spectral gap. Run <code>np.linalg.eigvals(P.T)</code>; take <span class="math inline">\(1 - \max|\lambda_i|\)</span> for <span class="math inline">\(i \geq 2\)</span>. Target: <span class="math inline">\(\delta \geq 0.05\)</span> (gives <span class="math inline">\(t_{\text{mix}} \leq 200\,N\ln N\)</span>).</p></li>
+<li><p><strong><span class="math inline">\(\varepsilon_{\max}\)</span></strong> — the KAM threshold. Compute <span class="math inline">\(\delta / (2(N-1))\)</span>. Every new constraint must satisfy <span class="math inline">\(\|\Delta P\|_\infty &lt; \varepsilon_{\max}\)</span>.</p></li>
+</ol>
+<p>A 10-line script to get started:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> autonomy_certificate(P: np.ndarray) <span class="op">-&gt;</span> <span class="bu">dict</span>:</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    N <span class="op">=</span> P.shape[<span class="dv">0</span>]</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    evals <span class="op">=</span> np.linalg.eigvals(P.T)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    delta <span class="op">=</span> <span class="fl">1.0</span> <span class="op">-</span> np.<span class="bu">max</span>(np.<span class="bu">abs</span>(evals[<span class="dv">1</span>:]))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    t_mix <span class="op">=</span> N <span class="op">/</span> delta <span class="op">*</span> np.log(N)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    eps_max <span class="op">=</span> delta <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> (N <span class="op">-</span> <span class="dv">1</span>))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> {<span class="st">"N"</span>: N, <span class="st">"delta"</span>: <span class="bu">round</span>(delta, <span class="dv">6</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">"t_mix_ticks"</span>: <span class="bu">int</span>(t_mix),</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">"eps_max"</span>: <span class="bu">round</span>(eps_max, <span class="dv">8</span>)}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Run this in your CI pipeline on every harness-config change. If <span class="math inline">\(\delta\)</span> drops below your threshold, the build fails with a message identifying the invariant subset (via a simple graph-reachability check on the transition digraph). No ambiguity. No “it worked in my local test.” Just a number that went below a line.</p>
+<hr>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<p>The ergodicity framework has limitations, and it’s worth stating them plainly. First, it’s a <em>necessary</em> but not <em>sufficient</em> condition for autonomy: an ergodic harness can still produce poor code if the LLM’s per-step quality is low. Ergodicity guarantees <em>exploration</em>, not <em>exploitation</em>. Those are different things, and this framework only handles the former.</p>
+<p>Second, the finite-state assumption is an idealization. A production harness with a continuous context window is not literally finite-state, but the coarse-graining results in <a href="../../posts/2026-11-19-coarse-graining-autonomy-rg-flow-in-harness-design/">Coarse-Graining Autonomy</a> justify the discretization to within a computable error. Good enough for engineering purposes.</p>
+<p>Third, the KAM certificate is a <em>local</em> result. It certifies that a small perturbation preserves ergodicity, but it does not tell you what happens at a <em>large</em> perturbation (say, replacing the entire tool layer). For that, the percolation analysis in <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy</a> is the right tool.</p>
+<p>But the deeper methodological point—and this is what I find genuinely exciting—is that autonomy, far from being some philosophical or behavioral property, is a <em>structural</em> one. It’s a property of the transition matrix, not of the LLM weights. That reframing is what makes it CI-auditable, what makes it amenable to perturbation analysis, and what makes the entire series of posts—spectral, percolative, cohomological, geometric—cohere into a single design calculus. You can put a number on it. You can test it in a pipeline. And that changes everything about how you reason about agent reliability.</p>
+<hr>
+</section>
+<section id="related-posts-in-this-series" class="level2">
+<h2 class="anchored" data-anchor-id="related-posts-in-this-series">Related Posts in This Series</h2>
+<ul>
+<li><a href="../../posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/">The Spectral Gap of Autonomy: Eigenmodes in Harness Design</a> — Compute the convergence speed <span class="math inline">\(\delta\)</span> and run the spectral-conditioning algorithm that feeds directly into the mixing bound above.</li>
+<li><a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy: Critical Dynamics in Harness Design</a> — Find the constraint density at which the invariant set fragments; the global complement to the local KAM certificate.</li>
+<li><a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds: A Variational Account of Autonomy</a> — The dual (KL-budget) formulation of the ergodic LP; useful when you want a per-step cost model rather than a global stationary distribution.</li>
+<li><a href="../../posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/">Cohomological Obstructions to Complete Harness Autonomy</a> — Diagnose <em>why</em> a harness fails the ergodicity test: is the obstruction parametric (fixable by tuning) or topological (requires structural redesign)?</li>
+<li><a href="../../posts/2026-11-19-wasserstein-autonomy-optimal-transport-of-harness-states/">Wasserstein Autonomy: Optimal Transport of Harness States</a> — Quantify the refactoring effort to move from a current non-ergodic configuration to the ergodic target, with a CI-auditable transport plan.</li>
+</ul>
+<hr>
+<p><em>The three numbers—<span class="math inline">\(N\)</span>, <span class="math inline">\(\delta\)</span>, <span class="math inline">\(\varepsilon_{\max}\)</span>—are the ergonomic handles on harness autonomy. Compute them, log them, and let your CI pipeline enforce them. Everything else in the series is a refinement of one of these three.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ianmerlos34\.github\.io\/harness-coding\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

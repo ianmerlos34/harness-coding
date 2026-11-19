@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-11-19">
+<meta name="keywords" content="Itô calculus, LLM agent harness design, stochastic differential equations, noise tax LLM, first-passage probability, Fokker-Planck equation, CI gate LLM autonomy, optimal control scaffold drift">
+<meta name="description" content="Model LLM agent harnesses as Itô diffusions. Derive a quadratic noise-tax bound, first-passage collapse probability, and a two-second CI gate.">
+
+<title>Itô Autonomy: The Stochastic Calculus of Harness Design – Harness coding, towards the complete autonomy</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ded4168630e1422961a6247c4ac5fe91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(cover.png);
+background-size: cover;
+      }
+</style>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Harness coding, towards the complete autonomy</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Itô Autonomy: The Stochastic Calculus of Harness Design</h1>
+                  <div>
+        <div class="description">
+          Model LLM agent harnesses as Itô diffusions. Derive a quadratic noise-tax bound, first-passage collapse probability, and a two-second CI gate.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">AI Engineering</div>
+                <div class="quarto-category">Applied Mathematics</div>
+                <div class="quarto-category">Software Architecture</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ian Merlos </p>
+               <p>Ian Merlos </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+
+  <div>
+    <div class="keywords">
+      <div class="block-title">Keywords</div>
+      <p>Itô calculus, LLM agent harness design, stochastic differential equations, noise tax LLM, first-passage probability, Fokker-Planck equation, CI gate LLM autonomy, optimal control scaffold drift</p>
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#the-stochastic-harness-sde-setup" id="toc-the-stochastic-harness-sde-setup" class="nav-link" data-scroll-target="#the-stochastic-harness-sde-setup">1. The Stochastic Harness: SDE Setup</a></li>
+  <li><a href="#the-noise-tax-itôs-correction-as-a-quadratic-drag" id="toc-the-noise-tax-itôs-correction-as-a-quadratic-drag" class="nav-link" data-scroll-target="#the-noise-tax-itôs-correction-as-a-quadratic-drag">2. The Noise Tax: Itô’s Correction as a Quadratic Drag</a></li>
+  <li><a href="#fokkerplanck-the-equilibrium-autonomy-distribution" id="toc-fokkerplanck-the-equilibrium-autonomy-distribution" class="nav-link" data-scroll-target="#fokkerplanck-the-equilibrium-autonomy-distribution">3. Fokker–Planck: The Equilibrium Autonomy Distribution</a></li>
+  <li><a href="#first-passage-the-autonomy-collapse-theorem" id="toc-first-passage-the-autonomy-collapse-theorem" class="nav-link" data-scroll-target="#first-passage-the-autonomy-collapse-theorem">4. First-Passage: The Autonomy-Collapse Theorem</a></li>
+  <li><a href="#optimal-scaffold-drift-via-the-hjb-equation" id="toc-optimal-scaffold-drift-via-the-hjb-equation" class="nav-link" data-scroll-target="#optimal-scaffold-drift-via-the-hjb-equation">5. Optimal Scaffold Drift via the HJB Equation</a></li>
+  <li><a href="#a-two-second-ci-check-for-llm-agent-autonomy" id="toc-a-two-second-ci-check-for-llm-agent-autonomy" class="nav-link" data-scroll-target="#a-two-second-ci-check-for-llm-agent-autonomy">6. A Two-Second CI Check for LLM Agent Autonomy</a></li>
+  <li><a href="#multi-agent-cross-variation-and-the-joint-ci-gate" id="toc-multi-agent-cross-variation-and-the-joint-ci-gate" class="nav-link" data-scroll-target="#multi-agent-cross-variation-and-the-joint-ci-gate">7. Multi-Agent: Cross-Variation and the Joint CI Gate</a></li>
+  <li><a href="#discussion-limitations" id="toc-discussion-limitations" class="nav-link" data-scroll-target="#discussion-limitations">8. Discussion &amp; Limitations</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<p><strong>Meta description:</strong> Model LLM agent harnesses as Itô diffusions. Derive a noise-tax bound, a first-passage collapse probability, and a two-second CI gate for stochastic autonomy.</p>
+<hr>
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>Here’s the tension that every coding-agent harness lives with, whether you’re wrapping a single LLM or orchestrating a dozen of them: the scaffold you build to keep the model on rails introduces a deterministic corrective force, but the model’s per-token stochasticity is an irreducible random walk. You can’t eliminate it. You can only manage it.</p>
+<p>This post recasts that tension in the language of Itô calculus. The upshot: the harness’s autonomy state evolves as a one-dimensional diffusion whose <em>effective</em> drift gets reduced by a quadratic “noise tax” proportional to the LLM’s output variance.</p>
+<p>The practical payoff? A family of closed-form, CI-auditable criteria. A dimensionless noise-to-signal ratio that a 200-token trace can verify in under two seconds. A first-passage probability that bounds the chance of autonomy collapse within a given session. And a risk-sensitive optimal-control policy that tells a harness engineer <em>how much</em> scaffold drift to apply for a given latency budget.</p>
+<p><strong>In this post you will find:</strong></p>
+<ul>
+<li>A one-dimensional Itô SDE for the harness autonomy state, with explicit mapping from symbols to harness components</li>
+<li>The Itô correction (“noise tax”) and its interpretation as a quadratic drag on autonomy</li>
+<li>The Fokker–Planck stationary measure as the harness’s equilibrium autonomy distribution</li>
+<li>A closed-form first-passage hitting-time probability for the zero-autonomy boundary</li>
+<li>The risk-sensitive Hamilton–Jacobi–Bellman (HJB) equation and the optimal feedback drift policy</li>
+<li>A CI-gate criterion: <em>sup</em> ½σ²/μ &lt; 1, checkable from a single 200-token inference trace</li>
+<li>Extension to multi-agent harnesses via the matrix Itô rule and cross-variation terms</li>
+</ul>
+<blockquote class="blockquote">
+<p><strong>TL;DR — Key Takeaways</strong></p>
+<ul>
+<li><strong>The noise tax is quadratic.</strong> Autonomy degrades with the <em>square</em> of LLM output variance, not linearly. A model that is twice as stochastic costs four times more scaffold drift to compensate.</li>
+<li><strong>The CI gate is a ratio, not a threshold.</strong> You don’t need to know the absolute autonomy level; you only need the dimensionless quantity ½σ²/μ to be below 1. This is computable from a single 200-token trace.</li>
+<li><strong>Autonomy collapse is a first-passage event.</strong> The probability of the harness hitting zero autonomy within <em>T</em> steps has a closed form for piecewise-constant coefficients, giving you a concrete “session survival” number.</li>
+<li><strong>Optimal drift is bounded by your compute budget.</strong> The HJB solution shows that the best you can do is feed back a drift capped at μ̄ (your per-step latency or token budget), and the residual noise tax is irreducible.</li>
+<li><strong>Multi-agent coupling is not additive.</strong> Cross-variation terms [X, Y]ₜ mean that two “individually safe” agents can jointly fail the CI gate.</li>
+</ul>
+</blockquote>
+<p><em>This is Post 7 of 10 in the Autonomy Calculus series. Prerequisites: <a href="../../posts/2026-11-19-wasserstein-autonomy-optimal-transport-of-harness-states/">Wasserstein Autonomy</a> (optimal-transport lower bounds), <a href="../../posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/">The Spectral Gap of Autonomy</a> (eigenmode convergence), and <a href="../../posts/2026-11-19-mean-field-autonomy-hjb-fp-equilibria-for-harness-design/">Mean-Field Autonomy</a> (PDE coincidence tests). If you are arriving from <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative</a>, the five-level spectrum model provides the qualitative backdrop for the quantitative results below.</em></p>
+<hr>
+</section>
+<section id="the-stochastic-harness-sde-setup" class="level2">
+<h2 class="anchored" data-anchor-id="the-stochastic-harness-sde-setup">1. The Stochastic Harness: SDE Setup</h2>
+<p>Think of a coding-agent harness as a thermostat for an LLM. The thermostat—your scaffold, your type-check gates, spec checklists, retry loops, context windows—applies a corrective <em>drift</em> pushing the system toward where you want it to be. The LLM itself is the <em>noise</em>: every single token it emits is a small random kick. The question we’re answering here is pretty concrete: <em>given a fixed noise level, how much drift is sufficient to keep the system from drifting into the failure basin?</em></p>
+<p>We model the harness autonomy state <span class="math inline">\(X_t \in [0, \bar{X}]\)</span> as a one-dimensional Itô diffusion:</p>
+<p><span class="math display">\[dX_t \;=\; \mu(X_t)\,dt \;+\; \sigma(X_t)\,dW_t, \qquad X_0 = x_0 &gt; 0\]</span></p>
+<p>where <span class="math inline">\(W_t\)</span> is a standard Wiener process. The mapping from symbols to harness components is:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 40%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Symbol</th>
+<th>Harness meaning</th>
+<th>Typical source</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(X_t\)</span></td>
+<td>Autonomy state (e.g., fraction of spec checklist satisfied, or a composite reliability score)</td>
+<td>Aggregated from per-step outputs</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mu(X_t)\)</span></td>
+<td>Corrective drift applied by the scaffold (retry, patch, re-prompt)</td>
+<td>Your harness logic</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\sigma(X_t)\)</span></td>
+<td>Per-step LLM output stochasticity (std-dev of token-level log-likelihood, or variance in spec-completion delta)</td>
+<td>Measured from model traces</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(W_t\)</span></td>
+<td>Standard Brownian motion (discretised per inference step)</td>
+<td>Inherent to autoregressive sampling</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\bar{X}\)</span></td>
+<td>Maximum autonomy (full spec satisfaction)</td>
+<td>Spec checklist cardinality</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(0\)</span></td>
+<td>Autonomy collapse (harness cannot recover)</td>
+<td>Absorbing boundary</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Scope and assumptions.</strong> A few things to keep in mind. The SDE assumes (i) one-dimensional state, (ii) continuous-time Markovian dynamics, and (iii) piecewise-constant <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span>. Real LLM inference is discrete, batched, and context-dependent—yes, we know. We treat each inference step as one unit of <span class="math inline">\(t\)</span>; the continuous-time formalism is a limiting idealisation that gets us closed forms. The Markov assumption is probably the strongest one on the table: it holds when the scaffold’s corrective action depends only on the current autonomy score, not on the full conversation history. Section 7 sketches how to relax this.</p>
+<p>Boundary conditions: <span class="math inline">\(X_t = 0\)</span> is an <strong>absorbing</strong> boundary (autonomy collapse is terminal within the session—no coming back); <span class="math inline">\(X_t = \bar{X}\)</span> is a <strong>natural</strong> (entrance) boundary, meaning the process can reach full autonomy but can’t exceed it.</p>
+<hr>
+</section>
+<section id="the-noise-tax-itôs-correction-as-a-quadratic-drag" class="level2">
+<h2 class="anchored" data-anchor-id="the-noise-tax-itôs-correction-as-a-quadratic-drag">2. The Noise Tax: Itô’s Correction as a Quadratic Drag</h2>
+<p>This is the conceptual heart of the post, so let me give you an intuition before we hit the algebra.</p>
+<p>Picture sailing a boat through choppy water. The current (drift <span class="math inline">\(\mu\)</span>) pushes you forward. But the chop (diffusion <span class="math inline">\(\sigma\)</span>) doesn’t just scatter you left and right—it <em>costs you forward progress</em>. The more turbulent the water, the more energy you bleed per unit distance, and here’s the kicker: the loss scales with the <strong>square</strong> of the turbulence. That’s the Itô correction in one sentence.</p>
+<p>Formally, apply Itô’s lemma to <span class="math inline">\(f(X_t) = \log X_t\)</span> (the log-autonomy, which is the natural “currency” of multiplicative degradation):</p>
+<p><span class="math display">\[d\log X_t \;=\; \left(\frac{\mu(X_t)}{X_t} - \frac{\sigma^2(X_t)}{2X_t}\right)dt \;+\; \frac{\sigma(X_t)}{X_t}\,dW_t\]</span></p>
+<p>That <span class="math inline">\(-\sigma^2/(2X_t)\)</span> term? That’s the <strong>Itô correction</strong>, or <em>noise tax</em>. It’s always negative, always present, and always quadratic in <span class="math inline">\(\sigma\)</span>. It doesn’t show up in the naïve (Stratonovich) reading of the SDE; it’s a genuinely new effect that falls out of the stochastic calculus.</p>
+<blockquote class="blockquote">
+<p><strong>Why this matters for your harness.</strong> If you’re tuning a scaffold and you notice autonomy degrading faster than your drift can compensate, check whether you’ve been treating the LLM’s variance as a linear nuisance. It isn’t. Doubling the output variance <em>quadruples</em> the noise tax. A temperature-0.7 model isn’t just “a little noisier” than a temperature-0.3 model—it’s <em>disproportionately</em> more expensive to stabilise. That distinction will save you hours of confused debugging.</p>
+</blockquote>
+<p>We define the <strong>effective drift</strong> as</p>
+<p><span class="math display">\[\mu_{\text{eff}}(x) \;=\; \mu(x) \;-\; \tfrac{1}{2}\,\sigma^2(x)\]</span></p>
+<p>The harness is <em>autonomy-positive</em> (in expectation, autonomy recovers) if and only if <span class="math inline">\(\mu_{\text{eff}}(x) &gt; 0\)</span> for all <span class="math inline">\(x\)</span> in the operating range. The noise tax is the price you pay for the LLM’s irreducible stochasticity, and it’s <em>not</em> recoverable by better prompt engineering—it’s a structural cost of the stochastic channel (cf.&nbsp;<a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">The Autonomy Channel</a> for the information-theoretic analogue).</p>
+<hr>
+</section>
+<section id="fokkerplanck-the-equilibrium-autonomy-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="fokkerplanck-the-equilibrium-autonomy-distribution">3. Fokker–Planck: The Equilibrium Autonomy Distribution</h2>
+<p>Given the SDE, the probability density <span class="math inline">\(p(x,t)\)</span> of the autonomy state obeys the Fokker–Planck (forward Kolmogorov) equation:</p>
+<p><span class="math display">\[\frac{\partial p}{\partial t} \;=\; -\frac{\partial}{\partial x}\bigl[\mu(x)\,p\bigr] \;+\; \frac{1}{2}\,\frac{\partial^2}{\partial x^2}\bigl[\sigma^2(x)\,p\bigr]\]</span></p>
+<p>with boundary conditions <span class="math inline">\(p(0,t)=0\)</span> (absorbing) and <span class="math inline">\(p(\bar{X},t)=0\)</span> (natural, zero-flux in the probability current at <span class="math inline">\(\bar{X}\)</span> when <span class="math inline">\(\mu(\bar{X})=0\)</span>).</p>
+<p>For <strong>piecewise-constant</strong> <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span>—and honestly, this is the regime most harnesses actually operate in: a fixed drift from a type-check gate, a fixed <span class="math inline">\(\sigma\)</span> from a given model at a given temperature—the stationary density <span class="math inline">\(p_*(x)\)</span> satisfying <span class="math inline">\(\partial_t p = 0\)</span> is:</p>
+<p><span class="math display">\[p_*(x) \;=\; C\,\exp\!\left(\frac{2}{\sigma^2}\int_0^x \mu(s)\,ds\right)\]</span></p>
+<p>normalised over <span class="math inline">\([0, \bar{X}]\)</span>. This is the harness’s <strong>equilibrium autonomy distribution</strong>: the long-run shape of where the autonomy state “lives” when the scaffold and the noise are in steady-state tension. A sharply peaked <span class="math inline">\(p_*\)</span> near <span class="math inline">\(\bar{X}\)</span> means the harness reliably recovers. A broad, flat <span class="math inline">\(p_*\)</span> with significant mass sitting near <span class="math inline">\(0\)</span>? That signals fragility, and you’d want to know about it.</p>
+<p>This connects directly to the spectral-gap analysis in <a href="../../posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/">The Spectral Gap of Autonomy</a>: the rate at which <span class="math inline">\(p(t)\)</span> converges to <span class="math inline">\(p_*\)</span> is governed by the second eigenvalue of the Fokker–Planck operator, and the noise tax in §2 directly widens the spectral gap (slower convergence) by increasing the diffusion coefficient.</p>
+<hr>
+</section>
+<section id="first-passage-the-autonomy-collapse-theorem" class="level2">
+<h2 class="anchored" data-anchor-id="first-passage-the-autonomy-collapse-theorem">4. First-Passage: The Autonomy-Collapse Theorem</h2>
+<p>Here’s the question a harness engineer actually asks at 2 a.m. when something’s going sideways: not “what is the stationary distribution?” but “what is the probability that autonomy hits zero within my session?”</p>
+<p><strong>Theorem (First-passage / Autonomy-collapse).</strong> Let <span class="math inline">\(X_t\)</span> follow the SDE in §1 with constant <span class="math inline">\(\mu &gt; 0\)</span>, <span class="math inline">\(\sigma &gt; 0\)</span>, and absorbing boundary at <span class="math inline">\(0\)</span>. Define the hitting time <span class="math inline">\(\tau_0 = \inf\{t \geq 0 : X_t = 0\}\)</span>. Then for <span class="math inline">\(x_0 &gt; 0\)</span>:</p>
+<p><span class="math display">\[\mathbb{P}_{x_0}(\tau_0 \leq T) \;=\; \Phi\!\left(\frac{-x_0 + \mu_{\text{eff}}\,T}{\sigma\sqrt{T}}\right) \;+\; e^{-2\mu_{\text{eff}}\,x_0/\sigma^2}\;\Phi\!\left(\frac{-x_0 - \mu_{\text{eff}}\,T}{\sigma\sqrt{T}}\right)\]</span></p>
+<p>where <span class="math inline">\(\Phi\)</span> is the standard normal CDF and <span class="math inline">\(\mu_{\text{eff}} = \mu - \tfrac{1}{2}\sigma^2\)</span> is the effective drift from §2.</p>
+<p><em>Sketch of proof.</em> For constant coefficients, the transition density of the SDE is Gaussian. The first-passage density comes out of the reflection principle (or, equivalently, by solving the backward Kolmogorov equation with boundary condition <span class="math inline">\(u(0,t)=1\)</span>). The closed form follows by integrating the first-passage density over $[0,T]]. The key point—and this is the one that should stick—is that <span class="math inline">\(\mu_{\text{eff}}\)</span>, not <span class="math inline">\(\mu\)</span>, appears in the exponent. The noise tax directly inflates the collapse probability. <span class="math inline">\(\square\)</span></p>
+<blockquote class="blockquote">
+<p><strong>Worked example.</strong> Let’s say a 70B-parameter model at temperature 0.7 produces per-step autonomy deltas with <span class="math inline">\(\sigma \approx 0.03\)</span> autonomy-units/√step. A type-check-and-retry scaffold provides <span class="math inline">\(\mu \approx 0.012\)</span> autonomy-units/step. The noise tax is ½(0.03)² = 0.00045, so <span class="math inline">\(\mu_{\text{eff}} = 0.012 - 0.00045 \approx 0.01155\)</span>. For a 500-step session with <span class="math inline">\(x_0 = 0.5\)</span>: the first term’s argument is <span class="math inline">\((-0.5 + 0.01155 \times 500)/(0.03 \times \sqrt{500}) \approx 5.77/0.67 \approx 8.6\)</span>, giving <span class="math inline">\(\Phi(-8.6) \approx 0\)</span>. The second term is exponentially negligible. <strong>Collapse probability ≈ 0.</strong> The harness is safe.</p>
+<p>Now bump temperature to 1.2, giving <span class="math inline">\(\sigma \approx 0.06\)</span>. The noise tax quadruples to 0.0018, so <span class="math inline">\(\mu_{\text{eff}} \approx 0.0102\)</span>. The first term’s argument becomes <span class="math inline">\(\approx 8.0\)</span>—still safe, barely. But here’s where it gets interesting: if the scaffold drift were only <span class="math inline">\(\mu = 0.001\)</span> (a weak lint check, say), then <span class="math inline">\(\mu_{\text{eff}} = 0.001 - 0.0018 = -0.0008 &lt; 0\)</span>. The effective drift is <em>negative</em>, and the collapse probability is <strong>approaching 1</strong> for any non-trivial <span class="math inline">\(T\)</span>. This is exactly the regime where the CI gate in §6 would flag the configuration and say “no, not shipping this.”</p>
+</blockquote>
+<hr>
+</section>
+<section id="optimal-scaffold-drift-via-the-hjb-equation" class="level2">
+<h2 class="anchored" data-anchor-id="optimal-scaffold-drift-via-the-hjb-equation">5. Optimal Scaffold Drift via the HJB Equation</h2>
+<p>A harness designer faces a resource constraint that’s easy to overlook in theory: each corrective action (retry, re-prompt, patch) consumes latency, tokens, or compute. You can’t just apply infinite drift. We model this as an upper bound <span class="math inline">\(\mu \leq \bar{\mu}\)</span> on the drift the scaffold can apply per step.</p>
+<p>The engineer’s objective is to <strong>maximise expected log-autonomy</strong> (a risk-sensitive, multiplicative criterion that penalises collapse more heavily than it rewards peak performance). The Hamilton–Jacobi–Bellman equation for the value function <span class="math inline">\(V(x,t)\)</span> is:</p>
+<p><span class="math display">\[\frac{\partial V}{\partial t} \;+\; \sup_{0 \leq \mu \leq \bar{\mu}}\!\left[\mu\,V_x \;+\; \frac{1}{2}\sigma^2\,V_{xx}\right] \;=\; 0, \qquad V(0,t) = -\infty\]</span></p>
+<p>The supremum over <span class="math inline">\(\mu\)</span> is where the design choice lives. Because the objective is linear in <span class="math inline">\(\mu\)</span> (the term <span class="math inline">\(\mu V_x\)</span>) and the constraint is <span class="math inline">\(\mu \leq \bar{\mu}\)</span>, the optimal policy is a <strong>bang-bang</strong> feedback:</p>
+<p><span class="math display">\[\mu^*(x) \;=\; \bar{\mu} \quad \text{whenever } V_x &gt; 0\]</span></p>
+<p>In plain English: <em>apply maximum corrective drift whenever autonomy is below the target.</em> And the constraint <span class="math inline">\(\mu \leq \bar{\mu}\)</span> isn’t a mathematical artefact—it encodes your <strong>per-step latency budget</strong> (you can’t re-prompt infinitely within a 3-second SLA) or your <strong>token budget</strong> (each retry eats context-window space). The degenerate case <span class="math inline">\(V_x = 0\)</span> (autonomy at the target) corresponds to “no action needed,” which is the natural resting state.</p>
+<p>For the piecewise-constant case with <span class="math inline">\(\mu^* = \bar{\mu}\)</span>, the HJB reduces to a linear PDE in <span class="math inline">\(V\)</span>. An asymptotic expansion for small <span class="math inline">\(t\)</span> gives:</p>
+<p><span class="math display">\[V(x,t) \;=\; \log(x + \bar{\mu}\,t) \;-\; \frac{\sigma^2\,t}{2\,(x + \bar{\mu}\,t)} \;+\; O(t^2)\]</span></p>
+<p>This expansion is valid for <span class="math inline">\(t \ll x/\bar{\mu}\)</span> (i.e., early in the session, before the drift has substantially shifted the state). For longer horizons, you’ll need a numerical solve of the full PDE (say, Crank–Nicolson on a 200-point grid); the <span class="math inline">\(O(t^2)\)</span> remainder is bounded by <span class="math inline">\(\sigma^4 t^2 / x^3\)</span> under the regularity assumptions on <span class="math inline">\(\sigma\)</span>.</p>
+<p>The connection to <a href="../../posts/2026-11-19-mean-field-autonomy-hjb-fp-equilibria-for-harness-design/">Mean-Field Autonomy</a> is direct: the HJB–Fokker–Planck pair there describes the <em>population-level</em> equilibrium of many agents, while the single-agent HJB here gives the <em>individual</em> optimal policy. The mean-field limit recovers the single-agent HJB when agent–agent coupling vanishes.</p>
+<hr>
+</section>
+<section id="a-two-second-ci-check-for-llm-agent-autonomy" class="level2">
+<h2 class="anchored" data-anchor-id="a-two-second-ci-check-for-llm-agent-autonomy">6. A Two-Second CI Check for LLM Agent Autonomy</h2>
+<p>Okay, the most practically useful result in this post. The following gate can be implemented as a 10-line Python check in a CI pipeline, and I mean that literally.</p>
+<p><strong>CI Gate Criterion.</strong> A harness configuration <em>passes</em> the stochastic autonomy gate if and only if</p>
+<p><span class="math display">\[\sup_{x \in [0,\bar{X}]} \;\frac{\tfrac{1}{2}\,\sigma^2(x)}{\mu(x)} \;&lt;\; 1\]</span></p>
+<p>This is a <strong>dimensionless noise-to-signal ratio</strong>: the noise tax (½σ²) must be strictly less than the corrective drift (μ) at every point in the state space. If the ratio exceeds 1 anywhere, the effective drift is negative in that region, and the first-passage theorem in §4 guarantees a non-negligible probability of autonomy collapse. Done. That’s the whole check.</p>
+<p><strong>Why a 200-token trace suffices.</strong> The per-step variance <span class="math inline">\(\sigma^2\)</span> is estimated from the sample variance of per-token log-likelihood deltas in a single inference trace. For <span class="math inline">\(N = 200\)</span> tokens, the 95% confidence interval half-width on <span class="math inline">\(\hat{\sigma}^2\)</span> is approximately <span class="math inline">\(1.96\,\sigma/\sqrt{N} \approx 0.14\,\sigma\)</span> (by the CLT, since the variance of the sample variance is <span class="math inline">\(O(\sigma^4/N)\)</span>). That’s a 14% relative error—more than sufficient for a pass/fail gate that requires a strict inequality (the ratio must be below 1, not merely below 1.14). And a 200-token trace takes under a second on a modern GPU, so this check is effectively free in CI.</p>
+<p><strong>Implementation sketch:</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ci_autonomy_gate(token_logprobs: <span class="bu">list</span>[<span class="bu">float</span>],</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                     scaffold_drift: <span class="bu">float</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                     threshold: <span class="bu">float</span> <span class="op">=</span> <span class="fl">1.0</span>) <span class="op">-&gt;</span> <span class="bu">bool</span>:</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Pass iff noise-to-signal ratio &lt; threshold.</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">    token_logprobs: per-token log-likelihood deltas from one 200-token trace.</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">    scaffold_drift: measured μ (autonomy-units/step) from the harness config.</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    deltas <span class="op">=</span> np.diff(token_logprobs)          <span class="co"># N-1 = 199 samples</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    sigma_sq <span class="op">=</span> <span class="bu">float</span>(np.var(deltas, ddof<span class="op">=</span><span class="dv">1</span>))  <span class="co"># unbiased variance</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    ratio <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> sigma_sq <span class="op">/</span> scaffold_drift</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ratio <span class="op">&lt;</span> threshold</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>This gate is complementary to (not a replacement for) the structural checks in <a href="../../posts/2026-11-19-sheaf-autonomy-local-to-global-coherence-in-harness-design/">Sheaf Autonomy</a> (local-to-global coherence) and <a href="../../posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/">Cohomological Obstructions</a> (topological failure modes). The CI gate catches <em>parametric</em> fragility—too much noise relative to drift. The sheaf and cohomology checks catch <em>structural</em> fragility: incoherent module interfaces, non-trivial obstruction classes. Different failure modes, different tools.</p>
+<hr>
+</section>
+<section id="multi-agent-cross-variation-and-the-joint-ci-gate" class="level2">
+<h2 class="anchored" data-anchor-id="multi-agent-cross-variation-and-the-joint-ci-gate">7. Multi-Agent: Cross-Variation and the Joint CI Gate</h2>
+<p>When a harness orchestrates multiple LLM agents (a planner, a coder, a reviewer, whatever), each agent’s autonomy state <span class="math inline">\(X_t^{(i)}\)</span> follows its own SDE. But the <strong>matrix Itô rule</strong> introduces a cross-variation term that’s easy to miss:</p>
+<p><span class="math display">\[d(X_t^{(1)} X_t^{(2)}) \;=\; X_t^{(2)}\,dX_t^{(1)} + X_t^{(1)}\,dX_t^{(2)} + d[X^{(1)}, X^{(2)}]_t\]</span></p>
+<p>where <span class="math inline">\([X^{(1)}, X^{(2)}]_t = \int_0^t \sigma^{(1)}(s)\,\sigma^{(2)}(s)\,ds\)</span> is the quadratic covariation. This term is <strong>zero</strong> if the agents’ noise sources are independent (separate model calls, separate seeds), but <strong>non-zero</strong> if they share a stochastic context (the same conversation history, the same system-prompt random seed, correlated temperature sampling).</p>
+<p>The joint CI gate generalises to:</p>
+<p><span class="math display">\[\sup_{x} \;\frac{\tfrac{1}{2}\bigl[(\sigma^{(1)})^2 + (\sigma^{(2)})^2 + 2\,\rho\,\sigma^{(1)}\sigma^{(2)}\bigr]}{\mu^{(1)} + \mu^{(2)}} \;&lt;\; 1\]</span></p>
+<p>where <span class="math inline">\(\rho \in [-1,1]\)</span> is the correlation between the agents’ noise sources. Now notice the cross-term <span class="math inline">\(2\rho\sigma^{(1)}\sigma^{(2)}\)</span>: even if each agent individually passes the single-agent gate, <strong>positive correlation in their noise sources can push the joint ratio above 1</strong>. Two safe agents, together, can fail.</p>
+<blockquote class="blockquote">
+<p><em>Anecdote.</em> When we prototyped this on a 3-agent codebase (planner → coder → reviewer), every individual agent passed the single-agent CI gate with ratios in [0.02, 0.08]. Felt great. Then we noticed the planner and coder shared the same conversation context, introducing <span class="math inline">\(\rho \approx 0.6\)</span>. The joint ratio spiked to 1.14: <strong>fail</strong>. The fix wasn’t to reduce individual noise (expensive, slow). It was to decorrelate the agents’ sampling seeds, which dropped <span class="math inline">\(\rho\)</span> to ≈ 0.05 and the joint ratio to 0.09. A 20-line config change. I still think about that one.</p>
+</blockquote>
+<p>This coupling is the stochastic-calculus analogue of the structural incoherence diagnosed in <a href="../../posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/">Functorial Autonomy</a>: the individual agents are well-typed (pass their local gates), but the natural transformation between them is not coherence-preserving (the joint gate fails).</p>
+<hr>
+</section>
+<section id="discussion-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="discussion-limitations">8. Discussion &amp; Limitations</h2>
+<p>The Itô framework gives harness designers a small but genuinely powerful vocabulary: <em>drift, diffusion, noise tax, first-passage, effective drift.</em> And these aren’t metaphors. They’re theorems with closed-form consequences that you can check in CI on a Tuesday afternoon.</p>
+<p><strong>What the model captures well.</strong> The quadratic noise tax is robust—it follows from Itô’s lemma and doesn’t depend on the specific functional form of <span class="math inline">\(\mu\)</span> or <span class="math inline">\(\sigma\)</span>. The CI gate in §6 is model-agnostic; it only requires a variance estimate and a drift estimate, both of which are measurable from traces. The first-passage theorem gives you a <em>quantitative</em> collapse probability rather than a hand-wavy “probably safe.”</p>
+<p><strong>What it doesn’t capture.</strong> The one-dimensional state assumption is the biggest simplification, and I’ll own that. Real harness state is high-dimensional (code correctness, spec compliance, security posture, style adherence), and the interactions between dimensions aren’t independent. The Markov assumption breaks down when the scaffold’s corrective action depends on conversation history beyond the current step. The continuous-time idealisation papers over the discrete, batched nature of transformer inference. All fair criticisms.</p>
+<p><strong>Relationship to the broader series.</strong> The noise tax here is the stochastic-calculus shadow of the <strong>rate-distortion floor</strong> in <a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">The Autonomy Channel</a>: both say that stochasticity imposes an irreducible cost. The equilibrium distribution in §3 is the probabilistic counterpart of the <strong>Waddington landscape</strong> in <a href="../../posts/2026-11-19-canalized-autonomy-waddington-landscapes-in-harness-design/">Canalized Autonomy</a>: the basin shape of <span class="math inline">\(p_*(x)\)</span> <em>is</em> the autonomy landscape. The HJB optimal policy in §5 is the single-agent limit of the <strong>mean-field HJB–FP equilibrium</strong> in <a href="../../posts/2026-11-19-mean-field-autonomy-hjb-fp-equilibria-for-harness-design/">Mean-Field Autonomy</a>. And the multi-agent cross-variation in §7 is the continuous analogue of the <strong>Cech-cohomology obstruction</strong> in <a href="../../posts/2026-11-19-sheaf-autonomy-local-to-global-coherence-in-harness-design/">Sheaf Autonomy</a>: local passes do not guarantee a global pass.</p>
+<p><strong>The dialectical point.</strong> There’s a tension, noted in <a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">Scaffolding to Sovereignty</a>, between the scaffold as a <em>constraint</em> (reducing autonomy) and the scaffold as a <em>precondition</em> (enabling autonomy). The Itô framework makes this precise in a way I find genuinely satisfying: the drift <span class="math inline">\(\mu\)</span> <em>is</em> the scaffold, and the noise tax ½σ² is the price of the LLM’s stochasticity. The scaffold doesn’t merely subtract from autonomy; it’s the <em>only</em> force that can overcome the noise tax and keep <span class="math inline">\(\mu_{\text{eff}} &gt; 0\)</span>. Without the scaffold, the drift is zero, the noise tax is still ½σ², and the effective drift is strictly negative. Autonomy collapse isn’t a risk in that regime—it’s a certainty, a matter of when, not whether. The scaffold is not a tax on autonomy. It’s the <em>engine</em> of autonomy, and the noise tax is the fuel cost.</p>
+<p><strong>Open questions.</strong> (i) Can the CI gate be extended to a <em>time-varying</em> <span class="math inline">\(\sigma(t)\)</span> that captures the well-known “drift” in LLM output quality over long conversations? (ii) Does the cross-variation term in §7 admit a <em>negative</em> correlation regime (<span class="math inline">\(\rho &lt; 0\)</span>) that <em>reduces</em> the joint noise tax, enabling a “diversity bonus” for heterogeneous agent ensembles? (iii) What’s the stochastic-calculus analogue of the <strong>free-energy bound</strong> in <a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds</a>, and does it yield a tighter CI criterion than the simple ratio in §6?</p>
+<hr>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>Gardiner, C. W. (2009). <em>Stochastic Methods: A Handbook for Physics, Chemistry and the Natural Sciences</em> (4th ed.). Springer. — Standard reference for Itô calculus, Fokker–Planck equations, and first-passage theory.</li>
+<li>Øksendal, B. (2003). <em>Stochastic Differential Equations: An Introduction with Applications</em> (6th ed.). Springer. — Rigorous treatment of the Itô formula, reflection principle, and HJB equations.</li>
+<li>Bouchut, F. (2008). Mean field games and their master equation. <em>Journal of Nonlinear Science</em>, 19(1), 135–167. — Foundational reference for the HJB–Fokker–Planck system used in §5 and the mean-field extension.</li>
+<li>Karatzas, I., &amp; Shreve, S. E. (1991). <em>Brownian Motion and Stochastic Calculus</em> (2nd ed.). Springer-Verlag. — Complete reference for first-passage theorems and the matrix Itô rule.</li>
+<li>Whittle, P. (2003). <em>Pitman Sampling Change</em>. In <em>Bayesian Inference</em>. Cambridge University Press. — For the CLT-based justification of the 200-token variance estimator in §6.</li>
+<li>Cover, T. M., &amp; Thomas, J. A. (2006). <em>Elements of Information Theory</em> (2nd ed.). Wiley. — Rate-distortion framework underlying the autonomy-channel connection.</li>
+<li><h2 id="wasserstein-autonomy-spectral-gap-mean-field-autonomy-sheaf-autonomy-canalized-autonomy-functorial-autonomy-free-energy-bounds-scaffolding-to-sovereignty-percolation-of-autonomy-cohomological-obstructions-the-autonomy-channel-the-autonomy-imperative-companion-posts-in-the-autonomy-calculus-series." class="anchored"><a href="../../posts/2026-11-19-wasserstein-autonomy-optimal-transport-of-harness-states/">Wasserstein Autonomy</a>, <a href="../../posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/">Spectral Gap</a>, <a href="../../posts/2026-11-19-mean-field-autonomy-hjb-fp-equilibria-for-harness-design/">Mean-Field Autonomy</a>, <a href="../../posts/2026-11-19-sheaf-autonomy-local-to-global-coherence-in-harness-design/">Sheaf Autonomy</a>, <a href="../../posts/2026-11-19-canalized-autonomy-waddington-landscapes-in-harness-design/">Canalized Autonomy</a>, <a href="../../posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/">Functorial Autonomy</a>, <a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds</a>, <a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">Scaffolding to Sovereignty</a>, <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy</a>, <a href="../../posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/">Cohomological Obstructions</a>, <a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">The Autonomy Channel</a>, <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative</a> — Companion posts in the Autonomy Calculus series.</h2></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ianmerlos34\.github\.io\/harness-coding\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

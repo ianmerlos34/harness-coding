@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Harness coding, towards the complete autonomy</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-listing/list.min.js"></script>
+<script src="site_libs/quarto-listing/quarto-listing.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-ded4168630e1422961a6247c4ac5fe91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script>
+
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    const listingTargetEl = window.document.querySelector('#listing-listing .list');
+    if (!listingTargetEl) {
+      // No listing discovered, do not attach.
+      return; 
+    }
+
+    const options = {
+      valueNames: ['listing-date','listing-title','listing-author','listing-image','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description","listing-categories"],
+    };
+
+    window['quarto-listings'] = window['quarto-listings'] || {};
+    window['quarto-listings']['listing-listing'] = new List('listing-listing', options);
+
+    if (window['quarto-listing-loaded']) {
+      window['quarto-listing-loaded']();
+    }
+  });
+  </script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Harness coding, towards the complete autonomy</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="./index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-page-left">
+      <h1 class="title">Harness coding, towards the complete autonomy</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta column-page-left">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        
+    <h5 class="quarto-listing-category-title">Categories</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">All <span class="quarto-category-count">(19)</span></div><div class="category" data-category="QUklMjBBZ2VudCUyMEFyY2hpdGVjdHVyZQ==">AI Agent Architecture <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QUklMjBBZ2VudCUyMERlc2lnbg==">AI Agent Design <span class="quarto-category-count">(3)</span></div><div class="category" data-category="QUklMjBBZ2VudHM=">AI Agents <span class="quarto-category-count">(4)</span></div><div class="category" data-category="QUklMjBFbmdpbmVlcmluZw==">AI Engineering <span class="quarto-category-count">(4)</span></div><div class="category" data-category="QUklMjBJbmZyYXN0cnVjdHVyZQ==">AI Infrastructure <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QUklMjBTeXN0ZW1z">AI Systems <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QUklMjBTeXN0ZW1zJTIwRW5naW5lZXJpbmc=">AI Systems Engineering <span class="quarto-category-count">(1)</span></div><div class="category" data-category="YWktYXJjaGl0ZWN0dXJl">ai-architecture <span class="quarto-category-count">(1)</span></div><div class="category" data-category="YWktZW5naW5lZXJpbmc=">ai-engineering <span class="quarto-category-count">(1)</span></div><div class="category" data-category="QWxnZWJyYWljJTIwVG9wb2xvZ3k=">Algebraic Topology <span class="quarto-category-count">(2)</span></div><div class="category" data-category="QXBwbGllZCUyME1hdGhlbWF0aWNz">Applied Mathematics <span class="quarto-category-count">(8)</span></div><div class="category" data-category="QXJ0aWZpY2lhbCUyMEludGVsbGlnZW5jZQ==">Artificial Intelligence <span class="quarto-category-count">(1)</span></div><div class="category" data-category="YXV0b25vbW91cy1hZ2VudHM=">autonomous-agents <span class="quarto-category-count">(1)</span></div><div class="category" data-category="Y2F0ZWdvcnktdGhlb3J5">category-theory <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RGVzaWduJTIwUGhpbG9zb3BoeQ==">Design Philosophy <span class="quarto-category-count">(1)</span></div><div class="category" data-category="SW5mb3JtYXRpb24lMjBUaGVvcnk=">Information Theory <span class="quarto-category-count">(2)</span></div><div class="category" data-category="bGxtLWFnZW50cw==">llm-agents <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TXVsdGktQWdlbnQlMjBTeXN0ZW1z">Multi-Agent Systems <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U29mdHdhcmUlMjBBcmNoaXRlY3R1cmU=">Software Architecture <span class="quarto-category-count">(6)</span></div><div class="category" data-category="U29mdHdhcmUlMjBFbmdpbmVlcmluZw==">Software Engineering <span class="quarto-category-count">(9)</span></div><div class="category" data-category="c29mdHdhcmUtYXJjaGl0ZWN0dXJl">software-architecture <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c29mdHdhcmUtZW5naW5lZXJpbmc=">software-engineering <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U3RhdGlzdGljYWwlMjBNZWNoYW5pY3M=">Statistical Mechanics <span class="quarto-category-count">(1)</span></div><div class="category" data-category="U3RhdGlzdGljYWwlMjBQaHlzaWNz">Statistical Physics <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VGhlb3JldGljYWwlMjBDb21wdXRlciUyMFNjaWVuY2U=">Theoretical Computer Science <span class="quarto-category-count">(1)</span></div><div class="category" data-category="dGhlb3JldGljYWwtcGh5c2ljcw==">theoretical-physics <span class="quarto-category-count">(1)</span></div></div></div>
+<!-- main -->
+<main class="content quarto-banner-title-block column-page-left" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+
+
+
+
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-listing-file-modified-sort="1795112903013" data-listing-reading-time-sort="16" data-listing-word-count-sort="3192">
+<div class="thumbnail"><a href="./posts/2026-11-19-mechanism-design-for-autonomy-incentive-compatible/index.html" class="no-external-icon" aria-hidden="true" tabindex="-1">
+
+<div class="listing-item-img-placeholder card-img-top" >&nbsp;</div>
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-mechanism-design-for-autonomy-incentive-compatible/index.html" class="no-external-icon">Mechanism Design for Autonomy: Incentive-Compatible</a>
+</h3>
+<div class="listing-description">
+<a href="./posts/2026-11-19-mechanism-design-for-autonomy-incentive-compatible/index.html" class="no-external-icon">
+title: “Mechanism Design for Autonomy: Incentive-Compatible” description: “Proving a revelation principle, constraint lower bound, and polynomial-time Pareto-optimal…
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-mechanism-design-for-autonomy-incentive-compatible/index.html" class="no-external-icon">
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="1" data-categories="Y2F0ZWdvcnktdGhlb3J5JTJDYWktZW5naW5lZXJpbmclMkNzb2Z0d2FyZS1hcmNoaXRlY3R1cmUlMkNsbG0tYWdlbnRz" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903010" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="20" data-listing-word-count-sort="3898">
+<div class="thumbnail"><a href="./posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/index.html" class="no-external-icon">Functorial Autonomy: Categorical Structure of Harness Design</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('Y2F0ZWdvcnktdGhlb3J5'); return false;">category-theory</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('YWktZW5naW5lZXJpbmc='); return false;">ai-engineering</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('c29mdHdhcmUtYXJjaGl0ZWN0dXJl'); return false;">software-architecture</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('bGxtLWFnZW50cw=='); return false;">llm-agents</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/index.html" class="no-external-icon">
+<p>Recast harness design as a category where safe refactors are natural transformations, yielding a checkable algebraic criterion for autonomy preservation.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="2" data-categories="QUklMjBBZ2VudCUyMERlc2lnbiUyQ1NvZnR3YXJlJTIwRW5naW5lZXJpbmclMkNJbmZvcm1hdGlvbiUyMFRoZW9yeQ==" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903010" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="11" data-listing-word-count-sort="2115">
+<div class="thumbnail"><a href="./posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/index.html" class="no-external-icon">Free Energy Bounds: A Variational Account of Autonomy</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBBZ2VudCUyMERlc2lnbg=='); return false;">AI Agent Design</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBFbmdpbmVlcmluZw=='); return false;">Software Engineering</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('SW5mb3JtYXRpb24lMjBUaGVvcnk='); return false;">Information Theory</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/index.html" class="no-external-icon">
+<p>A free-energy bound quantifying the maximum autonomy a coding-agent harness can sustain, with a per-step KL budget design calculus for engineers.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="3" data-categories="YXV0b25vbW91cy1hZ2VudHMlMkNhaS1hcmNoaXRlY3R1cmUlMkN0aGVvcmV0aWNhbC1waHlzaWNzJTJDc29mdHdhcmUtZW5naW5lZXJpbmc=" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903011" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="18" data-listing-word-count-sort="3470">
+<div class="thumbnail"><a href="./posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/index.html" class="no-external-icon">Gauge Symmetry and the Invariant Core of Harness Autonomy</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('YXV0b25vbW91cy1hZ2VudHM='); return false;">autonomous-agents</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('YWktYXJjaGl0ZWN0dXJl'); return false;">ai-architecture</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('dGhlb3JldGljYWwtcGh5c2ljcw=='); return false;">theoretical-physics</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('c29mdHdhcmUtZW5naW5lZXJpbmc='); return false;">software-engineering</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/index.html" class="no-external-icon">
+<p>Apply gauge-symmetry principles to collapse the combinatorial design space of LLM agent harnesses into a finite set of inequivalent autonomy structures.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="4" data-categories="QUklMjBBZ2VudCUyMERlc2lnbiUyQ0FsZ2VicmFpYyUyMFRvcG9sb2d5JTJDU29mdHdhcmUlMjBBcmNoaXRlY3R1cmU=" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903009" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3319">
+<div class="thumbnail"><a href="./posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/index.html" class="no-external-icon">Cohomological Obstructions to Complete Harness Autonomy</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBBZ2VudCUyMERlc2lnbg=='); return false;">AI Agent Design</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QWxnZWJyYWljJTIwVG9wb2xvZ3k='); return false;">Algebraic Topology</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBBcmNoaXRlY3R1cmU='); return false;">Software Architecture</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/index.html" class="no-external-icon">
+<p>Prove why some AI agent harness failures are topological, not parametric. A cohomology-based theorem and algorithm diagnose structural autonomy obstructions.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="5" data-categories="QUklMjBBZ2VudCUyMEFyY2hpdGVjdHVyZSUyQ0FsZ2VicmFpYyUyMFRvcG9sb2d5JTJDU29mdHdhcmUlMjBFbmdpbmVlcmluZw==" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903016" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="15" data-listing-word-count-sort="2846">
+<div class="thumbnail"><a href="./posts/2026-11-19-sheaf-autonomy-local-to-global-coherence-in-harness-design/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-sheaf-autonomy-local-to-global-coherence-in-harness-design/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-sheaf-autonomy-local-to-global-coherence-in-harness-design/index.html" class="no-external-icon">Sheaf Autonomy: Local-to-Global Coherence in Harness Design</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBBZ2VudCUyMEFyY2hpdGVjdHVyZQ=='); return false;">AI Agent Architecture</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QWxnZWJyYWljJTIwVG9wb2xvZ3k='); return false;">Algebraic Topology</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBFbmdpbmVlcmluZw=='); return false;">Software Engineering</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-sheaf-autonomy-local-to-global-coherence-in-harness-design/index.html" class="no-external-icon">
+<p>Diagnose and repair structural incoherence in multi-module AI agent harnesses using a computable Cech-cohomology gate—no LLM inference required.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-sheaf-autonomy-local-to-global-coherence-in-harness-design/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="6" data-categories="QUklMjBBZ2VudCUyMERlc2lnbiUyQ1N0YXRpc3RpY2FsJTIwTWVjaGFuaWNzJTJDU29mdHdhcmUlMjBBcmNoaXRlY3R1cmU=" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903009" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3750">
+<div class="thumbnail"><a href="./posts/2026-11-19-coarse-graining-autonomy-rg-flow-in-harness-design/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-coarse-graining-autonomy-rg-flow-in-harness-design/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-coarse-graining-autonomy-rg-flow-in-harness-design/index.html" class="no-external-icon">Coarse-Graining Autonomy: RG Flow in Harness Design</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBBZ2VudCUyMERlc2lnbg=='); return false;">AI Agent Design</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljYWwlMjBNZWNoYW5pY3M='); return false;">Statistical Mechanics</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBBcmNoaXRlY3R1cmU='); return false;">Software Architecture</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-coarse-graining-autonomy-rg-flow-in-harness-design/index.html" class="no-external-icon">
+<p>Wilsonian RG methods applied to AI agent harness design: fixed points, critical transitions, and a cascade algorithm for minimal autonomy constraints.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-coarse-graining-autonomy-rg-flow-in-harness-design/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="7" data-categories="QUklMjBBZ2VudHMlMkNTdGF0aXN0aWNhbCUyMFBoeXNpY3MlMkNTb2Z0d2FyZSUyMEVuZ2luZWVyaW5n" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903014" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="19" data-listing-word-count-sort="3679">
+<div class="thumbnail"><a href="./posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/index.html" class="no-external-icon">Percolation of Autonomy: Critical Dynamics in Harness Design</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBBZ2VudHM='); return false;">AI Agents</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U3RhdGlzdGljYWwlMjBQaHlzaWNz'); return false;">Statistical Physics</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBFbmdpbmVlcmluZw=='); return false;">Software Engineering</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/index.html" class="no-external-icon">
+<p>Apply percolation theory to AI agent harness design. Discover why autonomy emerges in discrete jumps and four heuristics for tuning constraint density.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="8" data-categories="QXBwbGllZCUyME1hdGhlbWF0aWNzJTJDU29mdHdhcmUlMjBFbmdpbmVlcmluZyUyQ0FJJTIwSW5mcmFzdHJ1Y3R1cmU=" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903016" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="21" data-listing-word-count-sort="4153">
+<div class="thumbnail"><a href="./posts/2026-11-19-symplectic-autonomy-noether-conservation-in-harness-design/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-symplectic-autonomy-noether-conservation-in-harness-design/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-symplectic-autonomy-noether-conservation-in-harness-design/index.html" class="no-external-icon">Symplectic Autonomy: Noether Conservation in Harness Design</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QXBwbGllZCUyME1hdGhlbWF0aWNz'); return false;">Applied Mathematics</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBFbmdpbmVlcmluZw=='); return false;">Software Engineering</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBJbmZyYXN0cnVjdHVyZQ=='); return false;">AI Infrastructure</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-symplectic-autonomy-noether-conservation-in-harness-design/index.html" class="no-external-icon">
+<p>Use Noether’s theorem and symplectic reduction to build a CI-checkable test for safe refactoring of coding-agent harnesses preserving autonomy invariants.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-symplectic-autonomy-noether-conservation-in-harness-design/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="9" data-categories="QUklMjBFbmdpbmVlcmluZyUyQ0luZm9ybWF0aW9uJTIwVGhlb3J5JTJDU29mdHdhcmUlMjBBcmNoaXRlY3R1cmU=" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903017" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2648">
+<div class="thumbnail"><a href="./posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/index.html" class="no-external-icon">The Autonomy Channel: Rate-Distortion in Harness Design</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBFbmdpbmVlcmluZw=='); return false;">AI Engineering</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('SW5mb3JtYXRpb24lMjBUaGVvcnk='); return false;">Information Theory</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBBcmNoaXRlY3R1cmU='); return false;">Software Architecture</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/index.html" class="no-external-icon">
+<p>Recasting the coding-agent harness as a Shannon channel, we derive its rate-distortion function R(D) and prove a structural cost floor on autonomy.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="10" data-categories="QUklMjBFbmdpbmVlcmluZyUyQ1NvZnR3YXJlJTIwQXJjaGl0ZWN0dXJlJTJDQXBwbGllZCUyME1hdGhlbWF0aWNz" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903008" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2648">
+<div class="thumbnail"><a href="./posts/2026-11-19-canalized-autonomy-waddington-landscapes-in-harness-design/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-canalized-autonomy-waddington-landscapes-in-harness-design/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-canalized-autonomy-waddington-landscapes-in-harness-design/index.html" class="no-external-icon">Canalized Autonomy: Waddington Landscapes in Harness Design</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBFbmdpbmVlcmluZw=='); return false;">AI Engineering</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBBcmNoaXRlY3R1cmU='); return false;">Software Architecture</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QXBwbGllZCUyME1hdGhlbWF0aWNz'); return false;">Applied Mathematics</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-canalized-autonomy-waddington-landscapes-in-harness-design/index.html" class="no-external-icon">
+<p>Compute canalization depth, verify basin integrity, and safely simplify LLM agent harnesses using a Waddington-landscape geometric framework.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-canalized-autonomy-waddington-landscapes-in-harness-design/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="11" data-categories="QXBwbGllZCUyME1hdGhlbWF0aWNzJTJDQUklMjBTeXN0ZW1zJTIwRW5naW5lZXJpbmclMkNNdWx0aS1BZ2VudCUyMFN5c3RlbXM=" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903012" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="12" data-listing-word-count-sort="2237">
+<div class="thumbnail"><a href="./posts/2026-11-19-mean-field-autonomy-hjb-fp-equilibria-for-harness-design/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-mean-field-autonomy-hjb-fp-equilibria-for-harness-design/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-mean-field-autonomy-hjb-fp-equilibria-for-harness-design/index.html" class="no-external-icon">Mean-Field Autonomy: HJB-FP Equilibria for Harness Design</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QXBwbGllZCUyME1hdGhlbWF0aWNz'); return false;">Applied Mathematics</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBTeXN0ZW1zJTIwRW5naW5lZXJpbmc='); return false;">AI Systems Engineering</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('TXVsdGktQWdlbnQlMjBTeXN0ZW1z'); return false;">Multi-Agent Systems</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-mean-field-autonomy-hjb-fp-equilibria-for-harness-design/index.html" class="no-external-icon">
+<p>Recasting multi-agent LLM harness design as a mean-field game, we show autonomy-optimality is a PDE coincidence test you can gate in CI.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-mean-field-autonomy-hjb-fp-equilibria-for-harness-design/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="12" data-categories="QXJ0aWZpY2lhbCUyMEludGVsbGlnZW5jZSUyQ1NvZnR3YXJlJTIwRW5naW5lZXJpbmclMkNUaGVvcmV0aWNhbCUyMENvbXB1dGVyJTIwU2NpZW5jZQ==" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903017" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="14" data-listing-word-count-sort="2603">
+<div class="thumbnail"><a href="./posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/index.html" class="no-external-icon">The Autonomy Imperative: Code as Self-Governing Architecture</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QXJ0aWZpY2lhbCUyMEludGVsbGlnZW5jZQ=='); return false;">Artificial Intelligence</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBFbmdpbmVlcmluZw=='); return false;">Software Engineering</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('VGhlb3JldGljYWwlMjBDb21wdXRlciUyMFNjaWVuY2U='); return false;">Theoretical Computer Science</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/index.html" class="no-external-icon">
+<p>A five-level spectrum model for coding-agent autonomy grounded in control theory, formal verification, and philosophy of mind.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="13" data-categories="QUklMjBTeXN0ZW1zJTJDQXBwbGllZCUyME1hdGhlbWF0aWNzJTJDU29mdHdhcmUlMjBFbmdpbmVlcmluZw==" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903018" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="20" data-listing-word-count-sort="3859">
+<div class="thumbnail"><a href="./posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/index.html" class="no-external-icon">The Spectral Gap of Autonomy: Eigenmodes in Harness Design</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBTeXN0ZW1z'); return false;">AI Systems</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QXBwbGllZCUyME1hdGhlbWF0aWNz'); return false;">Applied Mathematics</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBFbmdpbmVlcmluZw=='); return false;">Software Engineering</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/index.html" class="no-external-icon">
+<p>Measure your coding-agent harness convergence speed with eigenmode analysis. Includes a sensitivity certificate and a spectral-conditioning algorithm.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="14" data-categories="QUklMjBBZ2VudHMlMkNBcHBsaWVkJTIwTWF0aGVtYXRpY3MlMkNTb2Z0d2FyZSUyMEVuZ2luZWVyaW5n" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903007" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="22" data-listing-word-count-sort="4210">
+<div class="thumbnail"><a href="./posts/2026-11-19-autonomy-as-ergodicity-mixing-theorems-for-harness-design/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-autonomy-as-ergodicity-mixing-theorems-for-harness-design/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-autonomy-as-ergodicity-mixing-theorems-for-harness-design/index.html" class="no-external-icon">Autonomy as Ergodicity: Mixing Theorems for Harness Design</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBBZ2VudHM='); return false;">AI Agents</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QXBwbGllZCUyME1hdGhlbWF0aWNz'); return false;">Applied Mathematics</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBFbmdpbmVlcmluZw=='); return false;">Software Engineering</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-autonomy-as-ergodicity-mixing-theorems-for-harness-design/index.html" class="no-external-icon">
+<p>Formalize coding-agent autonomy as ergodicity, prove O(N²/δ) mixing-time bounds, and derive KAM certificates for constraint robustness in harness design.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-autonomy-as-ergodicity-mixing-theorems-for-harness-design/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="15" data-categories="QUklMjBBZ2VudHMlMkNTb2Z0d2FyZSUyMEVuZ2luZWVyaW5nJTJDRGVzaWduJTIwUGhpbG9zb3BoeQ==" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903015" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3054">
+<div class="thumbnail"><a href="./posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/index.html" class="no-external-icon">Scaffolding to Sovereignty: The Dialectic of Code Autonomy</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBBZ2VudHM='); return false;">AI Agents</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBFbmdpbmVlcmluZw=='); return false;">Software Engineering</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('RGVzaWduJTIwUGhpbG9zb3BoeQ=='); return false;">Design Philosophy</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/index.html" class="no-external-icon">
+<p>Scaffolding isn’t a tax on AI agent autonomy—it’s the generative precondition. A dialectical framework for LLM agent harness design.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="16" data-categories="QUklMjBFbmdpbmVlcmluZyUyQ0FwcGxpZWQlMjBNYXRoZW1hdGljcyUyQ1NvZnR3YXJlJTIwQXJjaGl0ZWN0dXJl" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903008" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="16" data-listing-word-count-sort="3078">
+<div class="thumbnail"><a href="./posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/index.html" class="no-external-icon">Autonomy as Geodesic: Information Geometry of Harness Design</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBFbmdpbmVlcmluZw=='); return false;">AI Engineering</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QXBwbGllZCUyME1hdGhlbWF0aWNz'); return false;">Applied Mathematics</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBBcmNoaXRlY3R1cmU='); return false;">Software Architecture</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/index.html" class="no-external-icon">
+<p>Recasting coding-agent harness design as a Riemannian manifold where autonomy transitions are geodesics, with computable effort, curvature, and drift.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="17" data-categories="QUklMjBFbmdpbmVlcmluZyUyQ0FwcGxpZWQlMjBNYXRoZW1hdGljcyUyQ1NvZnR3YXJlJTIwQXJjaGl0ZWN0dXJl" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903012" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3382">
+<div class="thumbnail"><a href="./posts/2026-11-19-ito-autonomy-the-stochastic-calculus-of-harness-design/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-ito-autonomy-the-stochastic-calculus-of-harness-design/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-ito-autonomy-the-stochastic-calculus-of-harness-design/index.html" class="no-external-icon">Itô Autonomy: The Stochastic Calculus of Harness Design</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBFbmdpbmVlcmluZw=='); return false;">AI Engineering</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QXBwbGllZCUyME1hdGhlbWF0aWNz'); return false;">Applied Mathematics</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBBcmNoaXRlY3R1cmU='); return false;">Software Architecture</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-ito-autonomy-the-stochastic-calculus-of-harness-design/index.html" class="no-external-icon">
+<p>Model LLM agent harnesses as Itô diffusions. Derive a quadratic noise-tax bound, first-passage collapse probability, and a two-second CI gate.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-ito-autonomy-the-stochastic-calculus-of-harness-design/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+<div class="quarto-post image-right" data-index="18" data-categories="U29mdHdhcmUlMjBFbmdpbmVlcmluZyUyQ0FJJTIwQWdlbnRzJTJDQXBwbGllZCUyME1hdGhlbWF0aWNz" data-listing-date-sort="1795046400000" data-listing-file-modified-sort="1795112903019" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="17" data-listing-word-count-sort="3378">
+<div class="thumbnail"><a href="./posts/2026-11-19-wasserstein-autonomy-optimal-transport-of-harness-states/index.html" class="no-external-icon">
+
+<img loading="lazy" src="./posts/2026-11-19-wasserstein-autonomy-optimal-transport-of-harness-states/cover.png" class="thumbnail-image">
+
+</a></div>
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./posts/2026-11-19-wasserstein-autonomy-optimal-transport-of-harness-states/index.html" class="no-external-icon">Wasserstein Autonomy: Optimal Transport of Harness States</a>
+</h3>
+<div class="listing-categories">
+
+<div class="listing-category" onclick="window.quartoListingCategory('U29mdHdhcmUlMjBFbmdpbmVlcmluZw=='); return false;">Software Engineering</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QUklMjBBZ2VudHM='); return false;">AI Agents</div>
+
+<div class="listing-category" onclick="window.quartoListingCategory('QXBwbGllZCUyME1hdGhlbWF0aWNz'); return false;">Applied Mathematics</div>
+
+</div>
+<div class="listing-description">
+<a href="./posts/2026-11-19-wasserstein-autonomy-optimal-transport-of-harness-states/index.html" class="no-external-icon">
+<p>Recasting the scaffold-to-autonomy transition as an optimal-transport problem yields a provable lower bound on refactoring effort and a CI-auditable plan.</p>
+</a>
+</div>
+</div>
+<div class="metadata">
+<a href="./posts/2026-11-19-wasserstein-autonomy-optimal-transport-of-harness-states/index.html" class="no-external-icon">
+<div class="listing-date">
+Nov 19, 2026
+</div>
+<div class="listing-author">
+Ian Merlos
+</div>
+</a>
+</div>
+</div>
+</div>
+<div class="listing-no-matching d-none">No matching items</div>
+</div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ianmerlos34\.github\.io\/harness-coding\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

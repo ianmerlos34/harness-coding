@@ -1,6 +1,0 @@
-# Default metadata applied to every post in this directory.
-# Edit to add affiliation, social links, photo, etc.
-# See: https://quarto.org/docs/websites/website-blog.html#author-metadata
-author:
-  - name: "Ian Merlos"
-    bio: "I am a traditional developer that has become an harness developer. My aim is to build a fully autonomous software creation tool and here I share my thoughts."

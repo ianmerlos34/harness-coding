@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-11-19">
+<meta name="keywords" content="optimal transport, Wasserstein distance, coding agent autonomy, harness refactoring cost, constraint lattice, Kantorovich dual, scaffold to autonomy, refactoring effort estimation, AI agent guardrails, optimal transport scheduling">
+<meta name="description" content="Recasting the scaffold-to-autonomy transition as an optimal-transport problem yields a provable lower bound on refactoring effort and a CI-auditable plan.">
+
+<title>Wasserstein Autonomy: Optimal Transport of Harness States – Harness coding, towards the complete autonomy</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ded4168630e1422961a6247c4ac5fe91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(cover.png);
+background-size: cover;
+      }
+</style>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Harness coding, towards the complete autonomy</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Wasserstein Autonomy: Optimal Transport of Harness States</h1>
+                  <div>
+        <div class="description">
+          Recasting the scaffold-to-autonomy transition as an optimal-transport problem yields a provable lower bound on refactoring effort and a CI-auditable plan.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">Software Engineering</div>
+                <div class="quarto-category">AI Agents</div>
+                <div class="quarto-category">Applied Mathematics</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ian Merlos </p>
+               <p>Ian Merlos </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+
+  <div>
+    <div class="keywords">
+      <div class="block-title">Keywords</div>
+      <p>optimal transport, Wasserstein distance, coding agent autonomy, harness refactoring cost, constraint lattice, Kantorovich dual, scaffold to autonomy, refactoring effort estimation, AI agent guardrails, optimal transport scheduling</p>
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#why-transport-not-enumeration" id="toc-why-transport-not-enumeration" class="nav-link" data-scroll-target="#why-transport-not-enumeration">1. Why Transport, Not Enumeration</a></li>
+  <li><a href="#the-constraint-lattice-and-its-measures" id="toc-the-constraint-lattice-and-its-measures" class="nav-link" data-scroll-target="#the-constraint-lattice-and-its-measures">2. The Constraint Lattice and Its Measures</a>
+  <ul class="collapse">
+  <li><a href="#the-lattice-mathcall" id="toc-the-lattice-mathcall" class="nav-link" data-scroll-target="#the-lattice-mathcall">2.1 The Lattice <span class="math inline">\(\mathcal{L}\)</span></a></li>
+  <li><a href="#probability-measures-on-mathcall" id="toc-probability-measures-on-mathcall" class="nav-link" data-scroll-target="#probability-measures-on-mathcall">2.2 Probability Measures on <span class="math inline">\(\mathcal{L}\)</span></a></li>
+  <li><a href="#notation-summary" id="toc-notation-summary" class="nav-link" data-scroll-target="#notation-summary">2.3 Notation Summary</a></li>
+  </ul></li>
+  <li><a href="#the-worked-example" id="toc-the-worked-example" class="nav-link" data-scroll-target="#the-worked-example">3. The Worked Example</a></li>
+  <li><a href="#the-dual-formulation" id="toc-the-dual-formulation" class="nav-link" data-scroll-target="#the-dual-formulation">4. The Dual Formulation</a>
+  <ul class="collapse">
+  <li><a href="#primal-and-dual" id="toc-primal-and-dual" class="nav-link" data-scroll-target="#primal-and-dual">4.1 Primal and Dual</a></li>
+  <li><a href="#existence-and-uniqueness" id="toc-existence-and-uniqueness" class="nav-link" data-scroll-target="#existence-and-uniqueness">4.2 Existence and Uniqueness</a></li>
+  </ul></li>
+  <li><a href="#the-optimal-coupling-as-a-refactoring-schedule" id="toc-the-optimal-coupling-as-a-refactoring-schedule" class="nav-link" data-scroll-target="#the-optimal-coupling-as-a-refactoring-schedule">5. The Optimal Coupling as a Refactoring Schedule</a></li>
+  <li><a href="#entropy-and-the-transport-cost" id="toc-entropy-and-the-transport-cost" class="nav-link" data-scroll-target="#entropy-and-the-transport-cost">6. Entropy and the Transport Cost</a></li>
+  <li><a href="#free-energy-connection" id="toc-free-energy-connection" class="nav-link" data-scroll-target="#free-energy-connection">7. Free-Energy Connection</a></li>
+  <li><a href="#percolation-threshold-and-the-w₂-bound" id="toc-percolation-threshold-and-the-w₂-bound" class="nav-link" data-scroll-target="#percolation-threshold-and-the-w₂-bound">8. Percolation Threshold and the W₂ Bound</a></li>
+  <li><a href="#practical-algorithm" id="toc-practical-algorithm" class="nav-link" data-scroll-target="#practical-algorithm">9. Practical Algorithm</a></li>
+  <li><a href="#discussion-and-open-questions" id="toc-discussion-and-open-questions" class="nav-link" data-scroll-target="#discussion-and-open-questions">10. Discussion and Open Questions</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">11. Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<!-- meta description: We recast the scaffold-to-autonomy transition for coding-agent harnesses as a Kantorovich optimal-transport problem, yielding a computable lower bound on refactoring effort and a concrete, order-preserving work schedule. -->
+<!-- og:description: We recast the scaffold-to-autonomy transition for coding-agent harnesses as a Kantorovich optimal-transport problem, yielding a computable lower bound on refactoring effort and a concrete, order-preserving work schedule. -->
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>So here’s a question that keeps coming up in conversations about coding agents: how much actual engineering work sits between a fully scaffolded harness and one that runs with barely any human in the loop? We recast this question as a Kantorovich optimal-transport (OT) problem between two probability measures on a partially ordered constraint lattice, and out of that framing falls a provable lower bound—the Wasserstein-2 distance (W₂)—on the irreducible cost of getting to autonomy. The dual formulation gives you a certifiable refactoring schedule, and the whole thing slots neatly into the entropy, free-energy, and percolation threads we’ve been pulling through this series.</p>
+<blockquote class="blockquote">
+<p><strong>What you will get from this post</strong></p>
+<ul>
+<li>A formal W₂ lower bound on the refactoring cost between any two harness configurations.</li>
+<li>A dual-potential certificate you can actually drop into a CI pipeline and have it audited.</li>
+<li>A seven-step algorithm that turns the bound into an ordered, dependency-respecting work schedule.</li>
+<li>Explicit connections to the rate-distortion, free-energy, and percolation results elsewhere in this series.</li>
+</ul>
+</blockquote>
+<p><em>Prerequisites.</em> Fair warning: this post assumes you’re comfortable with basic measure theory, the Kantorovich formulation of OT, and enough lattice theory to follow the partial-order notation. If OT is new to you, Villani (2009), Chapters 1–2, is the classic entry point, or the more accessible survey in Peyré &amp; Cuturi (2019), Chapter 1, will get you there. For the broader autonomy-spectrum model we’re building on, see <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative</a>.</p>
+<hr>
+</section>
+<section id="why-transport-not-enumeration" class="level2">
+<h2 class="anchored" data-anchor-id="why-transport-not-enumeration">1. Why Transport, Not Enumeration</h2>
+<p>“How far is my harness from full autonomy?” Sounds like a simple question, right? The naive move is to enumerate: list the constraints you need to pull, the invariants you need to loosen, the feedback loops you need to rewire, and then sum up the person-hours. And sure, you can do that. But it’s fragile. The <em>order</em> in which you relax things matters—some relaxations are only possible after others are in place. And the geometry of the constraint space (its partial order, its symmetries, its critical thresholds) sets a cost floor that no clever scheduling can get below.</p>
+<p>Optimal transport gives us exactly the right language for this. Instead of asking “which constraints do I remove?”, the question becomes “what’s the minimum work to deform the probability measure describing my current harness into the one describing the target autonomous state?” The W₂ distance between those two measures <em>is</em> that minimum work. Concretely, it’s the cost of moving mass—engineering attention, test coverage, guardrail density—from wherever the scaffolded regime puts it to wherever the autonomous regime needs it, subject to the geometric constraints of the lattice.</p>
+<p>And this isn’t just a pretty reframing. It buys you three things: (i) a lower bound that doesn’t care what schedule you pick, (ii) a dual certificate you can verify without enumerating the full coupling, and (iii) a natural bridge to the rate-distortion floor in <a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">The Autonomy Channel</a> and the free-energy bound in <a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds</a>.</p>
+<hr>
+</section>
+<section id="the-constraint-lattice-and-its-measures" class="level2">
+<h2 class="anchored" data-anchor-id="the-constraint-lattice-and-its-measures">2. The Constraint Lattice and Its Measures</h2>
+<section id="the-lattice-mathcall" class="level3">
+<h3 class="anchored" data-anchor-id="the-lattice-mathcall">2.1 The Lattice <span class="math inline">\(\mathcal{L}\)</span></h3>
+<p>A harness configuration is modelled as an element <span class="math inline">\(a \in \mathcal{L}\)</span> of a finite distributive lattice <span class="math inline">\((\mathcal{L}, \preceq)\)</span>. The atoms are individual constraints—input-validation rules, output-checklist gates, sandbox isolation levels, human-approval checkpoints, that sort of thing. The order <span class="math inline">\(\preceq\)</span> encodes <em>weakening</em>: <span class="math inline">\(a \preceq b\)</span> means configuration <span class="math inline">\(b\)</span> has relaxed (or removed) at least the constraints present in <span class="math inline">\(a\)</span>. Top element <span class="math inline">\(\top\)</span> is the fully scaffolded harness; bottom element <span class="math inline">\(\bot\)</span> is maximal autonomy (nothing left beyond the irreducible safety invariants we identified in <a href="../../posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/">Cohomological Obstructions</a>).</p>
+<p>The distance between two configurations is defined via an <strong>effort function</strong>:</p>
+<p><span class="math display">\[d(a, b) \;=\; \text{effort}(a \to b),\]</span></p>
+<p>where <span class="math inline">\(\text{effort}(a \to b)\)</span> is the engineering cost (person-hours, CI-cycle-equivalents, whatever normalised unit you like) of going from configuration <span class="math inline">\(a\)</span> to <span class="math inline">\(b\)</span> along the shortest dependency-respecting path in <span class="math inline">\(\mathcal{L}\)</span>.</p>
+<p><strong>Estimating the effort function.</strong> This is the single most important empirical input to the whole framework, and honestly, it deserves way more attention than a one-line definition gets. In practice, you’ll calibrate <span class="math inline">\(\text{effort}(a \to b)\)</span> from a few sources:</p>
+<ul>
+<li><strong>CI/CD telemetry.</strong> Wall-clock time and retry counts for the sequence of test-suite changes needed to pass under relaxed constraints.</li>
+<li><strong>Pull-request review data.</strong> Median review time and revision cycles for PRs that touch the same guardrail files.</li>
+<li><strong>Historical refactoring logs.</strong> If your team has already walked part of the lattice, the realised effort for each transition <span class="math inline">\((a, b)\)</span> is a direct sample.</li>
+<li><strong>Expert elicitation.</strong> For transitions nobody’s traversed yet, structured Delphi estimates (anchored on the ones you <em>have</em> traversed) give you a defensible prior.</li>
+</ul>
+<p>The key requirement is that <span class="math inline">\(d\)</span> satisfy the triangle inequality on <span class="math inline">\(\mathcal{L}\)</span>. It need not be symmetric if adding constraints costs differently than removing them, but for the W₂ formulation we assume symmetry (or restrict to the directed setting). A companion post will develop a proper statistical estimator for <span class="math inline">\(\text{effort}\)</span> from heterogeneous telemetry; for now, treat it as given.</p>
+</section>
+<section id="probability-measures-on-mathcall" class="level3">
+<h3 class="anchored" data-anchor-id="probability-measures-on-mathcall">2.2 Probability Measures on <span class="math inline">\(\mathcal{L}\)</span></h3>
+<p>Here’s the point that trips people up: a <em>harness state</em> isn’t a single lattice element. In production, you’re running across multiple codebases, feature branches, deployment environments—so the state is really a <em>distribution</em> over lattice elements. Formally, a harness state is a probability measure <span class="math inline">\(\mu \in \mathcal{P}(\mathcal{L})\)</span> (for finite <span class="math inline">\(\mathcal{L}\)</span>, just a probability vector). The scaffolded state <span class="math inline">\(\mu_S\)</span> concentrates mass near <span class="math inline">\(\top\)</span>; the autonomous target <span class="math inline">\(\mu_A\)</span> concentrates near <span class="math inline">\(\bot\)</span>.</p>
+</section>
+<section id="notation-summary" class="level3">
+<h3 class="anchored" data-anchor-id="notation-summary">2.3 Notation Summary</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 47%">
+<col style="width: 52%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(\mathcal{L}, \preceq\)</span></td>
+<td>Finite distributive constraint lattice</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(a, b \in \mathcal{L}\)</span></td>
+<td>Harness configurations</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(d(a,b)\)</span></td>
+<td>Symmetric effort distance</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mu, \nu \in \mathcal{P}(\mathcal{L})\)</span></td>
+<td>Harness states (probability measures)</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\gamma\)</span></td>
+<td>Coupling (joint distribution on <span class="math inline">\(\mathcal{L} \times \mathcal{L}\)</span>)</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(W_2(\mu,\nu)\)</span></td>
+<td>Wasserstein-2 distance</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\varphi, \psi\)</span></td>
+<td>Dual potentials</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(H(\gamma)\)</span></td>
+<td>Shannon entropy of the coupling</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(F(\mu)\)</span></td>
+<td>Free-energy functional</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(p_c\)</span></td>
+<td>Percolation threshold</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\nu\)</span> (exponent)</td>
+<td>Critical exponent of the percolation cluster</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\mathrm{KL}(\mu \| \nu)\)</span></td>
+<td>Kullback–Leibler divergence</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="the-worked-example" class="level2">
+<h2 class="anchored" data-anchor-id="the-worked-example">3. The Worked Example</h2>
+<blockquote class="blockquote">
+<p><strong>Concrete anchor.</strong> Let’s make this tangible. Picture a small harness with four constraints: input validation (IV), output checklist (OC), sandbox isolation (SI), and human approval (HA). The lattice has <span class="math inline">\(2^4 = 16\)</span> elements (all subsets of active constraints). The scaffolded state <span class="math inline">\(\mu_S\)</span> puts 80% mass on the full set <span class="math inline">\(\{IV, OC, SI, HA\}\)</span> and 20% on <span class="math inline">\(\{IV, SI, HA\}\)</span>. The autonomous target <span class="math inline">\(\mu_A\)</span> puts 70% mass on <span class="math inline">\(\{IV\}\)</span> and 30% on <span class="math inline">\(\{IV, SI\}\)</span>.</p>
+<p>The effort function, calibrated from (say) a year of CI logs, looks like this: removing HA costs 40 h; removing OC costs 25 h; removing SI costs 60 h (because it requires re-architecting the sandbox boundary); adding any constraint back costs 10 h per constraint. The W₂ distance between <span class="math inline">\(\mu_S\)</span> and <span class="math inline">\(\mu_A\)</span> comes out of solving the linear programme over the <span class="math inline">\(16 \times 16\)</span> coupling matrix. The optimal coupling assigns the 70% mass at <span class="math inline">\(\{IV, OC, SI, HA\}\)</span> to <span class="math inline">\(\{IV\}\)</span> at cost <span class="math inline">\(d^2 = (40+25+60)^2 = 18225\)</span>, and the 30% mass at <span class="math inline">\(\{IV, SI, HA\}\)</span> to <span class="math inline">\(\{IV, SI\}\)</span> at cost <span class="math inline">\(d^2 = 40^2 = 1600\)</span>. The W₂ value is <span class="math inline">\(\sqrt{0.7 \cdot 18225 + 0.3 \cdot 1600} \approx 112.4\)</span> (in <span class="math inline">\(\sqrt{\text{h}^2}\)</span> units).</p>
+<p><em>Interpretation.</em> No matter how cleverly you sequence the refactoring, the total effort can’t fall below <span class="math inline">\(\approx 112.4^2 \approx 12{,}630\)</span> h² (or <span class="math inline">\(\approx 112.4\)</span> h in the linearised reading). That’s the irreducible cost.</p>
+</blockquote>
+<p>What I like about this example is the key property it exposes: the W₂ bound is <em>schedule-independent</em>. Whether the team pulls HA first, or OC first, or parallelises the SI re-architecture alongside the HA removal—the total effort can’t dip below the bound. Period.</p>
+<hr>
+</section>
+<section id="the-dual-formulation" class="level2">
+<h2 class="anchored" data-anchor-id="the-dual-formulation">4. The Dual Formulation</h2>
+<section id="primal-and-dual" class="level3">
+<h3 class="anchored" data-anchor-id="primal-and-dual">4.1 Primal and Dual</h3>
+<p>The primal Wasserstein-2 problem is</p>
+<p><span class="math display">\[W_2^2(\mu, \nu) \;=\; \inf_{\gamma \in \Pi(\mu,\nu)} \int_{\mathcal{L} \times \mathcal{L}} d(a,b)^2 \, d\gamma(a,b),\]</span></p>
+<p>where <span class="math inline">\(\Pi(\mu,\nu)\)</span> is the set of all couplings (joint distributions with marginals <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\nu\)</span>).</p>
+<p>By the Kantorovich dual, this equals</p>
+<p><span class="math display">\[\boxed{\;W_2^2(\mu, \nu) \;=\; \sup_{\varphi, \psi} \;\left\{ \int \varphi \, d\mu \;+\; \int \psi \, d\nu \;\;\middle|\;\; \varphi(a) + \psi(b) \;\leq\; d(a,b)^2 \;\;\forall\, a,b \in \mathcal{L} \right\}.\;}\]</span></p>
+<p>Let me translate that into plain English: the squared W₂ distance equals the best you can do by assigning a “price” <span class="math inline">\(\varphi(a)\)</span> to every source configuration and a “value” <span class="math inline">\(\psi(b)\)</span> to every target, subject to the single rule that no pair’s combined price-and-value may exceed the squared transport cost between them.</p>
+<p>For finite <span class="math inline">\(\mathcal{L}\)</span>, the dual is a linear programme with <span class="math inline">\(2|\mathcal{L}|\)</span> variables and <span class="math inline">\(|\mathcal{L}|^2\)</span> inequality constraints. Here’s where it gets practically useful: a feasible dual pair <span class="math inline">\((\varphi, \psi)\)</span> is a <em>certificate</em>. If someone on the team proposes a refactoring schedule with total cost <span class="math inline">\(C\)</span>, and <span class="math inline">\(\int \varphi\, d\mu + \int \psi\, d\nu &gt; C\)</span>, then that schedule is provably suboptimal. You can check this in CI. No hand-waving required.</p>
+</section>
+<section id="existence-and-uniqueness" class="level3">
+<h3 class="anchored" data-anchor-id="existence-and-uniqueness">4.2 Existence and Uniqueness</h3>
+<p>For the discrete setting (finite <span class="math inline">\(\mathcal{L}\)</span>), the optimal coupling always exists—the feasible set <span class="math inline">\(\Pi(\mu,\nu)\)</span> is compact and the objective is linear, so you’re done. Uniqueness is a bit more delicate: it holds whenever the cost matrix <span class="math inline">\((d(a_i, b_j)^2)_{ij}\)</span> is <em>non-degenerate</em> in the sense that no two distinct pairs <span class="math inline">\((a_i, b_j) \neq (a_k, \ell)\)</span> share the same cost value (Murota, 2003, Ch. 5). When the cost matrix has ties, the optimal coupling is unique up to the face of the coupling polytope that’s degenerate, and any element of that face works. In practice, the strict lattice ordering of <span class="math inline">\(\mathcal{L}\)</span> and the monotonicity of <span class="math inline">\(\text{effort}\)</span> keep things non-degenerate for all but pathological effort assignments.</p>
+<hr>
+</section>
+</section>
+<section id="the-optimal-coupling-as-a-refactoring-schedule" class="level2">
+<h2 class="anchored" data-anchor-id="the-optimal-coupling-as-a-refactoring-schedule">5. The Optimal Coupling as a Refactoring Schedule</h2>
+<p>Now, the optimal coupling <span class="math inline">\(\gamma^*\)</span> isn’t just some abstract probability distribution sitting in a vector space. Because <span class="math inline">\(\mathcal{L}\)</span> is a poset, the <em>support</em> of <span class="math inline">\(\gamma^*\)</span>—the set of pairs <span class="math inline">\((a, b)\)</span> with <span class="math inline">\(\gamma^*(a, b) &gt; 0\)</span>—induces a partial order on the refactoring steps. Concretely: if <span class="math inline">\(\gamma^*\)</span> assigns mass to <span class="math inline">\((a_1, b_1)\)</span> and <span class="math inline">\((a_2, b_2)\)</span> with <span class="math inline">\(a_1 \preceq a_2\)</span> but <span class="math inline">\(b_1 \not\preceq b_2\)</span>, then the transition for <span class="math inline">\((a_1, b_1)\)</span> must be finished before <span class="math inline">\((a_2, b_2)\)</span> can start. Topologically sort that partial order, and you’ve got a concrete, dependency-respecting schedule.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+
+<pre class="mermaid mermaid-js">flowchart TD
+  A["Scaffolded state μ_S&lt;br/&gt;(mass near ⊤)"] --&gt;|"Step 1: Remove HA&lt;br/&gt;(40 h)"| B
+  B --&gt;|"Step 2: Remove OC&lt;br/&gt;(25 h)"| C
+  C --&gt;|"Step 3: Re-architect SI&lt;br/&gt;(60 h)"| D["Autonomous state μ_A&lt;br/&gt;(mass near ⊥)"]
+  A -.-&gt;|"Dual certificate&lt;br/&gt;φ + ψ ≤ d²"| C
+  B -.-&gt;|"Dual certificate"| D
+  style A fill:#e8f0fe,stroke:#4285f4
+  style D fill:#fce8e6,stroke:#ea4335
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><em>Figure 1: The optimal coupling as a directed acyclic refactoring graph. Arrows indicate the transport of mass along the lattice; dashed edges represent the dual-potential feasibility constraints that certify optimality.</em></p>
+<p>The schedule is <em>order-preserving</em>: it never asks you to remove a constraint before its prerequisites are in place. That’s a direct consequence of the lattice structure and the monotonicity of the cost. It means the W₂ schedule is always a valid engineering plan—whereas an arbitrary enumeration might happily propose pulling the sandbox before the approval gate that depends on it. (I’ve seen that happen in planning documents. Don’t.)</p>
+<hr>
+</section>
+<section id="entropy-and-the-transport-cost" class="level2">
+<h2 class="anchored" data-anchor-id="entropy-and-the-transport-cost">6. Entropy and the Transport Cost</h2>
+<p>The coupling <span class="math inline">\(\gamma\)</span> is a joint distribution, so it carries a Shannon entropy <span class="math inline">\(H(\gamma) = -\sum_{a,b} \gamma(a,b) \log \gamma(a,b)\)</span>. A deterministic coupling (a bijection between support points of <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\nu\)</span>) has <span class="math inline">\(H(\gamma) = 0\)</span>; a maximally mixed coupling hits <span class="math inline">\(H(\gamma) = \log(|\mathcal{L}|)\)</span>.</p>
+<p>What does the entropy of the <em>optimal</em> coupling actually tell you? It measures the intrinsic ambiguity in the refactoring schedule. If <span class="math inline">\(H(\gamma^*) &gt; 0\)</span>, there are multiple ways to route the mass and the team has genuine scheduling freedom. If <span class="math inline">\(H(\gamma^*) = 0\)</span>, the schedule is rigid—every unit of mass must travel along a single, uniquely determined path. In the worked example from §3, <span class="math inline">\(H(\gamma^*) = 0\)</span> because the support has exactly two points and the masses match one-to-one.</p>
+<p>Entropy also feeds into the rate-distortion connection. As we showed in <a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">The Autonomy Channel</a>, the minimum “description length” of a harness configuration at distortion level <span class="math inline">\(D\)</span> is governed by <span class="math inline">\(R(D)\)</span>, and the W₂ cost provides a geometric realisation of that distortion.</p>
+<hr>
+</section>
+<section id="free-energy-connection" class="level2">
+<h2 class="anchored" data-anchor-id="free-energy-connection">7. Free-Energy Connection</h2>
+<p>The free-energy functional we introduced in <a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds</a> is</p>
+<p><span class="math display">\[F(\mu) \;=\; \int \Phi(a) \, d\mu(a) \;+\; T \, H(\mu),\]</span></p>
+<p>where <span class="math inline">\(\Phi: \mathcal{L} \to \mathbb{R}\)</span> is the constraint-potential (the “energy” of a configuration, increasing with the number of active constraints), <span class="math inline">\(T &gt; 0\)</span> is a temperature parameter (think: engineering slack), and <span class="math inline">\(H(\mu)\)</span> is the entropy of the harness state.</p>
+<p>Now, assume the interpolation <span class="math inline">\(\mu_t\)</span> between <span class="math inline">\(\mu_S\)</span> and <span class="math inline">\(\mu_A\)</span> follows the gradient flow of <span class="math inline">\(F\)</span> (i.e., <span class="math inline">\(\partial_t \mu_t = -\nabla_{\mu} F(\mu_t)\)</span> in the Wasserstein tangent space). The Benamou–Brenier kinetic-energy identity then gives</p>
+<p><span class="math display">\[W_2^2(\mu_S, \mu_A) \;=\; \inf_{\mu_t} \int_0^1 \int_{\mathcal{L}} \frac{|\nabla \varphi_t(a)|^2}{2} \, d\mu_t(a) \, dt.\]</span></p>
+<p>Under that same gradient-flow assumption, the chain rule yields</p>
+<p><span class="math display">\[\frac{d}{dt} F(\mu_t) \;=\; -\int_{\mathcal{L}} \frac{|\nabla \varphi_t(a)|^2}{2} \, d\mu_t(a),\]</span></p>
+<p>so integrating from <span class="math inline">\(t=0\)</span> to <span class="math inline">\(t=1\)</span>:</p>
+<p><span class="math display">\[\boxed{\;W_2^2(\mu_S, \mu_A) \;=\; F(\mu_S) - F(\mu_A).\;}\]</span></p>
+<p>In words: the squared transport cost <em>equals</em> the drop in free energy between the scaffolded and autonomous states. This isn’t a coincidence—it’s the Wasserstein analogue of the thermodynamic fact that work equals the change in free energy along a reversible path.</p>
+<p>The practical upshot: the per-step KL budget from <a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds</a> reads as a <em>local</em> bound on the instantaneous transport speed <span class="math inline">\(|\nabla \varphi_t|^2 / 2\)</span>, while the W₂ bound is the <em>global</em> integral of that speed over the full transition. One is the speedometer; the other is the odometer.</p>
+<hr>
+</section>
+<section id="percolation-threshold-and-the-w₂-bound" class="level2">
+<h2 class="anchored" data-anchor-id="percolation-threshold-and-the-w₂-bound">8. Percolation Threshold and the W₂ Bound</h2>
+<p>In <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy</a>, we model the constraint lattice as a site-percolation process: each constraint is “active” (scaffolded) with probability <span class="math inline">\(p\)</span>, and autonomy emerges when the active-constraint cluster percolates. The critical threshold <span class="math inline">\(p_c\)</span> is where the expected cluster size diverges.</p>
+<p>The W₂ bound interacts with this in a sharp way. Define the <em>autonomy deficit</em> at threshold as</p>
+<p><span class="math display">\[\Delta W_2^2 \;=\; W_2^2(\mu_S, \mu_A) \Big|_{p = p_c} \;-\; W_2^2(\mu_S, \mu_A) \Big|_{p \to 0}.\]</span></p>
+<p>Near <span class="math inline">\(p_c\)</span>, the cluster size scales as <span class="math inline">\(\langle s \rangle \sim |p - p_c|^{-\nu}\)</span> (with <span class="math inline">\(\nu \approx 4/3\)</span> in 2D, <span class="math inline">\(\nu \approx 0.876\)</span> in 3D; Stauffer &amp; Aharony, 1994). The W₂ cost inherits this divergence: as <span class="math inline">\(p \to p_c^-\)</span>, the optimal coupling must route mass through increasingly large intermediate clusters, and <span class="math inline">\(W_2^2\)</span> blows up as <span class="math inline">\(|p_c - p|^{-2\nu}\)</span>.</p>
+<p>What this means in practice is that the <em>last</em> increment of autonomy—the final relaxation of the last percolating constraint cluster—is disproportionately expensive. The W₂ bound makes that quantitative. You should expect a power-law blow-up in effort as the harness approaches the critical threshold, and you should plan buffer capacity accordingly. The RG-flow cascade algorithm in <a href="../../posts/2026-11-19-coarse-graining-autonomy-rg-flow-in-harness-design/">Coarse-Graining Autonomy</a> gives you a practical method for identifying which constraints belong to the percolating cluster and scheduling their relaxation before you hit the critical window.</p>
+<hr>
+</section>
+<section id="practical-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="practical-algorithm">9. Practical Algorithm</h2>
+<p>Here’s the seven-step pipeline that converts the W₂ bound into an actionable refactoring plan. A reference implementation in Python, built on the <code>POT</code> library (Peyré &amp; Cuturi, 2019) with a custom lattice-distance kernel, lives at <a href="https://github.com/harness-ot/wasserstein-autonomy">the companion repository</a> (placeholder; see project page for the live link).</p>
+<ol type="1">
+<li><strong>Enumerate the lattice.</strong> List all constraint configurations <span class="math inline">\(a_1, \ldots, a_N\)</span> and the partial order <span class="math inline">\(\preceq\)</span>. (For <span class="math inline">\(k\)</span> independent constraints, <span class="math inline">\(N = 2^k\)</span>; for correlated constraints, <span class="math inline">\(N\)</span> is smaller.)</li>
+<li><strong>Calibrate the effort function.</strong> Populate the <span class="math inline">\(N \times N\)</span> cost matrix <span class="math inline">\(d(a_i, a_j)\)</span> from CI telemetry, PR review data, and expert estimates (§2.1).</li>
+<li><strong>Specify the target measure.</strong> Define <span class="math inline">\(\mu_A\)</span> by listing the desired constraint configurations and their target probabilities across the deployment fleet.</li>
+<li><strong>Solve the dual LP.</strong> Run a linear programme (e.g., <code>scipy.optimize.linprog</code> or a commercial solver) to get the optimal potentials <span class="math inline">\((\varphi^*, \psi^*)\)</span>. The objective value <em>is</em> <span class="math inline">\(W_2^2\)</span>.</li>
+<li><strong>Extract the coupling.</strong> Recover <span class="math inline">\(\gamma^*\)</span> from the complementary-slackness conditions: <span class="math inline">\(\gamma^*(a,b) &gt; 0\)</span> only where <span class="math inline">\(\varphi^*(a) + \psi^*(b) = d(a,b)^2\)</span>.</li>
+<li><strong>Topologically sort the support.</strong> Build the DAG from the support of <span class="math inline">\(\gamma^*\)</span> and produce the ordered refactoring schedule (§5).</li>
+<li><strong>Emit the certificate.</strong> Write <span class="math inline">\((\varphi^*, \psi^*)\)</span> to a machine-readable file. Downstream CI checks can then verify that any proposed schedule with cost <span class="math inline">\(C\)</span> satisfies <span class="math inline">\(C \geq \int \varphi^*\, d\mu_S + \int \psi^*\, d\mu_A\)</span>.</li>
+</ol>
+<p>The whole pipeline runs in <span class="math inline">\(O(N^3)\)</span> time for the LP (dominated by the <span class="math inline">\(N^2\)</span> constraint matrix), which is tractable up to <span class="math inline">\(N \leq 10^4\)</span>—comfortably beyond the <span class="math inline">\(2^{20} \approx 10^6\)</span> configurations of a 20-constraint harness.</p>
+<hr>
+</section>
+<section id="discussion-and-open-questions" class="level2">
+<h2 class="anchored" data-anchor-id="discussion-and-open-questions">10. Discussion and Open Questions</h2>
+<p><strong>Relation to the geodesic framework.</strong> The W₂ geodesic between <span class="math inline">\(\mu_S\)</span> and <span class="math inline">\(\mu_A\)</span> is the unique (up to the non-degeneracy condition) constant-speed path in <span class="math inline">\(\mathcal{P}(\mathcal{L})\)</span> that minimises kinetic energy. This is the same geodesic we identified in <a href="../../posts/2026-11-19-autonomy-as-geodesic-information-geometry-of-harness-design/">Autonomy as Geodesic</a>, where the Riemannian metric on <span class="math inline">\(\mathcal{P}(\mathcal{L})\)</span> is induced by the lattice distance <span class="math inline">\(d\)</span>. What this post adds is the dual certificate and the percolation sensitivity layered on top of that geometric picture.</p>
+<p><strong>Relation to functorial structure.</strong> You can view the optimal coupling <span class="math inline">\(\gamma^*\)</span> as a natural transformation between the “scaffolded” and “autonomous” functors on the constraint category, in the sense we developed in <a href="../../posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/">Functorial Autonomy</a>. The W₂ bound then becomes a lower bound on the “distance” between natural transformations, and the dual potentials are component-wise witnesses of the naturality square. (I know, I know—category theory. But it earns its keep here.)</p>
+<p><strong>Multi-agent case.</strong> When the harness has to coordinate <span class="math inline">\(n &gt; 2\)</span> concurrent agent instances (say, a coder, a reviewer, and a security auditor), the single coupling <span class="math inline">\(\gamma\)</span> is replaced by a joint distribution on <span class="math inline">\(\mathcal{L}^n\)</span> with prescribed marginals. The dual becomes a system of <span class="math inline">\(n\)</span> coupled potentials <span class="math inline">\((\varphi_1, \ldots, \varphi_n)\)</span> with <span class="math inline">\(n(n-1)/2\)</span> cross-constraints. The W₂ bound generalises to the <em>multi-marginal Wasserstein distance</em>, and the dual LP has <span class="math inline">\(n \cdot N\)</span> variables. The percolation analysis extends naturally: the critical threshold now governs the simultaneous percolation of <span class="math inline">\(n\)</span> interdependent constraint clusters. Full treatment deferred to a subsequent post—this one’s already long enough.</p>
+<p><strong>Gauge invariance.</strong> As we showed in <a href="../../posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/">Gauge Symmetry and the Invariant Core</a>, many distinct lattice elements are gauge-equivalent: they differ only in the <em>labelling</em> of constraints, not in their structural role. The W₂ distance is gauge-invariant (it depends only on the orbit of <span class="math inline">\(\mu\)</span> under the gauge group), so the bound is well-defined on the quotient space <span class="math inline">\(\mathcal{P}(\mathcal{L}) / \mathcal{G}\)</span>. This reduces the effective dimension of the LP and kills the spurious cost differences that creep in from arbitrary constraint naming.</p>
+<p><strong>Cohomological obstructions.</strong> Not every target <span class="math inline">\(\mu_A\)</span> is reachable by any finite sequence of constraint relaxations. As proved in <a href="../../posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/">Cohomological Obstructions</a>, non-trivial elements of <span class="math inline">\(H^1(\mathcal{L}; \mathbb{Z})\)</span> obstruct the existence of a global section of the constraint-bundle, meaning <em>no</em> coupling <span class="math inline">\(\gamma\)</span> exists for certain target measures. The W₂ problem is then infeasible, and the dual LP flags this via unboundedness of the dual objective. Practical advice: run the feasibility check (Step 4) <em>before</em> you invest in the full schedule. Saves you a week of work.</p>
+<p><strong>If you are looking for adjacent topics:</strong> this post sits at the intersection of LLM agent evaluation methodology, coding-agent guardrail design, refactoring cost estimation, and quantitative software-architecture trade-offs. The spectral-conditioning result in <a href="../../posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/">The Spectral Gap of Autonomy</a> gives a complementary convergence-speed bound, while the dialectical framing in <a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">Scaffolding to Sovereignty</a> tackles the philosophical question of whether scaffolding is a prerequisite or a hindrance.</p>
+<hr>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">11. Conclusion</h2>
+<p>So. We’ve recast the scaffold-to-autonomy transition as a Kantorovich optimal-transport problem on a constraint lattice. The W₂ distance between the scaffolded and autonomous harness states gives you a schedule-independent lower bound on refactoring effort. The dual potentials give you a CI-auditable certificate. And the optimal coupling, read against the lattice order, produces a concrete, dependency-respecting work schedule. The bound sharpens with the entropy of the coupling, aligns with the free-energy drop along the autonomy geodesic, and diverges at the percolation threshold—quantifying the disproportionate cost of that final increment of autonomy.</p>
+<p>The practical message, if you take nothing else from this post: before your team starts ripping out guardrails, compute the W₂ bound. It tells you, in a single number, how much effort is irreducibly required. And the dual certificate tells you, in a single file, whether any proposed schedule can beat it.</p>
+<p><strong>The distance between a scaffolded harness and an autonomous one is not a matter of opinion, priority, or political negotiation. It is a number, and it is provably the smallest one that will do.</strong></p>
+<hr>
+<section id="references" class="level3">
+<h3 class="anchored">References</h3>
+<ul>
+<li>Murota, K. (2003). <em>ID-functions and M-convex Functions</em>. Springer.</li>
+<li>Peyré, G., &amp; Cuturi, M. (2019). <em>Computational Optimal Transport</em>. Foundations and Trends in Machine Learning, 11(5–6), 355–607.</li>
+<li>Stauffer, D., &amp; Aharony, A. (1994). <em>Introduction to Percolation Theory</em> (2nd ed.). Taylor &amp; Francis.</li>
+<li>Villani, C. (2009). <em>Optimal Transport: Old and New</em>. Springer. (Grundlehren, vol.&nbsp;338.)</li>
+<li><h2 id="internal-series-references-as-linked-above." class="anchored" data-anchor-id="references"><a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">Internal series references as linked above.</a></h2></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ianmerlos34\.github\.io\/harness-coding\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

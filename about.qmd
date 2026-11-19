@@ -1,7 +1,0 @@
----
-title: "About"
----
-
-Welcome to **Harness coding, towards the complete autonomy**.
-
-This blog aim to build step by step, with each article adding on top of the previous ones, incrementally, the process of building a completely autonomous agent harness, we will explore all the relevant elements suc has the SDLC phases and how on each the harness is implemented, integrating security, adding ui constraints, ensuring specs are achieved with checklist, and so on so forth. We will provide examples of templates, and common mistakes when creating these harnesses. We will explore different approaches, and best practices based on previous experiences. We will explore different tools that already exist.

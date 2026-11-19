@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-11-19">
+<meta name="keywords" content="rate-distortion theory, Shannon channel model, coding agent harness design, LLM constraint optimization, AI autonomy bounds, information theory applied to AI, guardrail budget allocation, agentic coding pipeline, distortion tolerance, structural cost floor">
+<meta name="description" content="Recasting the coding-agent harness as a Shannon channel, we derive its rate-distortion function R(D) and prove a structural cost floor on autonomy.">
+
+<title>The Autonomy Channel: Rate-Distortion in Harness Design – Harness coding, towards the complete autonomy</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ded4168630e1422961a6247c4ac5fe91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(cover.png);
+background-size: cover;
+      }
+</style>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Harness coding, towards the complete autonomy</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">The Autonomy Channel: Rate-Distortion in Harness Design</h1>
+                  <div>
+        <div class="description">
+          Recasting the coding-agent harness as a Shannon channel, we derive its rate-distortion function R(D) and prove a structural cost floor on autonomy.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">AI Engineering</div>
+                <div class="quarto-category">Information Theory</div>
+                <div class="quarto-category">Software Architecture</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ian Merlos </p>
+               <p>Ian Merlos </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+
+  <div>
+    <div class="keywords">
+      <div class="block-title">Keywords</div>
+      <p>rate-distortion theory, Shannon channel model, coding agent harness design, LLM constraint optimization, AI autonomy bounds, information theory applied to AI, guardrail budget allocation, agentic coding pipeline, distortion tolerance, structural cost floor</p>
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#in-brief" id="toc-in-brief" class="nav-link active" data-scroll-target="#in-brief">In Brief</a></li>
+  <li><a href="#the-channel-analogy" id="toc-the-channel-analogy" class="nav-link" data-scroll-target="#the-channel-analogy">1. The Channel Analogy</a></li>
+  <li><a href="#formal-setup" id="toc-formal-setup" class="nav-link" data-scroll-target="#formal-setup">2. Formal Setup</a>
+  <ul class="collapse">
+  <li><a href="#notation" id="toc-notation" class="nav-link" data-scroll-target="#notation">2.1 Notation</a></li>
+  <li><a href="#the-constraint-channel" id="toc-the-constraint-channel" class="nav-link" data-scroll-target="#the-constraint-channel">2.2 The Constraint Channel</a></li>
+  <li><a href="#discrete-alphabet-case-and-computational-complexity" id="toc-discrete-alphabet-case-and-computational-complexity" class="nav-link" data-scroll-target="#discrete-alphabet-case-and-computational-complexity">2.3 Discrete-Alphabet Case and Computational Complexity</a></li>
+  </ul></li>
+  <li><a href="#the-gaussian-rd-curve" id="toc-the-gaussian-rd-curve" class="nav-link" data-scroll-target="#the-gaussian-rd-curve">3. The Gaussian R(D) Curve</a></li>
+  <li><a href="#the-structural-cost-floor" id="toc-the-structural-cost-floor" class="nav-link" data-scroll-target="#the-structural-cost-floor">4. The Structural Cost Floor</a></li>
+  <li><a href="#design-calculus-from-rd-to-per-step-budgets" id="toc-design-calculus-from-rd-to-per-step-budgets" class="nav-link" data-scroll-target="#design-calculus-from-rd-to-per-step-budgets">5. Design Calculus: From R(D) to Per-Step Budgets</a>
+  <ul class="collapse">
+  <li><a href="#estimating-sigma2-in-practice" id="toc-estimating-sigma2-in-practice" class="nav-link" data-scroll-target="#estimating-sigma2-in-practice">5.1 Estimating <span class="math inline">\(\sigma^2\)</span> in Practice</a></li>
+  <li><a href="#from-abstract-bits-to-concrete-guardrails-a-calibration-convention" id="toc-from-abstract-bits-to-concrete-guardrails-a-calibration-convention" class="nav-link" data-scroll-target="#from-abstract-bits-to-concrete-guardrails-a-calibration-convention">5.2 From Abstract Bits to Concrete Guardrails: A Calibration Convention</a></li>
+  <li><a href="#per-step-budget-allocation" id="toc-per-step-budget-allocation" class="nav-link" data-scroll-target="#per-step-budget-allocation">5.3 Per-Step Budget Allocation</a></li>
+  </ul></li>
+  <li><a href="#positioning-among-adjacent-frameworks" id="toc-positioning-among-adjacent-frameworks" class="nav-link" data-scroll-target="#positioning-among-adjacent-frameworks">6. Positioning Among Adjacent Frameworks</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">7. Key Takeaways</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">8. Conclusion</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#reproducibility" id="toc-reproducibility" class="nav-link" data-scroll-target="#reproducibility">Reproducibility</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<blockquote class="blockquote">
+<p><strong>Meta description:</strong> We recast the coding-agent harness as a Shannon channel and derive its rate-distortion function R(D), proving a structural cost floor on autonomy that no model upgrade can eliminate.</p>
+</blockquote>
+<section id="in-brief" class="level2">
+<h2 class="anchored" data-anchor-id="in-brief">In Brief</h2>
+<p>Here’s the core idea in one breath: treat the coding-agent harness as a Shannon channel running between “what you asked for” and “what the agent actually does.” From that, we derive a rate-distortion function R(D) that pins down the irreducible minimum of scaffolding you need to keep any given level of behavioral autonomy in check.</p>
+<p>And here’s the punchline — “more autonomy, fewer rules” is not a free lunch. The R(D) curve imposes a structural cost floor, and no amount of model capability is going to get you around it. The post wraps up with a design calculus that translates the R(D) slope into concrete per-step budget allocations you can actually use in a production LLM harness.</p>
+<p><strong>Who should read this.</strong> You’ll want basic information theory in your back pocket (entropy, mutual information, the Shannon channel model) and familiarity with the <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">five-level autonomy spectrum</a> from earlier in this series. Rate-distortion theory? Not necessary. I define everything you need inline as we go.</p>
+<p>The intuition is genuinely simple: if the harness <em>is</em> the channel, then the laws governing channels apply to harnesses. What follows is just making that intuition precise.</p>
+</section>
+<section id="the-channel-analogy" class="level2">
+<h2 class="anchored" data-anchor-id="the-channel-analogy">1. The Channel Analogy</h2>
+<p>Shannon’s 1948 channel theorem treats communication as a pipeline: a source emits a message X, the channel introduces noise, and a receiver reconstructs Ŷ (Shannon, 1948). The interesting question isn’t “what is the message?” It’s “how many bits must the channel carry to deliver the message within a tolerable distortion budget?”</p>
+<p>A coding-agent harness is structurally isomorphic to this pipeline. I mean that literally. The <em>source</em> is the task specification (user prompt, SDLC phase objective, acceptance criteria). The <em>channel</em> is the agentic coding loop: the whole sequence of tool calls, context windows, and decision points through which the LLM translates intent into concrete actions (file edits, test executions, deployment steps). The <em>receiver</em> is the resulting codebase state. And the <em>noise</em>? That’s the model’s stochastic sampling, context truncation, and the inherent ambiguity baked into natural-language specs.</p>
+<p>Now, this is not merely a metaphor. In the <a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">dialectical framework for scaffolding</a>, I argued that constraints are the generative precondition of autonomy rather than its tax. The rate-distortion formalism gives that claim a quantitative backbone: it specifies <em>how many</em> constraints form the minimum viable set, and <em>how</em> that minimum scales as the tolerated behavioral variance (distortion) increases.</p>
+<p>The practitioner-facing consequence is pretty direct. When a team is debating whether to add another AI agent guardrail, another checklist item, another prompt engineering constraint — the R(D) curve tells them whether that addition sits above or below the structural floor. Below the floor? The constraint is doing real work. Above it? It’s redundant given the distortion budget, and you can retire it.</p>
+</section>
+<section id="formal-setup" class="level2">
+<h2 class="anchored" data-anchor-id="formal-setup">2. Formal Setup</h2>
+<section id="notation" class="level3">
+<h3 class="anchored" data-anchor-id="notation">2.1 Notation</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 42%">
+<col style="width: 57%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Symbol</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(X\)</span></td>
+<td>Task specification (source signal): prompt, phase objective, acceptance criteria</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(Y\)</span></td>
+<td>Ideal agent action sequence (noiseless channel output)</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(\hat{Y}\)</span></td>
+<td>Actual agent action (noisy channel output), a function of <span class="math inline">\(X\)</span> plus stochastic perturbation</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(R\)</span></td>
+<td>Rate: number of constraint bits the harness must transmit per step</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(D\)</span></td>
+<td>Distortion: expected behavioral deviation <span class="math inline">\(\mathbb{E}[d(X, \hat{Y})]\)</span></td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(\sigma^2\)</span></td>
+<td>Variance of the task’s action-embedding (proxy for decision-space complexity)</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(H(X)\)</span></td>
+<td>Shannon entropy of the source distribution</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(I(X; \hat{Y})\)</span></td>
+<td>Mutual information between specification and realized action</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(R^*(D)\)</span></td>
+<td>Rate-distortion function: minimum <span class="math inline">\(R\)</span> achieving distortion <span class="math inline">\(\leq D\)</span></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-constraint-channel" class="level3">
+<h3 class="anchored" data-anchor-id="the-constraint-channel">2.2 The Constraint Channel</h3>
+<p>Let <span class="math inline">\(X \in \mathcal{X}\)</span> denote the task specification drawn from a distribution <span class="math inline">\(p(x)\)</span>. The harness, parameterized by a constraint set <span class="math inline">\(\mathcal{C}\)</span> of size <span class="math inline">\(|\mathcal{C}| = 2^R\)</span> (i.e., <span class="math inline">\(R\)</span> bits of specification capacity), maps <span class="math inline">\(X\)</span> to an action <span class="math inline">\(\hat{Y} = g(X, \mathcal{C}, \epsilon)\)</span>, where <span class="math inline">\(\epsilon\)</span> is the model’s stochastic noise. The distortion is:</p>
+<p><span class="math display">\[D = \mathbb{E}_{p(x),\,p(\hat{y}|x)}\!\bigl[d(x, \hat{y})\bigr]\]</span></p>
+<p>where <span class="math inline">\(d(\cdot,\cdot)\)</span> is a task-appropriate metric (e.g., edit distance in code, KL divergence in action distributions, or a weighted checklist-failure rate).</p>
+<p>The rate-distortion function is:</p>
+<p><span class="math display">\[R^*(D) = \min_{p(\hat{y}|x):\,\mathbb{E}[d] \leq D} I(X; \hat{Y})\]</span></p>
+<p>In plain terms: this is the minimum mutual information — equivalently, the minimum number of constraint bits — required to keep the agent’s realized behavior within distortion <span class="math inline">\(D\)</span> of the specification.</p>
+</section>
+<section id="discrete-alphabet-case-and-computational-complexity" class="level3">
+<h3 class="anchored" data-anchor-id="discrete-alphabet-case-and-computational-complexity">2.3 Discrete-Alphabet Case and Computational Complexity</h3>
+<p>For finite alphabets (say, a fixed set of <span class="math inline">\(K\)</span> tool-call actions per step), <span class="math inline">\(R^*(D)\)</span> is computed by a convex optimization over the set of test channels <span class="math inline">\(p(\hat{y}|x)\)</span>. In general, though, this is an infinite-dimensional program; exact computation is intractable beyond toy cases. In practice, two approximations get you close enough:</p>
+<ol type="1">
+<li><p><strong>Percolation heuristic.</strong> The <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">critical dynamics framework</a> gives a phase-transition estimate: constraint density <span class="math inline">\(\rho = R / R_{\max}\)</span> must exceed a threshold <span class="math inline">\(\rho_c \approx 0.59\)</span> (for lattice analogues) to sustain coherence. Crude, sure, but it gives you a lower bound without wrestling with full optimization.</p></li>
+<li><p><strong>Gaussian approximation.</strong> For continuous action spaces with approximately Gaussian noise (justified by the central limit theorem over many tool-call sub-steps; see Jaynes, 2003, on maximum-entropy arguments for Gaussian priors), the R(D) function admits a closed form, as shown next.</p></li>
+</ol>
+</section>
+</section>
+<section id="the-gaussian-rd-curve" class="level2">
+<h2 class="anchored" data-anchor-id="the-gaussian-rd-curve">3. The Gaussian R(D) Curve</h2>
+<p>Assume the action-embedding <span class="math inline">\(Y\)</span> is drawn from <span class="math inline">\(\mathcal{N}(0, \sigma^2)\)</span> and the distortion metric is mean-squared error: <span class="math inline">\(d(x, \hat{y}) = (x - \hat{y})^2\)</span>. Then:</p>
+<p><span class="math display">\[\boxed{R^*(D) = \max\!\left(0,\;\tfrac{1}{2}\log_2 \frac{\sigma^2}{D}\right) \text{ bits/step}}\]</span></p>
+<p>for <span class="math inline">\(0 &lt; D \leq \sigma^2\)</span> (Shannon, 1948, Ch. 9). Three observations follow, and I think they matter.</p>
+<p><strong>First, the curve is monotonically decreasing and concave.</strong> As tolerated distortion <span class="math inline">\(D\)</span> increases, the required constraint rate <span class="math inline">\(R^*\)</span> decreases — but at a diminishing rate. The marginal “autonomy gained per constraint bit removed” shrinks as <span class="math inline">\(D\)</span> grows. This is the mathematical expression of the <a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">scaffolding-to-sovereignty dialectic</a>: the first few removed constraints buy large autonomy gains; the last few buy almost none.</p>
+<p><strong>Second, <span class="math inline">\(R^*\)</span> has a hard floor at zero.</strong> No matter how large the distortion budget, the constraint rate cannot go negative. In engineering terms: there is no configuration in which the harness transmits <em>fewer than zero</em> constraint bits. The question is never “can we remove all rules?” (it can’t). It’s “what is the minimum rule-set that keeps <span class="math inline">\(D\)</span> within tolerance?”</p>
+<p><strong>Third, <span class="math inline">\(\sigma^2\)</span> is the dominant scaling parameter.</strong> A task with a large decision space (a full SDLC cycle involving architecture, implementation, testing, and deployment) has a large <span class="math inline">\(\sigma^2\)</span> and therefore a high R(D) floor. A narrowly scoped refactoring with a well-defined interface contract has a small <span class="math inline">\(\sigma^2\)</span> and a correspondingly low floor. So the harness designer’s first job isn’t to “pick rules.” It’s to <em>estimate <span class="math inline">\(\sigma^2\)</span> for the task class in question</em> and read off the curve.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+
+<pre class="mermaid mermaid-js">flowchart LR
+  A[Task Spec X] --&gt;|"harness (R bits)"| B[Agent Action Ŷ]
+  B --&gt; C{Distortion d(X,Ŷ) ≤ D?}
+  C --&gt;|Yes| D[Accept: commit, test, deploy]
+  C --&gt;|No| E[Reject: rollback, re-prompt]
+  E --&gt; A
+
+  style A fill:#e8f4fd,stroke:#2196F3
+  style B fill:#fff3e0,stroke:#FF9800
+  style D fill:#e8f5e9,stroke:#4CAF50
+  style E fill:#ffebee,stroke:#F44336
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><em>Figure 1. The harness-as-channel loop: specification enters, constrained action exits, distortion is checked, and the cycle repeats until the action falls within the acceptable band.</em></p>
+</section>
+<section id="the-structural-cost-floor" class="level2">
+<h2 class="anchored" data-anchor-id="the-structural-cost-floor">4. The Structural Cost Floor</h2>
+<p>The R(D) curve delivers a result that’s clean, if a little counterintuitive: <strong>the minimum constraint rate is a function of the task’s intrinsic complexity (<span class="math inline">\(\sigma^2\)</span>) and the tolerated distortion (<span class="math inline">\(D\)</span>), not of the model’s parameter count.</strong> A 400B-parameter model does not lower <span class="math inline">\(R^*(D)\)</span>. It reduces the <em>realized</em> distortion for a given <span class="math inline">\(R\)</span>, effectively shifting your operating point leftward on the curve — but the curve itself is a property of the task-channel geometry, not the decoder.</p>
+<p>This has a direct implication for the “just use a bigger model” argument, which I hear a lot. In the <a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">free-energy bound</a> analysis, I showed that model capability sets an upper bound on the <em>achievable</em> distortion for a given rate. The R(D) function sets a lower bound on the <em>required</em> rate for a given distortion. These are complementary constraints: the model determines how far left you <em>can</em> operate; the task determines how far left you <em>must</em> operate. Neither bound is removable by upgrading the other variable.</p>
+<p>For the harness developer, this means a few concrete things:</p>
+<ul>
+<li><strong>Constraint sets are not disposable.</strong> Retiring a guardrail is not a “model upgrade” problem; it’s a distortion-budget problem. If removing the guardrail pushes <span class="math inline">\(D\)</span> above tolerance, the R(D) curve says the constraint is structurally necessary. Period.</li>
+<li><strong>Redundancy is detectable.</strong> If two guardrails encode the same constraint bit (i.e., they’re correlated in the <span class="math inline">\(I(X;\hat{Y})\)</span> sense), one can be retired without increasing <span class="math inline">\(D\)</span>. And this is a testable claim: ablate one, measure the distortion delta.</li>
+<li><strong>The floor is task-specific.</strong> A greenfield architecture phase has a different <span class="math inline">\(\sigma^2\)</span> than a bug-fix patch. The harness must be re-parameterized per phase, not globally.</li>
+</ul>
+</section>
+<section id="design-calculus-from-rd-to-per-step-budgets" class="level2">
+<h2 class="anchored" data-anchor-id="design-calculus-from-rd-to-per-step-budgets">5. Design Calculus: From R(D) to Per-Step Budgets</h2>
+<section id="estimating-sigma2-in-practice" class="level3">
+<h3 class="anchored" data-anchor-id="estimating-sigma2-in-practice">5.1 Estimating <span class="math inline">\(\sigma^2\)</span> in Practice</h3>
+<p>The Gaussian model requires an estimate of the action-embedding variance. Two practical approaches that I’ve found work:</p>
+<ol type="1">
+<li><p><strong>Empirical.</strong> Compute the variance of the action-embedding vector (e.g., the one-hot or embedding-space representation of the tool-call sequence) across <span class="math inline">\(N \geq 30\)</span> completed runs of the same task class. <span class="math inline">\(\hat{\sigma}^2 = \frac{1}{N}\sum_i \|y_i - \bar{y}\|^2\)</span>.</p></li>
+<li><p><strong>Combinatorial proxy.</strong> For discrete phases with <span class="math inline">\(K\)</span> possible actions and an observed empirical distribution <span class="math inline">\(p_i\)</span>, use the entropy <span class="math inline">\(H = -\sum p_i \log_2 p_i\)</span> as a proxy for <span class="math inline">\(\sigma^2\)</span> (under the uniform-distribution assumption, <span class="math inline">\(H = \log_2 K = \frac{1}{2}\log_2 \sigma^2\)</span> for a 2-D embedding). Coarse, yeah, but it requires no model access.</p></li>
+</ol>
+<p>For a team without historical runs, here’s a reasonable starting heuristic: count the number of independent binary decisions (branch points, tool selections, file-touches) the task requires. Set <span class="math inline">\(\sigma^2 \approx 2^{2K}\)</span> where <span class="math inline">\(K\)</span> is that count. This overestimates, which is conservative — and in this context, conservative is fine.</p>
+</section>
+<section id="from-abstract-bits-to-concrete-guardrails-a-calibration-convention" class="level3">
+<h3 class="anchored" data-anchor-id="from-abstract-bits-to-concrete-guardrails-a-calibration-convention">5.2 From Abstract Bits to Concrete Guardrails: A Calibration Convention</h3>
+<p>The R(D) function outputs <em>bits</em>. But engineering teams need <em>artifacts</em>: a checklist item, a lint rule, a test gate, a prompt constraint. So we adopt the following calibration convention:</p>
+<blockquote class="blockquote">
+<p><strong>One constraint bit ≈ one independently verifiable guardrail</strong> (a binary pass/fail check that can be automated, versioned, and retired independently).</p>
+</blockquote>
+<p>Look, this is a coarse, engineering-level convention, not a theorem. Its purpose is to give the R(D) curve a unit that maps to artifacts a team can actually count, version, and retire in a CI/CD pipeline. It’s deliberately imprecise: the goal is a <em>budget</em> (order-of-magnitude), not an exact allocation.</p>
+<p><strong>Worked example.</strong> Suppose <span class="math inline">\(\sigma^2 = 16\)</span> (a moderately complex refactoring task with roughly 4 independent binary decisions) and the team tolerates <span class="math inline">\(D = 4\)</span>. Then:</p>
+<p><span class="math display">\[R^* = \tfrac{1}{2}\log_2 \frac{16}{4} = \tfrac{1}{2}\log_2 4 = 1 \text{ bit/step}\]</span></p>
+<p>If a release-critical deployment requires <span class="math inline">\(D = 1\)</span>:</p>
+<p><span class="math display">\[R^* = \tfrac{1}{2}\log_2 \frac{16}{1} = \tfrac{1}{2}\log_2 16 = 2 \text{ bits/step}\]</span></p>
+<p>Notice what happened: the 4× tightening of the distortion budget costs only <strong>1 additional constraint bit</strong>. That concavity is the key design insight. The last unit of precision is cheap. The expensive part is the <em>first</em> constraint bit (moving from <span class="math inline">\(D = \sigma^2\)</span> to <span class="math inline">\(D = \sigma^2/2\)</span>).</p>
+<p>Conversely, relaxing <span class="math inline">\(D\)</span> from 4 to 8 saves only <span class="math inline">\(\frac{1}{2}\log_2(16/8) - \frac{1}{2}\log_2(16/4) = 0.5 - 1 = -0.5\)</span> bits — i.e., the team <em>gains</em> 0.5 bits of autonomy. This is the “diminishing returns” regime where the <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">percolation threshold</a> becomes binding: below <span class="math inline">\(\rho_c\)</span>, autonomy fragments regardless of how few constraints remain.</p>
+</section>
+<section id="per-step-budget-allocation" class="level3">
+<h3 class="anchored" data-anchor-id="per-step-budget-allocation">5.3 Per-Step Budget Allocation</h3>
+<p>For a multi-phase SDLC pipeline (requirements → design → implementation → test → deploy), the total constraint budget is:</p>
+<p><span class="math display">\[R_{\text{total}} = \sum_{i=1}^{5} R_i^*(D_i) = \sum_{i=1}^{5} \tfrac{1}{2}\log_2 \frac{\sigma_i^2}{D_i}\]</span></p>
+<p>The allocation is <em>concave</em>: equalizing the marginal <span class="math inline">\(\partial R_i / \partial D_i\)</span> across phases yields the globally optimal split. In practice, this means:</p>
+<ul>
+<li><strong>High-<span class="math inline">\(\sigma^2\)</span> phases</strong> (architecture, multi-file refactoring) get more constraint bits.</li>
+<li><strong>Low-<span class="math inline">\(\sigma^2\)</span> phases</strong> (a single-function bug fix with a failing test) get fewer.</li>
+<li><strong>The marginal bit is cheapest where <span class="math inline">\(D_i\)</span> is already small</strong>, so the optimal strategy is to <em>tighten</em> existing high-precision phases before <em>loosening</em> low-precision ones.</li>
+</ul>
+<p>A practical workflow that I’d recommend:</p>
+<ol type="1">
+<li>Estimate <span class="math inline">\(\sigma_i^2\)</span> per phase (empirical or combinatorial).</li>
+<li>Set <span class="math inline">\(D_i\)</span> from the team’s risk tolerance (e.g., <span class="math inline">\(D_{\text{deploy}} &lt; D_{\text{implement}}\)</span>).</li>
+<li>Compute <span class="math inline">\(R_i^*\)</span> and round up to the nearest integer (you can’t have 0.7 guardrails, no matter how much you want to).</li>
+<li>Implement exactly <span class="math inline">\(R_i^*\)</span> independent, automatable checks per phase.</li>
+<li>At each sprint, ablate the lowest-impact guardrail and measure <span class="math inline">\(\Delta D\)</span>. If <span class="math inline">\(\Delta D\)</span> is within noise, retire it. If not, reinstate.</li>
+</ol>
+</section>
+</section>
+<section id="positioning-among-adjacent-frameworks" class="level2">
+<h2 class="anchored" data-anchor-id="positioning-among-adjacent-frameworks">6. Positioning Among Adjacent Frameworks</h2>
+<p>The R(D) lens is complementary to, not subsumed by, two other frameworks that show up in the agent-harness literature. Worth clarifying where it sits.</p>
+<p><strong>Control-theoretic feedback bounds.</strong> In the <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">autonomy-spectrum model</a>, the five levels of autonomy correspond to different feedback-loop gains. Control theory tells us that high gain (tight feedback) reduces steady-state error but risks oscillation. The R(D) curve reinterprets this: “gain” is the constraint rate <span class="math inline">\(R\)</span>, and “steady-state error” is the distortion <span class="math inline">\(D\)</span>. The control-theoretic stability condition (gain margin &gt; 1) maps to the R(D) condition <span class="math inline">\(R &gt; R^*(D)\)</span>. The percolation threshold <span class="math inline">\(\rho_c\)</span> is the information-theoretic analogue of the gain-margin boundary.</p>
+<p><strong>The scaffolding literature in LLM prompting.</strong> Recent work on prompt scaffolding, chain-of-thought decomposition, and structured output constraints (e.g., JSON-schema enforcement, tool-use constraints) can be read as <em>ad hoc</em> R(D) optimization: each added scaffold bit reduces distortion at the cost of reduced generality. The R(D) framework provides the <em>a priori</em> justification for how many scaffold bits are sufficient, rather than the current practice of adding constraints until the failure rate drops below a threshold (which, honestly, is equivalent to descending the R(D) curve empirically without knowing where the floor is).</p>
+<p>The contribution here is the <em>lower bound</em>: not “here is a heuristic that works” but “here is the minimum that <em>any</em> harness must satisfy, regardless of architecture.”</p>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">7. Key Takeaways</h2>
+<ul>
+<li><strong>The R(D) curve is a structural floor, not a target.</strong> It tells you the <em>minimum</em> constraint rate for a given distortion budget. Operating above it is wasteful; operating below it is infeasible.</li>
+<li><strong>Model size does not lower the floor.</strong> A larger model shifts the achievable-distortion curve leftward but does not change the R(D) function, which is a property of the task-channel geometry.</li>
+<li><strong>The curve is concave.</strong> The first constraint bit buys the most autonomy; the last buys the least. Budget allocation should be concave-aware: tighten where precision is already high, loosen where it’s already low.</li>
+<li><strong>Calibration is an engineering convention, not a theorem.</strong> One bit ≈ one guardrail is a useful unit for teams to count, version, and retire constraints in CI/CD.</li>
+</ul>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">8. Conclusion</h2>
+<p>The Shannon channel is, at bottom, a model of <em>lossy compression under a fidelity constraint</em>. A coding-agent harness is precisely such a system: it compresses the full specification space into a finite set of executable actions, and the quality of that compression is bounded by the information-theoretic geometry of the task. The rate-distortion function makes this bound explicit, quantifiable, and — crucially — <em>independent of the model doing the decoding</em>.</p>
+<p>For the harness developer, this reframes the central design question. It’s not “how many rules do we need?” (which invites an ad hoc, experience-driven answer). It’s “what is <span class="math inline">\(R^*(D)\)</span> for this task class, and are we operating at, above, or below it?” The first question has no principled answer. The second does.</p>
+<p>The <a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">free-energy bound</a> tells you how much autonomy a <em>given model</em> can sustain. The R(D) curve tells you how much autonomy a <em>given task</em> can demand. Together, they bracket the feasible design space for any agentic coding harness, and the intersection of the two is where production systems should live.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>Jaynes, E. T. (2003). <em>Probability Theory: The Logic of Science</em>. Cambridge University Press. (Maximum-entropy justification for Gaussian priors in the continuous R(D) case, §2.3.)</li>
+<li>Shannon, C. E. (1948). A mathematical theory of communication. <em>Bell System Technical Journal</em>, 27(3), 379–423.</li>
+</ul>
+</section>
+<section id="reproducibility" class="level2">
+<h2 class="anchored" data-anchor-id="reproducibility">Reproducibility</h2>
+<p>A reference implementation plotting <span class="math inline">\(R^*(D) = \frac{1}{2}\log_2(\sigma^2/D)\)</span> for <span class="math inline">\(\sigma^2 \in \{4, 16, 64\}\)</span> with the percolation threshold overlay is available in the companion repository. The script computes the ablation-based <span class="math inline">\(\Delta D\)</span> for a toy 5-phase SDLC pipeline and prints the per-phase constraint budget. See the <code>examples/rate_distortion/</code> directory.</p>
+<hr>
+<p><em>This post is part of a series building, step by step, a complete autonomous coding-agent harness. See also: <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative</a>, <a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">Scaffolding to Sovereignty</a>, <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy</a>, and <a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds</a>.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ianmerlos34\.github\.io\/harness-coding\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

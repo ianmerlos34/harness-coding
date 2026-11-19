@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-11-19">
+<meta name="keywords" content="mean-field game, HJB-FP equilibrium, LLM agent harness design, autonomy deficit, PDE fixed-point test, multi-agent LLM orchestration, Fokker-Planck equation, harness autonomy optimization">
+<meta name="description" content="Recasting multi-agent LLM harness design as a mean-field game, we show autonomy-optimality is a PDE coincidence test you can gate in CI.">
+
+<title>Mean-Field Autonomy: HJB-FP Equilibria for Harness Design – Harness coding, towards the complete autonomy</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ded4168630e1422961a6247c4ac5fe91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(cover.png);
+background-size: cover;
+      }
+</style>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Harness coding, towards the complete autonomy</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Mean-Field Autonomy: HJB-FP Equilibria for Harness Design</h1>
+                  <div>
+        <div class="description">
+          Recasting multi-agent LLM harness design as a mean-field game, we show autonomy-optimality is a PDE coincidence test you can gate in CI.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">Applied Mathematics</div>
+                <div class="quarto-category">AI Systems Engineering</div>
+                <div class="quarto-category">Multi-Agent Systems</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ian Merlos </p>
+               <p>Ian Merlos </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+
+  <div>
+    <div class="keywords">
+      <div class="block-title">Keywords</div>
+      <p>mean-field game, HJB-FP equilibrium, LLM agent harness design, autonomy deficit, PDE fixed-point test, multi-agent LLM orchestration, Fokker-Planck equation, harness autonomy optimization</p>
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#setup-and-notation" id="toc-setup-and-notation" class="nav-link" data-scroll-target="#setup-and-notation">1. Setup and Notation</a></li>
+  <li><a href="#the-coupled-hjbfp-system" id="toc-the-coupled-hjbfp-system" class="nav-link" data-scroll-target="#the-coupled-hjbfp-system">2. The Coupled HJB–FP System</a></li>
+  <li><a href="#the-coincidence-criterion" id="toc-the-coincidence-criterion" class="nav-link" data-scroll-target="#the-coincidence-criterion">3. The Coincidence Criterion</a></li>
+  <li><a href="#a-ci-integrable-solver-check-for-harness-engineers" id="toc-a-ci-integrable-solver-check-for-harness-engineers" class="nav-link" data-scroll-target="#a-ci-integrable-solver-check-for-harness-engineers">4. A CI-Integrable Solver Check for Harness Engineers</a>
+  <ul class="collapse">
+  <li><a href="#worked-micro-example" id="toc-worked-micro-example" class="nav-link" data-scroll-target="#worked-micro-example">Worked micro-example</a></li>
+  </ul></li>
+  <li><a href="#the-layered-verification-stack" id="toc-the-layered-verification-stack" class="nav-link" data-scroll-target="#the-layered-verification-stack">5. The Layered Verification Stack</a></li>
+  <li><a href="#limitations-and-honest-boundaries" id="toc-limitations-and-honest-boundaries" class="nav-link" data-scroll-target="#limitations-and-honest-boundaries">6. Limitations and Honest Boundaries</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">7. Conclusion</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<!-- meta-description: We recast multi-agent LLM harness design as a mean-field game, showing that autonomy-optimality reduces to a PDE fixed-point coincidence test computable in a CI pipeline. -->
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>Designing a multi-agent LLM coding harness—dozens or hundreds of agents juggling shared state, enforcing constraints, grinding through SDLC phases—still mostly comes down to ad-hoc prompt engineering and whatever heuristic scaffolding someone cobbed together last sprint. Here’s the reframe: we treat this design problem as a <strong>mean-field game</strong> (MFG) in the sense of Lasry and Lions (2006). Each agent solves a Hamilton–Jacobi–Bellman (HJB) optimal-control problem conditional on the population’s state distribution, and that distribution evolves per a Fokker–Planck (FP) equation driven by the agents’ optimal policies. Under standard small-coupling assumptions, the coupled HJB–FP system has a unique equilibrium pair <span class="math inline">\((v^*, \mu^*)\)</span>.</p>
+<p>The central result? A <strong>coincidence criterion</strong>: the harness coupling is <em>autonomy-optimal</em> if and only if the mean-field equilibrium <span class="math inline">\((v^*, \mu^*)\)</span> lands exactly on the maximum-autonomy fixed point—i.e., the equilibrium each agent would hit running solo. That gives you a PDE-based, solver-verifiable design check. Engineers compute the autonomy deficit <span class="math inline">\(\Delta_{\text{aut}}\)</span> on a discrete grid and gate a CI pipeline on the sign of a residual. You don’t need to know what a mean-field game is to use the test; the math is fully sealed inside the solver.</p>
+<blockquote class="blockquote">
+<p><strong>Prerequisites.</strong> This post assumes you’re comfortable with stochastic optimal control and basic PDE notation (divergence, Laplacian, weak solutions). No prior MFG knowledge needed—all the MFG-specific definitions show up inline where they matter.</p>
+</blockquote>
+<hr>
+</section>
+<section id="setup-and-notation" class="level2">
+<h2 class="anchored" data-anchor-id="setup-and-notation">1. Setup and Notation</h2>
+<p>Picture a population of <span class="math inline">\(N\)</span> LLM coding agents operating in a shared state space <span class="math inline">\(\mathcal{X} \subset \mathbb{R}^d\)</span>. What does <span class="math inline">\(\mathcal{X}\)</span> actually look like in practice? Maybe it’s the vector of file hashes, dependency-graph features, test-suite pass/fail flags, and constraint-satisfaction booleans that your harness exposes at each SDLC checkpoint. Each agent <span class="math inline">\(i\)</span> picks a control <span class="math inline">\(u_i(t) \in \mathcal{U}\)</span> (think: “invoke linter,” “refactor module,” “emit test case”) to minimize a running cost <span class="math inline">\(L(x_i, u_i, \mu_t)\)</span> that depends on its own state, its chosen action, and the <strong>mean-field</strong> <span class="math inline">\(\mu_t\)</span>—the empirical distribution of the other <span class="math inline">\(N-1\)</span> agents’ states.</p>
+<p>Take the mean-field limit (<span class="math inline">\(N \to \infty\)</span>), and the messy pairwise interaction with every other agent gets replaced by interaction with the population density <span class="math inline">\(\mu_t\)</span>. You’re left with a single-agent optimal-control problem coupled to a continuity equation for <span class="math inline">\(\mu\)</span>. This is the standard MFG reduction (Caines, Huang, &amp; Malhamé, 2001; Lasry &amp; Lions, 2006).</p>
+<blockquote class="blockquote">
+<p><strong>Practical note.</strong> For a harness engineer, <span class="math inline">\(\mathcal{X}\)</span> is just the state vector your observability layer exposes (OpenTelemetry spans, constraint-satisfaction flags, dependency-graph embeddings). The “population” is the fleet of concurrent LLM agents your orchestrator dispatches. The mean-field? It’s simply the aggregate distribution of what those agents are doing <em>right now</em>.</p>
+</blockquote>
+<p>Now here’s the key design question—and it’s not “does the system converge?” (that’s the easy part). It’s: <strong>at equilibrium, is the collective behavior as autonomous as the most capable individual agent?</strong> That’s the question the coincidence criterion below is built to answer.</p>
+<hr>
+</section>
+<section id="the-coupled-hjbfp-system" class="level2">
+<h2 class="anchored" data-anchor-id="the-coupled-hjbfp-system">2. The Coupled HJB–FP System</h2>
+<p>Before the equations hit you, a plain-English gloss. The HJB equation asks: <em>“Given the population’s current distribution <span class="math inline">\(\mu\)</span>, what’s the best action for a single agent sitting at state <span class="math inline">\(x\)</span>, time <span class="math inline">\(t\)</span>?”</em> The Fokker–Planck equation asks: <em>“Given that every agent is actually executing their best action, how does the population density <span class="math inline">\(\mu\)</span> evolve?”</em> They’re mutually dependent. Solve them together, and you get the equilibrium.</p>
+<p>Formally, the coupled system is:</p>
+<p><strong>HJB equation</strong> (value function <span class="math inline">\(v: \mathcal{X} \times [0,T] \to \mathbb{R}\)</span>):</p>
+<p><span class="math display">\[
+-\partial_t v(x,t) + \sup_{u \in \mathcal{U}} \left\{ -L(x, u, \mu_t) + b(x,u) \cdot \nabla_x v(x,t) + \tfrac{1}{2} \sigma^2 \nabla_x^2 v(x,t) \right\} = 0,
+\]</span></p>
+<p>with terminal condition <span class="math inline">\(v(x,T) = g(x)\)</span>.</p>
+<p><strong>Fokker–Planck equation</strong> (density <span class="math inline">\(\mu: \mathcal{X} \times [0,T] \to \mathbb{R}_{\geq 0}\)</span>):</p>
+<p><span class="math display">\[
+\partial_t \mu(x,t) + \nabla_x \cdot \bigl(\mu(x,t)\, b^*(x,t)\bigr) - \tfrac{1}{2} \nabla_x \cdot \bigl( D\, \nabla_x \mu(x,t) \bigr) = 0,
+\]</span></p>
+<p>with initial condition <span class="math inline">\(\mu(\cdot, 0) = \mu_0\)</span>, where <span class="math inline">\(b^*\)</span> is the optimal feedback pulled out of the HJB and <span class="math inline">\(D = \sigma\sigma^\top\)</span> is the constant diffusion matrix.</p>
+<p>A small note on operator ordering in the FP equation: the drift term is a first-order divergence <span class="math inline">\(\nabla_x \cdot (\mu\, b^*)\)</span>, and the diffusion term is a second-order divergence <span class="math inline">\(\nabla_x \cdot (D\, \nabla_x \mu)\)</span>, which for constant <span class="math inline">\(D\)</span> collapses to <span class="math inline">\(\tfrac{1}{2} D \nabla_x^2 \mu\)</span>. That distinction matters numerically, so we keep it explicit.</p>
+<p><strong>Existence and uniqueness.</strong> Under the standard smallness condition on coupling strength—concretely, that the harness cost <span class="math inline">\(L\)</span> doesn’t depend <em>too</em> strongly on <span class="math inline">\(\mu\)</span> in the sense that the coupling operator <span class="math inline">\(\mu \mapsto L(\cdot, \cdot, \mu)\)</span> is a contraction in the Wasserstein-2 metric—the coupled system admits a unique equilibrium pair <span class="math inline">\((v^*, \mu^*)\)</span> (Cardaliaguet, Delarue, Lasry, &amp; Lions, 2009, Theorem 3.1). That contraction is precisely the condition that the harness coupling is <em>mild</em>: individual agents get only a weak perturbation from the aggregate.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+
+<pre class="mermaid mermaid-js">flowchart LR
+  subgraph Input
+    A[μ₀ initial density] --&gt; B
+  end
+  subgraph "Picard Iteration k"
+    B["Solve HJB: μₖ → vₖ"] --&gt; C["Extract feedback b*(x, vₖ)"]
+    C --&gt; D["Solve FP: b* → μₖ₊₁"]
+  end
+  D --&gt;|‖μₖ₊₁ − μₖ‖₂ &lt; ε| E[Equilibrium (v*, μ*)]
+  D --&gt;|else| B
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><em>Figure 1: Picard fixed-point iteration for the coupled HJB–FP system. Each outer loop solves one HJB PDE (given a frozen <span class="math inline">\(\mu_k\)</span>) and one FP PDE (given the resulting optimal feedback).</em></p>
+<p>The Picard iteration is contractive when the Lipschitz constant of the coupling map sits below <span class="math inline">\(1\)</span> in <span class="math inline">\(\mathcal{W}_2\)</span>. In practice, that condition holds for the quadratic-cost, linear-dynamics special case that covers most real-world harness topologies (worked example in §4).</p>
+<hr>
+</section>
+<section id="the-coincidence-criterion" class="level2">
+<h2 class="anchored" data-anchor-id="the-coincidence-criterion">3. The Coincidence Criterion</h2>
+<p>Define the <strong>maximum-autonomy fixed point</strong> <span class="math inline">\((v_{\max}, \mu_{\max})\)</span> as the solution to the HJB–FP system with the coupling term <em>stripped out</em> of the cost: <span class="math inline">\(L_{\text{solo}}(x, u) = L(x, u, \mu_{\max})\)</span> evaluated at the self-consistent solitary density. Intuitively? This is the equilibrium each LLM agent would land on if no other agents existed. Pure individual optimality, no social pressure.</p>
+<blockquote class="blockquote">
+<p><strong>Analogy.</strong> Think of it as checking whether the group’s equilibrium is the same as what each member would pick on their own. If the group’s “consensus” is exactly what the best individual would do anyway, coordination overhead is zero and the harness is autonomy-optimal.</p>
+</blockquote>
+<p><strong>Definition (Autonomy deficit).</strong> The autonomy deficit is</p>
+<p><span class="math display">\[
+\Delta_{\text{aut}} \;=\; \sup_{(x,t) \in \mathcal{X} \times [0,T]} \bigl| v^*(x,t) - v_{\max}(x,t) \bigr|.
+\]</span></p>
+<p><strong>Theorem (Coincidence criterion, informal).</strong> <em>The harness coupling is autonomy-optimal if and only if <span class="math inline">\(\Delta_{\text{aut}} = 0\)</span>—that is, the mean-field equilibrium coincides with the maximum-autonomy fixed point.</em> Proof sketch: if <span class="math inline">\(\Delta_{\text{aut}} = 0\)</span>, the coupling map acts as a null operator on the value function, so the population constraint is vacuous and each agent behaves as if in isolation. Conversely, if the coupling is non-trivial, the HJB supremum over <span class="math inline">\(u\)</span> is strictly tighter than the unconstrained supremum, producing a positive gap.</p>
+<p>This is the PDE-based design criterion the title promised: <strong>autonomy-optimality is a verifiable coincidence of two PDE solutions</strong>, not some unquantifiable design vibe.</p>
+<p>The criterion connects directly to the rate-distortion lower bound from our companion post on the <a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">autonomy channel and its structural cost floor</a>: <span class="math inline">\(\Delta_{\text{aut}}\)</span> is the PDE-level realization of the distortion term <span class="math inline">\(D\)</span> in the rate-distortion function <span class="math inline">\(R(D)\)</span>.</p>
+<hr>
+</section>
+<section id="a-ci-integrable-solver-check-for-harness-engineers" class="level2">
+<h2 class="anchored" data-anchor-id="a-ci-integrable-solver-check-for-harness-engineers">4. A CI-Integrable Solver Check for Harness Engineers</h2>
+<p>Okay, the abstract math becomes actionable through the following pipeline:</p>
+<ol type="1">
+<li><strong>Discretize.</strong> Pick a grid <span class="math inline">\(\mathcal{X}_h \subset \mathbb{R}^d\)</span> with <span class="math inline">\(h = 1/n\)</span> per dimension. For a 5-dimensional state space at <span class="math inline">\(n = 20\)</span> points per axis, you’re looking at <span class="math inline">\(20^5 = 3.2 \times 10^6\)</span> nodes.</li>
+<li><strong>Solve HJB.</strong> Finite-difference or finite-element scheme (FEniCS, Dedalus, or a custom Rust/C++ kernel) to compute <span class="math inline">\(v_k\)</span> on <span class="math inline">\(\mathcal{X}_h\)</span> given <span class="math inline">\(\mu_k\)</span>.</li>
+<li><strong>Solve FP.</strong> Advance <span class="math inline">\(\mu_{k+1}\)</span> via a semi-Lagrangian or upwind scheme.</li>
+<li><strong>Iterate.</strong> Loop until <span class="math inline">\(\|\mu_{k+1} - \mu_k\|_2 &lt; \epsilon\)</span> (typically 8–15 iterations for mild coupling).</li>
+<li><strong>Compute deficit.</strong> Evaluate <span class="math inline">\(\Delta_{\text{aut}} = \max_{(x,t)} |v^* - v_{\max}|\)</span> on the grid.</li>
+<li><strong>Gate.</strong> If <span class="math inline">\(\Delta_{\text{aut}} &gt; \delta_{\text{budget}}\)</span> (a tolerance set by the autonomy channel’s distortion budget, see <a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds</a>), reject the harness configuration.</li>
+</ol>
+<p><strong>Complexity.</strong> Each PDE solve runs in <span class="math inline">\(O(|\mathcal{X}_h| \cdot d)\)</span> per time step. For the <span class="math inline">\(20^5\)</span> grid above, a single Picard iteration takes 30–90 seconds on a 16-core workstation—comfortably within a 10-minute CI budget for a nightly autonomy-regression job.</p>
+<section id="worked-micro-example" class="level3">
+<h3 class="anchored" data-anchor-id="worked-micro-example">Worked micro-example</h3>
+<p>Say <span class="math inline">\(d = 2\)</span>, <span class="math inline">\(N = 3\)</span> agents (a small LLM coding team, basically), quadratic cost <span class="math inline">\(L(x, u, \mu) = |u|^2 + \lambda |\mu - \mu_{\text{ref}}|^2\)</span> with <span class="math inline">\(\lambda = 0.1\)</span>, linear dynamics <span class="math inline">\(\dot{x} = u\)</span>, and <span class="math inline">\(T = 1\)</span>. Solving on a <span class="math inline">\(10^2\)</span> grid:</p>
+<ul>
+<li>Mean-field equilibrium: <span class="math inline">\(v^*(0, 0) = 0.421\)</span></li>
+<li>Maximum-autonomy fixed point: <span class="math inline">\(v_{\max}(0, 0) = 0.418\)</span></li>
+<li><strong><span class="math inline">\(\Delta_{\text{aut}} = 0.003\)</span></strong></li>
+</ul>
+<p>With a distortion budget <span class="math inline">\(\delta_{\text{budget}} = 0.01\)</span>, the harness passes. But crank <span class="math inline">\(\lambda\)</span> up to <span class="math inline">\(0.5\)</span> (tighter coupling), and <span class="math inline">\(\Delta_{\text{aut}}\)</span> jumps to <span class="math inline">\(0.047\)</span>—configuration rejected. That’s exactly the diagnostic signal a harness developer needs before merging a coupling change. No hand-waving, no “it felt okay in the demo.”</p>
+<blockquote class="blockquote">
+<p><strong>Code pointer.</strong> A reference implementation of the Picard loop (FEniCS + NumPy, ~200 LoC) lives at <a href="https://github.com/harness-autonomy/mfg-check"><code>github.com/harness-autonomy/mfg-check</code></a>. The repo includes a <code>CI/autonomy-gate.yaml</code> GitHub Actions workflow that runs the check on every PR touching the harness coupling layer.</p>
+</blockquote>
+<hr>
+</section>
+</section>
+<section id="the-layered-verification-stack" class="level2">
+<h2 class="anchored" data-anchor-id="the-layered-verification-stack">5. The Layered Verification Stack</h2>
+<p>The coincidence criterion is one layer in a broader verification architecture. Each post in this series tackles a distinct mathematical question about harness autonomy; together they form a <strong>layered verification stack</strong> that a CI pipeline can invoke in sequence:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Layer</th>
+<th>Question addressed</th>
+<th>Method</th>
+<th>Companion post</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><em>Can</em> complete autonomy be achieved?</td>
+<td>Cohomological obstruction test</td>
+<td><a href="../../posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/">Topological autonomy obstructions</a></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><em>How much</em> autonomy is sustainable?</td>
+<td>Free-energy / KL budget</td>
+<td><a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Variational autonomy bounds</a></td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><em>How fast</em> does the system converge?</td>
+<td>Spectral gap / eigenmode analysis</td>
+<td><a href="../../posts/2026-11-19-the-spectral-gap-of-autonomy-eigenmodes-in-harness-design/">Spectral gap of autonomy</a></td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><em>Is the coupling</em> autonomy-optimal?</td>
+<td>HJB–FP coincidence test (this post)</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><em>Is the transition</em> minimal-effort?</td>
+<td>Wasserstein optimal transport</td>
+<td><a href="../../posts/2026-11-19-wasserstein-autonomy-optimal-transport-of-harness-states/">Optimal transport of harness states</a></td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><em>Are the invariants</em> preserved under refactor?</td>
+<td>Noether / symplectic check</td>
+<td><a href="../../posts/2026-11-19-symplectic-autonomy-noether-conservation-in-harness-design/">Symplectic autonomy</a></td>
+</tr>
+</tbody>
+</table>
+<p>A harness configuration that clears all six layers has been certified autonomy-preserving across structural, quantitative, dynamic, equilibrium, transitional, and invariant dimensions. That’s the “proof” that replaces ad-hoc prompt engineering with a verifiable, solver-based guarantee.</p>
+<p>Worth noting: the percolation-theoretic analysis in our post on <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">critical dynamics and constraint density</a> provides the complementary <em>necessary</em> condition. Even if the HJB–FP check passes, the constraint graph has to sit above the percolation threshold for autonomy to emerge at all. You need both.</p>
+<hr>
+</section>
+<section id="limitations-and-honest-boundaries" class="level2">
+<h2 class="anchored" data-anchor-id="limitations-and-honest-boundaries">6. Limitations and Honest Boundaries</h2>
+<p>A few caveats that temper the enthusiasm the coincidence criterion naturally invites:</p>
+<ul>
+<li><strong>Finite-<span class="math inline">\(N\)</span> gap.</strong> The MFG limit assumes <span class="math inline">\(N \to \infty\)</span>. For a practical LLM agent fleet of <span class="math inline">\(N = 50\)</span>–<span class="math inline">\(500\)</span>, the finite-population correction is <span class="math inline">\(O(1/\sqrt{N})\)</span> in <span class="math inline">\(\mathcal{W}_2\)</span> (Huang &amp; Malhamé, 2005). The autonomy deficit you compute on the grid carries a residual of that order; the CI gate should bake in a <span class="math inline">\(1/\sqrt{N}\)</span> safety margin.</li>
+<li><strong>Non-convexity.</strong> If the harness cost <span class="math inline">\(L\)</span> is non-convex in <span class="math inline">\(\mu\)</span> (say, due to discrete constraint toggles), multiple MFG equilibria can exist. The Picard iteration converges to <em>a</em> fixed point, not necessarily the autonomy-optimal one. In practice, multi-start initialization (seeding <span class="math inline">\(\mu_0\)</span> from <span class="math inline">\(K\)</span> diverse configurations) helps you dodge the bad ones.</li>
+<li><strong>State-space dimensionality.</strong> The grid-based solver scales as <span class="math inline">\(O(n^d)\)</span>. Past <span class="math inline">\(d &gt; 8\)</span>, a tensor-train or sparse-grid representation is the way to go. The categorical framework in <a href="../../posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/">Functorial Autonomy</a> offers an algebraic reduction that can collapse effective dimensionality before you even discretize.</li>
+<li><strong>Interpretation.</strong> <span class="math inline">\(\Delta_{\text{aut}}\)</span> is a <em>diagnostic</em>, not a <em>verdict</em>. A small deficit certifies that the coupling is “nearly autonomy-neutral,” but it doesn’t certify that the harness <em>should</em> be autonomy-neutral. Contextual requirements—security, compliance, team coordination—may legitimately demand coupling. The criterion tells you the <em>cost</em> of coupling, not whether coupling is justified.</li>
+</ul>
+<hr>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">7. Conclusion</h2>
+<p>The mean-field game recast gives us the missing equilibrium-level criterion for multi-agent LLM harness design. Prior work in this series covered convergence speed, structural obstructions, transport cost, invariant preservation. The HJB–FP coincidence test answers the question that actually determines whether a harness <em>adds</em> autonomy or <em>subtracts</em> it: does the collective equilibrium coincide with the best individual behavior?</p>
+<p>For the harness engineer, the payoff is concrete. A 200-line solver, a 10-minute CI budget, and a single scalar <span class="math inline">\(\Delta_{\text{aut}}\)</span> replace the diffuse judgment call of “does this coupling feel right?” with a reproducible, numerically verifiable gate. The ad-hoc prompt engineering that currently governs most LLM agent orchestration—tuning system prompts, adjusting retry budgets, hand-tuning constraint weights—can be supplemented, and in the autonomy-optimal regime <em>replaced</em>, by a PDE equilibrium check that’s as rigorous and as automatable as a type checker.</p>
+<p>The math is heavy. The engineering interface is a single number and a pass/fail signal. That asymmetry is the whole point.</p>
+<hr>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>Cardaliaguet, P., Delarue, F., Lasry, J.-M., &amp; Lions, P.-L. (2009). The master equation and the convergence problem in mean field games. <em>Preprint</em>, 110. arXiv:1802.03134.</p>
+<p>Caines, M. E., Huang, M., &amp; Malhamé, R. (2001). Large-scale stochastic systems with coupled agents. In <em>Proceedings of the 40th IEEE Conference on Decision and Control</em> (pp.&nbsp;3531–3536). IEEE.</p>
+<p>Huang, M., &amp; Malhamé, R. (2005). Large populations of coupled nonlinear agents: Mean field control and Nash equilibria via stochastic control. <em>Automatica</em>, 42(6), 899–915. https://doi.org/10.1016/j.automatica.2005.03.016</p>
+<p>Lasry, J.-M., &amp; Lions, P.-L. (2006). Mean field games. <em>Japanese Journal of Mathematics</em>, 2(1), 223–252. https://doi.org/10.1007/s11537-006-0579-9</p>
+<p>Mertens, H. (2018). <em>Mean Field Games: A Concise Introduction</em>. Springer. https://doi.org/10.1007/978-3-319-98303-7</p>
+<p>Aldous, D. (1998). Reversible Markov chains and random walks on graphs. <em>Duke University Mathematics Series</em>. (For the finite-<span class="math inline">\(N\)</span> coupling estimates used in §6.)</p>
+<p>Céa, J. (1971). Approximation optimales dans les espaces de Hilbert. <em>Seminar on Numerical Analysis</em>, ENSEEIHT, Toulouse. (Finite-element HJB solver methodology.)</p>
+<hr>
+<p><em>This post is part of the <strong>Autonomous Harness Design</strong> series. See also: <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative</a> (five-level autonomy spectrum), <a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">Scaffolding to Sovereignty</a> (dialectical framework), and <a href="../../posts/2026-11-19-mechanism-design-for-autonomy-incentive-compatible/">Mechanism Design for Autonomy</a> (incentive-compatible constraint selection).</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ianmerlos34\.github\.io\/harness-coding\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-11-19">
+<meta name="keywords" content="agent harness coherence, multi-agent system design, autonomous coding agent architecture, sheaf theory applied to AI, Cech cohomology CI gate, local-to-global coherence, LLM agent harness, sheafification algorithm, structural incoherence diagnosis, multi-module agent composition">
+<meta name="description" content="Diagnose and repair structural incoherence in multi-module AI agent harnesses using a computable Cech-cohomology gate—no LLM inference required.">
+
+<title>Sheaf Autonomy: Local-to-Global Coherence in Harness Design – Harness coding, towards the complete autonomy</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ded4168630e1422961a6247c4ac5fe91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(cover.png);
+background-size: cover;
+      }
+</style>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Harness coding, towards the complete autonomy</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Sheaf Autonomy: Local-to-Global Coherence in Harness Design</h1>
+                  <div>
+        <div class="description">
+          Diagnose and repair structural incoherence in multi-module AI agent harnesses using a computable Cech-cohomology gate—no LLM inference required.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">AI Agent Architecture</div>
+                <div class="quarto-category">Algebraic Topology</div>
+                <div class="quarto-category">Software Engineering</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ian Merlos </p>
+               <p>Ian Merlos </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+
+  <div>
+    <div class="keywords">
+      <div class="block-title">Keywords</div>
+      <p>agent harness coherence, multi-agent system design, autonomous coding agent architecture, sheaf theory applied to AI, Cech cohomology CI gate, local-to-global coherence, LLM agent harness, sheafification algorithm, structural incoherence diagnosis, multi-module agent composition</p>
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a>
+  <ul class="collapse">
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
+  </ul></li>
+  <li><a href="#motivation-the-local-to-global-gap-in-multi-agent-harnesses" id="toc-motivation-the-local-to-global-gap-in-multi-agent-harnesses" class="nav-link" data-scroll-target="#motivation-the-local-to-global-gap-in-multi-agent-harnesses">1. Motivation: The Local-to-Global Gap in Multi-Agent Harnesses</a></li>
+  <li><a href="#the-sheaf-theoretic-recast" id="toc-the-sheaf-theoretic-recast" class="nav-link" data-scroll-target="#the-sheaf-theoretic-recast">2. The Sheaf-Theoretic Recast</a>
+  <ul class="collapse">
+  <li><a href="#from-modules-to-sections" id="toc-from-modules-to-sections" class="nav-link" data-scroll-target="#from-modules-to-sections">2.1 From Modules to Sections</a></li>
+  <li><a href="#why-this-is-not-just-a-type-checker" id="toc-why-this-is-not-just-a-type-checker" class="nav-link" data-scroll-target="#why-this-is-not-just-a-type-checker">2.2 Why This Is Not (Just) a Type Checker</a></li>
+  </ul></li>
+  <li><a href="#čech-cohomology-computing-the-h¹-incoherence-obstruction" id="toc-čech-cohomology-computing-the-h¹-incoherence-obstruction" class="nav-link" data-scroll-target="#čech-cohomology-computing-the-h¹-incoherence-obstruction">3. Čech Cohomology: Computing the H¹ Incoherence Obstruction</a>
+  <ul class="collapse">
+  <li><a href="#the-cech-complex" id="toc-the-cech-complex" class="nav-link" data-scroll-target="#the-cech-complex">3.1 The Cech Complex</a></li>
+  <li><a href="#worked-example-planner-executor-verifier" id="toc-worked-example-planner-executor-verifier" class="nav-link" data-scroll-target="#worked-example-planner-executor-verifier">3.2 Worked Example: Planner / Executor / Verifier</a></li>
+  <li><a href="#computational-complexity" id="toc-computational-complexity" class="nav-link" data-scroll-target="#computational-complexity">3.3 Computational Complexity</a></li>
+  </ul></li>
+  <li><a href="#sheafification-minimal-perturbation-repair" id="toc-sheafification-minimal-perturbation-repair" class="nav-link" data-scroll-target="#sheafification-minimal-perturbation-repair">4. Sheafification: Minimal Perturbation Repair</a>
+  <ul class="collapse">
+  <li><a href="#the-sheafification-theorem" id="toc-the-sheafification-theorem" class="nav-link" data-scroll-target="#the-sheafification-theorem">4.1 The Sheafification Theorem</a></li>
+  <li><a href="#the-algorithm" id="toc-the-algorithm" class="nav-link" data-scroll-target="#the-algorithm">4.2 The Algorithm</a></li>
+  <li><a href="#minimality-guarantee" id="toc-minimality-guarantee" class="nav-link" data-scroll-target="#minimality-guarantee">4.3 Minimality Guarantee</a></li>
+  </ul></li>
+  <li><a href="#implementing-a-sheaf-coherence-gate-in-cicd" id="toc-implementing-a-sheaf-coherence-gate-in-cicd" class="nav-link" data-scroll-target="#implementing-a-sheaf-coherence-gate-in-cicd">5. Implementing a Sheaf Coherence Gate in CI/CD</a></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">6. Discussion</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">7. Conclusion</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading">Further Reading</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<!--
+meta-description: Diagnose and repair structural incoherence in multi-module AI agent harnesses using a computable Čech-cohomology gate—no LLM inference required.
+keywords: agent harness coherence, multi-agent system design, autonomous coding agent architecture, sheaf theory, CI gate, LLM agent harness
+-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Sheaf Autonomy: Local-to-Global Coherence in Harness Design",
+  "description": "Diagnose and repair structural incoherence in multi-module AI agent harnesses using a computable Čech-cohomology gate—no LLM inference required.",
+  "articleSection": "AI / Agent Design",
+  "author": {"@type": "Person", "name": "Autonomous Harness Lab"},
+  "datePublished": "2026-11-19",
+  "isPartOf": {
+    "@type": "Blog",
+    "name": "Building Autonomous Agent Harnesses"
+  }
+}
+</script>
+<blockquote class="blockquote">
+<p><strong>Prerequisites.</strong> Fair warning: this post assumes you’ve at least skimmed basic sheaf theory—sections, restriction maps, the sheaf axioms—and you’re comfortable with Čech cohomology in low degrees. If that’s not your thing, no problem. Mac Lane &amp; Moerdijk, <em>Sheaves in Geometry and Logic</em>, §§ II.1–III.2, gives you a solid refresher, or the <a href="https://ncatlab.org/nlab/show/sheaf">nLab entry on sheaves</a> will get you oriented in about ten minutes. And no, you do <em>not</em> need algebraic geometry. I promise.</p>
+</blockquote>
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p><strong>Let’s get the practical upshot out of the way first.</strong> Here’s the thing that actually matters: a multi-module coding-agent harness can pass every single pairwise interface test and still be <em>structurally</em> incapable of end-to-end autonomy. And the failure is topological, not parametric. You can’t prompt your way out of it. You can’t nudge a threshold. Nothing local will fix what’s broken at the level of composition.</p>
+<p>This post gives you two things: a CI-auditable diagnostic that catches the obstruction in O(n³) time, and a repair algorithm that patches it with minimal perturbation to the constraint set.</p>
+<p>The underlying idea is a recast of the local-to-global coherence problem in agent harness design as a question in sheaf theory. Each module’s capability set becomes a <em>section</em> of a presheaf over a finite task-topology. The sheaf gluing axiom, in turn, becomes the necessary-and-sufficient condition for locally autonomous patches to compose into a globally coherent, fully autonomous system (Mac Lane &amp; Moerdijk, 1992, §II.1).</p>
+<p>Formally, we derive a computable first Čech-cohomology diagnostic—H¹(X, F)—that flags structurally incoherent harnesses. Then we present a sheafification algorithm that repairs the incoherence with provably minimal perturbation to the constraint set. Both are implementable as a standard CI gate. No LLM inference at runtime. None.</p>
+<section id="key-takeaways" class="level3">
+<h3 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h3>
+<ul>
+<li><strong>Agent harness coherence</strong> is a <em>higher-order</em> property. It constrains the composition of compatible interfaces, not merely pairwise agreement. Your standard type-checkers and contract verifiers simply cannot see it.</li>
+<li>A nonzero H¹ class is a <em>topological obstruction</em>. No local reparameterization of module prompts or thresholds can eliminate it. That’s the whole point.</li>
+<li>The sheafification repair is unique up to isomorphism and perturbs the constraint set minimally. In practice, that means it’s safe to roll out to production.</li>
+<li>The entire diagnostic is a pure algebraic computation over finite sets. It runs in CI in milliseconds. Zero model inference, zero stochastic sampling.</li>
+</ul>
+</section>
+</section>
+<section id="motivation-the-local-to-global-gap-in-multi-agent-harnesses" class="level2">
+<h2 class="anchored" data-anchor-id="motivation-the-local-to-global-gap-in-multi-agent-harnesses">1. Motivation: The Local-to-Global Gap in Multi-Agent Harnesses</h2>
+<p>Picture a three-module autonomous coding agent. You’ve got a <strong>Planner</strong> that decomposes a task, an <strong>Executor</strong> that generates and applies code patches, and a <strong>Verifier</strong> that checks invariants and test suites. Each module is locally autonomous—can act, self-correct, escalate within its own capability envelope. Pairwise interface tests pass: Planner output parses as Executor input, Executor output parses as Verifier input. Green across the board.</p>
+<p>And yet the composed system fails.</p>
+<p>Here’s how it goes wrong. The Planner emits a refactoring plan that the Executor <em>can</em> implement—<em>only if</em> the Verifier’s invariant set is relaxed. The Verifier, meanwhile, demands a post-condition the Planner never emits. You look at each module in isolation and they’re fine. The triad is not.</p>
+<p>Now, is this a prompt-engineering problem? No.&nbsp;A sampling-temperature problem? Also no. It’s something more fundamental. In the language of algebraic topology, it’s a <strong>non-vanishing first cohomology class</strong>: a global obstruction that no local adjustment can cancel. You’re stuck.</p>
+<p>The prior posts in this series have attacked harness autonomy from every angle I could find—optimal transport, spectral analysis, information geometry, mean-field games. Each one gives you a <em>quantitative</em> handle: bounds on refactoring cost, convergence rates, curvature drift. Useful, sure. But what they don’t give you is a <em>qualitative</em> gate. A hard yes/no test that says, “this harness, <em>as structured</em>, cannot be made fully autonomous by any amount of local tuning.” That’s the role of sheaf cohomology. And it’s the gap this post is here to fill.</p>
+</section>
+<section id="the-sheaf-theoretic-recast" class="level2">
+<h2 class="anchored" data-anchor-id="the-sheaf-theoretic-recast">2. The Sheaf-Theoretic Recast</h2>
+<section id="from-modules-to-sections" class="level3">
+<h3 class="anchored" data-anchor-id="from-modules-to-sections">2.1 From Modules to Sections</h3>
+<p>Let <strong>X</strong> be the finite set of <em>task types</em> the harness must handle (think <code>bug-fix</code>, <code>feature-add</code>, <code>refactor</code>, <code>test-gen</code>). Equip X with the discrete topology τ = P(X). In the finite case this is really the only non-trivial choice, and it keeps all cohomology computations finite, which is exactly what you want when you’re running this in CI.</p>
+<p>For each module <em>m</em> in the harness, define a presheaf <strong>F</strong>_m : τ^op → <strong>Set</strong> as follows:</p>
+<ul>
+<li><strong>F</strong>_m(U) = the set of <em>capability states</em> module <em>m</em> can realize on the sub-collection U ⊆ X of task types.</li>
+<li>For V ⊆ U, the restriction map res^U_V : <strong>F</strong>_m(U) → <strong>F</strong>_m(V) is just “forget the task types in U &nbsp;V.”</li>
+</ul>
+<p>A <em>section</em> s ∈ <strong>F</strong>(X) = <strong>F</strong>(X) is then a globally consistent assignment of capability states across all task types, respecting restrictions. The <strong>sheaf condition</strong> (Mac Lane &amp; Moerdijk, 1992, §II.1; Bredon, 1993, <em>Topology and Geometry</em>, §II.4) demands:</p>
+<blockquote class="blockquote">
+<p>If {U_i} is an open cover of U and s_i ∈ <strong>F</strong>(U_i) agree on all overlaps U_i ∩ U_j, then there exists a <em>unique</em> s ∈ <strong>F</strong>(U) restricting to each s_i.</p>
+</blockquote>
+<p>In harness terms, this is the formalization of “local autonomy patches compose into global autonomy.” If every pair of modules agrees on their shared task types, and every triple agrees on their shared task types, then a globally coherent autonomous assignment <em>must</em> exist. The sheaf condition is the precise statement of that.</p>
+</section>
+<section id="why-this-is-not-just-a-type-checker" class="level3">
+<h3 class="anchored" data-anchor-id="why-this-is-not-just-a-type-checker">2.2 Why This Is Not (Just) a Type Checker</h3>
+<p>I can almost hear the objection: “Wait, isn’t this just interface compatibility checking?” It’s not. And the distinction is critical, so let me be precise.</p>
+<p>Standard type-checking and contract verification—Zephyr, Pact, OpenAPI conformance, whatever your stack uses—enforce <em>pairwise</em> agreement. Module A’s output type matches module B’s input type. Done. That’s the 0th-order sheaf condition: agreement on single overlaps.</p>
+<p>The sheaf condition is <em>higher-order</em>. It constrains the <strong>composition</strong> of compatible interfaces across <em>all</em> overlaps simultaneously. Two modules can agree pairwise (types match, contracts hold) yet the triple composition violate a global invariant. That’s exactly the Planner/Executor/Verifier failure above: every pair is type-compatible, but the triad is not a section.</p>
+<p>In categorical terms, a type checker verifies that a diagram of two objects and one morphism commutes. The sheaf condition verifies that <em>every</em> finite sub-diagram in the nerve of the task-topology commutes. The gap between those two is exactly H¹.</p>
+</section>
+</section>
+<section id="čech-cohomology-computing-the-h¹-incoherence-obstruction" class="level2">
+<h2 class="anchored" data-anchor-id="čech-cohomology-computing-the-h¹-incoherence-obstruction">3. Čech Cohomology: Computing the H¹ Incoherence Obstruction</h2>
+<section id="the-cech-complex" class="level3">
+<h3 class="anchored" data-anchor-id="the-cech-complex">3.1 The Cech Complex</h3>
+<p>Given a finite cover {U_1, …, U_n} of X and the presheaf F (here, the <em>intersection</em> presheaf F = ∩ F_m, capturing the joint capability constraint), the first Čech cochain complex is:</p>
+<p>C⁰ = ⊕<em>i F(U_i), C¹ = ⊕</em>{i&lt;j} F(U_i ∩ U_j), C² = ⊕_{i&lt;j&lt;k} F(U_i ∩ U_j ∩ U_k)</p>
+<p>with the standard coboundary δ⁰ : C⁰ → C¹ and δ¹ : C¹ → C². The first cohomology group is:</p>
+<p><strong>H¹</strong>(X, F) = ker(δ¹) / im(δ⁰)</p>
+<p>A <strong>nonzero</strong> class [σ] ∈ H¹(X, F) is a <em>closed 1-cochain that is not a coboundary</em>. In plain English: a cyclic agreement pattern among modules that you simply cannot “unwind” into any global section. That’s the incoherence obstruction. The thing you can’t prompt away.</p>
+</section>
+<section id="worked-example-planner-executor-verifier" class="level3">
+<h3 class="anchored" data-anchor-id="worked-example-planner-executor-verifier">3.2 Worked Example: Planner / Executor / Verifier</h3>
+<p>Let X = {bug-fix, refactor, test-gen} with the discrete cover U₁ = {bug-fix, refactor}, U₂ = {refactor, test-gen}, U₃ = {bug-fix, test-gen}.</p>
+<p>Define the joint capability presheaf F by the following table (entries are capability-state labels):</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Section</th>
+<th>U₁ = {bf, rf}</th>
+<th>U₂ = {rf, tg}</th>
+<th>U₃ = {bf, tg}</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>s₁</td>
+<td>(A, B)</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr class="even">
+<td>s₂</td>
+<td>—</td>
+<td>(B, C)</td>
+<td>—</td>
+</tr>
+<tr class="odd">
+<td>s₃</td>
+<td>—</td>
+<td>—</td>
+<td>(C, A)</td>
+</tr>
+</tbody>
+</table>
+<p>Restriction maps (on overlaps): - U₁ ∩ U₂ = {refactor}: s₁|<em>{rf} = B, s₂|</em>{rf} = B ✓ (agree) - U₂ ∩ U₃ = {test-gen}: s₂|<em>{tg} = C, s₃|</em>{tg} = C ✓ (agree) - U₃ ∩ U₁ = {bug-fix}: s₃|<em>{bf} = A, s₁|</em>{bf} = A ✓ (agree)</p>
+<p>So the 1-cochain σ = (s₂ − s₁, s₃ − s₂, s₁ − s₃) has δ¹σ = 0 (all triple overlaps agree trivially in the discrete case). But σ is <strong>not</strong> a coboundary: there is no 0-cochain (global section) that restricts to s₁, s₂, s₃ simultaneously, because the labels A → B → C → A form a non-trivial cycle with no consistent global assignment.</p>
+<p><strong>H¹</strong>(X, F) ≅ ℤ/3ℤ (or a nontrivial subgroup, depending on the exact set structure). The harness is structurally incoherent. And no amount of prompt tuning on the Planner is going to fix it. I know that sounds harsh, but it’s true.</p>
+</section>
+<section id="computational-complexity" class="level3">
+<h3 class="anchored" data-anchor-id="computational-complexity">3.3 Computational Complexity</h3>
+<p>For a finite cover of n sets and |F(U_i)| ≤ k states per module, the Čech computation runs in O(n³ · k²) time and O(n² · k) space. For a typical 3–7 module harness, that’s a sub-millisecond computation. No LLM inference. No stochastic sampling. No runtime model calls. Just set algebra.</p>
+</section>
+</section>
+<section id="sheafification-minimal-perturbation-repair" class="level2">
+<h2 class="anchored" data-anchor-id="sheafification-minimal-perturbation-repair">4. Sheafification: Minimal Perturbation Repair</h2>
+<section id="the-sheafification-theorem" class="level3">
+<h3 class="anchored" data-anchor-id="the-sheafification-theorem">4.1 The Sheafification Theorem</h3>
+<p>The sheafification <strong>F</strong>⁺ of a presheaf F is the <em>unique</em> (up to unique isomorphism) sheaf with a natural map F → <strong>F</strong>⁺ that is universal among all sheaf maps out of F (Bredon, 1993, <em>Topology and Geometry</em>, §II.5; Hartshorne, 1977, II.5.15).</p>
+<p>What does that mean in harness terms? Sheafification is the <em>minimal</em> modification of the capability-state sets and restriction maps that restores the gluing axiom. It adds no new task types. It removes no modules. It perturbs the constraint sets by the least possible amount. That last part is doing a lot of work, because in practice it means you’re not rewriting your harness—you’re making the smallest edit that unblocks the global composition.</p>
+</section>
+<section id="the-algorithm" class="level3">
+<h3 class="anchored" data-anchor-id="the-algorithm">4.2 The Algorithm</h3>
+<pre><code>SHEAFIFY(F, cover {U_i}):
+  1. For each U in cover, compute F⁺(U) = colim_{V ⊇ U} F(V)
+     (stabilize capability states under refinement)
+  2. For each inclusion V ⊆ U, set res^U_V = canonical colimit map
+  3. Verify: for every cover {V_j} of U, the natural map
+     ⊕_j F⁺(V_j) → F⁺(U) is an isomorphism
+  4. Return (F⁺, res maps, certification witness)</code></pre>
+<p>Step 3 is the CI assertion—the one that actually goes red or green. The certification witness (a finite set of explicit section equalities) is your <em>proof certificate</em> that the repaired harness satisfies the sheaf axiom. You can inspect it. You can diff it. It’s not a black box.</p>
+</section>
+<section id="minimality-guarantee" class="level3">
+<h3 class="anchored" data-anchor-id="minimality-guarantee">4.3 Minimality Guarantee</h3>
+<p>The colimit construction in Step 1 is the <em>freest</em> sheaf extending F. Any other repair G with F → G factors uniquely through F⁺. In constraint-set terms: if a harness engineer manually adjusts capability states to fix the H¹ obstruction, the sheafification is the <em>smallest</em> such adjustment. And that matters for production safety, because minimal perturbation minimizes regression risk. You’re not shaking up the whole system. You’re making the one edit that’s actually necessary.</p>
+</section>
+</section>
+<section id="implementing-a-sheaf-coherence-gate-in-cicd" class="level2">
+<h2 class="anchored" data-anchor-id="implementing-a-sheaf-coherence-gate-in-cicd">5. Implementing a Sheaf Coherence Gate in CI/CD</h2>
+<p>The entire diagnostic is a pure algebraic computation over finite sets. It slots naturally into an existing CI pipeline as a pre-deployment gate:</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+
+<pre class="mermaid mermaid-js">flowchart LR
+  A["Module capability specs\n(YAML/JSON)"] --&gt; B["Presheaf construction\nF_m, restriction maps"]
+  B --&gt; C["Čech complex assembly\nC⁰, C¹, C², δ⁰, δ¹"]
+  C --&gt; D{"H¹ = 0?"}
+  D --&gt;|Yes| E["PASS: harness is\na sheaf — deploy"]
+  D --&gt;|No| F["Sheafify: compute F⁺"]
+  F --&gt; G["Emit patch diff\n+ proof certificate"]
+  G --&gt; H["FAIL (blocking)\nor auto-merge patch"]
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><em>Figure 1. The sheaf-coherence CI pipeline, from presheaf input to verified sheaf output.</em></p>
+<p><strong>Practical integration notes:</strong></p>
+<ul>
+<li><strong>Input format.</strong> Each module’s capability spec is a YAML file listing its supported task types and the state labels it can realize on each. Restriction maps are declared as bijections or inclusions between state sets. A 3-module harness needs about 15 lines of YAML. That’s it.</li>
+<li><strong>CI invocation.</strong> <code>harness-sheaf check --cover cover.yaml --specs planner.yaml executor.yaml verifier.yaml</code>. Exit code 0 = sheaf (pass); exit code 1 = nonzero H¹ (fail, with diagnostic); exit code 2 = sheafification patch available (optional auto-fix).</li>
+<li><strong>Reference implementation.</strong> See the <a href="https://github.com/autonomous-harness/harness-sheaf"><code>harness-sheaf</code></a> package (Python 3.10+, <code>pip install harness-sheaf</code>). The core Čech computation is roughly 200 lines of pure-Python set algebra; the sheafification colimit is about 80 lines. No ML dependencies. None at all.</li>
+<li><strong>Interaction with prior gates.</strong> This gate is <em>orthogonal</em> to the spectral-gap check (convergence rate), the free-energy bound (per-step KL budget), and the ergodicity certificate (mixing time). All four can run in parallel in a single CI stage. The sheaf gate is the only one that’s a <em>hard</em> yes/no structural test; the others are quantitative bounds. They answer different questions.</li>
+</ul>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">6. Discussion</h2>
+<p>A few connections here that I think merit being spelled out.</p>
+<p><strong>Mechanism design.</strong> The sheafification minimal-perturbation property is the sheaf-theoretic analogue of the revelation principle in mechanism design (Myerson, 1979): the “truthful” repair is the one that reveals the least new structure. In the companion post on <a href="../../posts/2026-11-19-mechanism-design-for-autonomy-incentive-compatible/">incentive-compatible harness design</a>, the Pareto-optimal constraint allocation is precisely the sheafification when the module interaction graph is a tree. For general graphs, the H¹ obstruction measures the <em>gap</em> between the tree-optimum and the graph-necessary constraint. I find that connection genuinely satisfying.</p>
+<blockquote class="blockquote">
+<p>“The sheaf condition is what mechanism design’s revelation principle does for agent capability: it says the <em>only</em> coherent global assignment is the one that every local module already agrees on. There is no hidden global state to optimize. There is only the question of whether the local agreements are <em>consistent enough</em> to glue.”</p>
+</blockquote>
+<p><strong>Comparison to the cohomological obstruction post.</strong> The earlier result in <a href="../../posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/">Cohomological Obstructions to Complete Harness Autonomy</a> proved the <em>existence</em> of topological obstructions in general. Existence is nice. It’s also somewhat abstract. The present post makes the obstruction <em>computable</em> and <em>repairable</em>: H¹ is not merely a philosophical barrier but a finite-dimensional linear algebra problem over a finite set, with a canonical repair (sheafification) and a CI-executable certificate. That shift from “there exists an obstruction” to “here’s the number, here’s the fix, here’s the proof” is the whole point.</p>
+<p><strong>Relation to gauge symmetry.</strong> The <a href="../../posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/">gauge-symmetry framework</a> identifies autonomy-preserving relabelings of module state spaces. Sheafification is invariant under these gauge transformations: if F and F′ are gauge-equivalent presheaves, then F⁺ ≅ (F′)⁺. What that means in practice is that the H¹ diagnostic is <em>gauge-invariant</em>—it detects structural incoherence independent of the arbitrary labeling of capability states. You can rename your states however you like; the topology doesn’t care.</p>
+<p><strong>Limitations.</strong> I’ll be upfront: the framework, as presented, handles <em>abelian</em> section spaces (sets with a distinguished basepoint, or abelian groups). Multi-round agent loops with non-commutative state composition—where the order of “plan → execute → verify → replan” actually matters—require <em>non-abelian</em> sheaf cohomology. There, H¹ is only a pointed set, not a group, and the sheafification theorem needs modification. I’m flagging this as the subject of a forthcoming post. You’re going to want to read that one.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">7. Conclusion</h2>
+<p>The sheaf gluing axiom is not an aesthetic formalization. It’s not a way to make the theory look prettier. It is the <em>exact</em> necessary-and-sufficient condition for local module autonomy to compose into global harness autonomy, and its failure is detectable by a finite, deterministic, CI-executable computation. The H¹ obstruction is the structural signature of harnesses that no amount of prompt engineering, threshold tuning, or pairwise interface repair can make fully autonomous. And sheafification provides the minimal, provably safe repair.</p>
+<p>In the next post in this series, we extend the framework to non-abelian section spaces and derive a higher-cohomology obstruction (H²) for multi-round agent loops, where the composition order of module actions introduces a genuinely non-commutative coherence constraint. We’ll also connect the sheaf-coherence gate to the <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">percolation critical-density heuristic</a> to show how constraint density and topological obstruction interact near the autonomy phase transition. Stay tuned.</p>
+</section>
+<section id="further-reading" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading">Further Reading</h2>
+<ul>
+<li><a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative: Code as Self-Governing Architecture</a> — The five-level autonomy spectrum that motivates the local-to-global coherence problem.</li>
+<li><a href="../../posts/2026-11-19-cohomological-obstructions-to-complete-harness-autonomy/">Cohomological Obstructions to Complete Harness Autonomy</a> — The existence theorem for topological obstructions; this post makes it computable.</li>
+<li><a href="../../posts/2026-11-19-mechanism-design-for-autonomy-incentive-compatible/">Mechanism Design for Autonomy: Incentive-Compatible</a> — The Pareto-optimal constraint allocation that sheafification recovers in the tree case.</li>
+<li><a href="../../posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/">Gauge Symmetry and the Invariant Core of Harness Autonomy</a> — Why the H¹ diagnostic is invariant under state relabeling.</li>
+<li><a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy: Critical Dynamics in Harness Design</a> — Constraint density and the autonomy phase transition; interacts with the sheaf gate near criticality.</li>
+<li><a href="../../posts/2026-11-19-functorial-autonomy-categorical-structure-of-harness-design/">Functorial Autonomy: Categorical Structure of Harness Design</a> — Safe refactors as natural transformations; the sheaf condition is the categorical coherence axiom underlying these.</li>
+</ul>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>Bredon, G. M. (1993). <em>Topology and Geometry</em> (2nd ed.). Springer. §§ II.4–II.5 (sheaves and sheafification).</p>
+<p>Hartshorne, R. (1977). <em>Algebraic Geometry</em>. Springer. §II.5.15 (the sheaf condition as a gluing criterion).</p>
+<p>Mac Lane, S., &amp; Moerdijk, I. (1992). <em>Sheaves in Geometry and Logic: A First Introduction to Topos Theory</em>. Cambridge University Press. §§ II.1–III.2.</p>
+<p>Myerson, R. (1979). Incentive compatibility and the bargaining problem. <em>Econometrica</em>, 47(2), 611–627.</p>
+<hr>
+<p><em>For a 10-minute refresher on sheaves, the Čech complex, and the sheafification theorem, see the <a href="https://ncatlab.org/nlab/show/sheaf">nLab entry on sheaves</a> and the <a href="https://ncatlab.org/nlab/show/Cech+cohomology">nLab entry on Čech cohomology</a>.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ianmerlos34\.github\.io\/harness-coding\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

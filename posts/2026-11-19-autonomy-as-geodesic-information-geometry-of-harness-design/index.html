@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-11-19">
+<meta name="keywords" content="information geometry, Fisher information metric, geodesic path optimization, coding agent harness design, Riemannian manifold, autonomy level transition, natural gradient descent, parallel transport constraints, harness reconfiguration cost, statistical manifold">
+<meta name="description" content="Recasting coding-agent harness design as a Riemannian manifold where autonomy transitions are geodesics, with computable effort, curvature, and drift.">
+
+<title>Autonomy as Geodesic: Information Geometry of Harness Design – Harness coding, towards the complete autonomy</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ded4168630e1422961a6247c4ac5fe91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(cover.png);
+background-size: cover;
+      }
+</style>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Harness coding, towards the complete autonomy</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Autonomy as Geodesic: Information Geometry of Harness Design</h1>
+                  <div>
+        <div class="description">
+          Recasting coding-agent harness design as a Riemannian manifold where autonomy transitions are geodesics, with computable effort, curvature, and drift.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">AI Engineering</div>
+                <div class="quarto-category">Applied Mathematics</div>
+                <div class="quarto-category">Software Architecture</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ian Merlos </p>
+               <p>Ian Merlos </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+
+  <div>
+    <div class="keywords">
+      <div class="block-title">Keywords</div>
+      <p>information geometry, Fisher information metric, geodesic path optimization, coding agent harness design, Riemannian manifold, autonomy level transition, natural gradient descent, parallel transport constraints, harness reconfiguration cost, statistical manifold</p>
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways">Key Takeaways</a></li>
+  <li><a href="#table-of-contents" id="toc-table-of-contents" class="nav-link" data-scroll-target="#table-of-contents">Table of Contents</a></li>
+  <li><a href="#series-navigation" id="toc-series-navigation" class="nav-link" data-scroll-target="#series-navigation">Series Navigation</a></li>
+  <li><a href="#the-manifold-of-harness-configurations" id="toc-the-manifold-of-harness-configurations" class="nav-link" data-scroll-target="#the-manifold-of-harness-configurations">1. The Manifold of Harness Configurations</a></li>
+  <li><a href="#the-fisher-information-metric-on-configuration-space" id="toc-the-fisher-information-metric-on-configuration-space" class="nav-link" data-scroll-target="#the-fisher-information-metric-on-configuration-space">2. The Fisher Information Metric on Configuration Space</a></li>
+  <li><a href="#geodesics-as-optimal-autonomy-transitions" id="toc-geodesics-as-optimal-autonomy-transitions" class="nav-link" data-scroll-target="#geodesics-as-optimal-autonomy-transitions">3. Geodesics as Optimal Autonomy Transitions</a>
+  <ul class="collapse">
+  <li><a href="#a-worked-2-d-example" id="toc-a-worked-2-d-example" class="nav-link" data-scroll-target="#a-worked-2-d-example">A Worked 2-D Example</a></li>
+  </ul></li>
+  <li><a href="#curvature-and-the-cost-of-autonomy" id="toc-curvature-and-the-cost-of-autonomy" class="nav-link" data-scroll-target="#curvature-and-the-cost-of-autonomy">4. Curvature and the Cost of Autonomy</a></li>
+  <li><a href="#parallel-transport-and-constraint-inheritance" id="toc-parallel-transport-and-constraint-inheritance" class="nav-link" data-scroll-target="#parallel-transport-and-constraint-inheritance">5. Parallel Transport and Constraint Inheritance</a></li>
+  <li><a href="#the-geodesic-design-workflow-six-steps-from-current-to-target-autonomy" id="toc-the-geodesic-design-workflow-six-steps-from-current-to-target-autonomy" class="nav-link" data-scroll-target="#the-geodesic-design-workflow-six-steps-from-current-to-target-autonomy">6. The Geodesic Design Workflow: Six Steps from Current to Target Autonomy</a></li>
+  <li><a href="#connection-to-natural-gradient-descent" id="toc-connection-to-natural-gradient-descent" class="nav-link" data-scroll-target="#connection-to-natural-gradient-descent">7. Connection to Natural Gradient Descent</a></li>
+  <li><a href="#limitations" id="toc-limitations" class="nav-link" data-scroll-target="#limitations">8. Limitations</a></li>
+  <li><a href="#further-reading-and-external-resources" id="toc-further-reading-and-external-resources" class="nav-link" data-scroll-target="#further-reading-and-external-resources">9. Further Reading and External Resources</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#a-closing-note" id="toc-a-closing-note" class="nav-link" data-scroll-target="#a-closing-note">A Closing Note</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>We recast the space of all parametrically defined coding-agent harness configurations as a statistical manifold equipped with the Fisher information metric. Every shift in autonomy level becomes a geodesic trajectory whose length, curvature, and parallel transport carry precise engineering meaning. The payoff? A differential-geometric calculus in which “how hard is it to make a harness more autonomous?” stops being an ad-hoc design heuristic and becomes a computable quantity.</p>
+<details>
+<summary>
+<em>Full abstract (paper-style)</em>
+</summary>
+Let <span class="math inline">\(\mathcal{H}\)</span> denote the set of all parametrically specified harnesses for a coding agent, and let <span class="math inline">\(\theta \in \Theta \subset \mathbb{R}^n\)</span> be the vector of design parameters (constraint densities, permission scopes, verification gates, feedback-loop gains, etc.). For each <span class="math inline">\(\theta\)</span>, the agent’s behavior is summarized by a conditional distribution <span class="math inline">\(p_\theta(\mathbf{y} \mid \mathbf{x})\)</span> over task outcomes. Equipping <span class="math inline">\(\Theta\)</span> with the Fisher information metric <span class="math inline">\(g_{ij}(\theta) = \mathbb{E}_\theta[\partial_i \log p_\theta \;\partial_j \log p_\theta]\)</span> turns <span class="math inline">\((\Theta, g)\)</span> into a Riemannian manifold <span class="math inline">\(\mathcal{M}\)</span>. We show that (i) optimal autonomy transitions are geodesics; (ii) the sectional curvature at <span class="math inline">\(\theta\)</span> quantifies the sensitivity of that transition to the <em>order</em> in which sub-constraints are relaxed; (iii) parallel transport along a geodesic defines a canonical way to carry constraint semantics from a lower-autonomy regime to a higher one without “twist.” We derive a design calculus: given a target autonomy level, the engineer computes the geodesic, reads off its length (effort), curvature (fragility), and holonomy (semantic drift), and thereby obtains a principled, quantitative answer to the central question of harness design.
+</details>
+<hr>
+</section>
+<section id="key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="key-takeaways">Key Takeaways</h2>
+<ul>
+<li><strong>Autonomy transitions are paths, not jumps.</strong> The geometric distance between two harness configurations (measured by the Fisher information metric) is the true cost of reconfiguration—not the number of parameters you happen to change.</li>
+<li><strong>Curvature is fragility.</strong> High sectional curvature near a configuration means the <em>order</em> in which you relax constraints actually matters; low curvature means the transition is robust to sequencing.</li>
+<li><strong>Parallel transport is semantic preservation.</strong> Carrying a constraint’s meaning along a geodesic without holonomy is just the math way of saying “the agent still understands what ‘safe’ means” at the new autonomy level.</li>
+<li><strong>A 2-D worked example</strong> (Gaussian-parameter manifold) shows how to compute the geodesic, the curvature, and the effort integral by hand.</li>
+<li><strong>The workflow is concrete:</strong> estimate the Fisher metric on your task suite, solve the geodesic ODE, read off length and curvature, and iterate.</li>
+</ul>
+<hr>
+</section>
+<section id="table-of-contents" class="level2">
+<h2 class="anchored" data-anchor-id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#1-the-manifold-of-harness-configurations">The Manifold of Harness Configurations</a></li>
+<li><a href="#2-the-fisher-information-metric-on-configuration-space">The Fisher Information Metric on Configuration Space</a></li>
+<li><a href="#3-geodesics-as-optimal-autonomy-transitions">Geodesics as Optimal Autonomy Transitions</a></li>
+<li><a href="#4-curvature-and-the-cost-of-autonomy">Curvature and the Cost of Autonomy</a></li>
+<li><a href="#5-parallel-transport-and-constraint-inheritance">Parallel Transport and Constraint Inheritance</a></li>
+<li><a href="#6-the-geodesic-design-workflow-six-steps-from-current-to-target-autonomy">The Geodesic Design Workflow: Six Steps from Current to Target Autonomy</a></li>
+<li><a href="#7-connection-to-natural-gradient-descent">Connection to Natural Gradient Descent</a></li>
+<li><a href="#8-limitations">Limitations</a></li>
+<li><a href="#9-further-reading-and-external-resources">Further Reading and External Resources</a></li>
+<li><a href="#references">References</a></li>
+</ol>
+<hr>
+</section>
+<section id="series-navigation" class="level2">
+<h2 class="anchored" data-anchor-id="series-navigation">Series Navigation</h2>
+<table class="caption-top table">
+<tbody>
+<tr class="odd">
+<td>← <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative</a></td>
+<td><a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">The Autonomy Channel</a> →</td>
+</tr>
+</tbody>
+</table>
+<p><em>This is Part 7 in the series on building a completely autonomous coding-agent harness.</em></p>
+<hr>
+</section>
+<section id="the-manifold-of-harness-configurations" class="level2">
+<h2 class="anchored" data-anchor-id="the-manifold-of-harness-configurations">1. The Manifold of Harness Configurations</h2>
+<p>So what <em>is</em> a coding-agent harness, really? It’s the parametric scaffold that governs what an LLM-based agent is allowed to perceive, decide, and execute across the software development lifecycle. Concretely, a harness is a tuple <span class="math inline">\(\mathbf{h} = (\mathcal{S}, \mathcal{P}, \mathcal{V}, \mathcal{F})\)</span> comprising a set of scope rules <span class="math inline">\(\mathcal{S}\)</span>, a permission matrix <span class="math inline">\(\mathcal{P}\)</span>, a verification gate <span class="math inline">\(\mathcal{V}\)</span>, and a feedback controller <span class="math inline">\(\mathcal{F}\)</span>. Each component gets parameterized by a finite vector, and you collect the whole thing into a single parameter vector <span class="math inline">\(\theta \in \Theta \subset \mathbb{R}^n\)</span>.</p>
+<p>For a given <span class="math inline">\(\theta\)</span>, the agent’s observable behavior on a task distribution <span class="math inline">\(\mathcal{D}\)</span> is captured by a conditional outcome distribution <span class="math inline">\(p_\theta(\mathbf{y} \mid \mathbf{x})\)</span>, where <span class="math inline">\(\mathbf{x}\)</span> is the task specification and <span class="math inline">\(\mathbf{y}\)</span> is the vector of deliverable properties (correctness, security, style compliance, and so on). The mapping <span class="math inline">\(\theta \mapsto p_\theta\)</span> is, in the classical sense (Amari &amp; Nagaoka, 2000), a <em>statistical model</em>.</p>
+<p>Now here’s where it gets geometric. The set of all such configurations <span class="math inline">\(\Theta\)</span>—modulo reparameterization invariance—forms a smooth manifold <span class="math inline">\(\mathcal{M}\)</span>. It’s smooth wherever the parameterization is regular, meaning the Fisher information matrix stays positive-definite. Its topology inherits from the ambient parameter space, modulo the equivalence class of reparameterizations that leave the induced distribution family unchanged. This resonates with the gauge-symmetry reduction I explored in <a href="../../posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/">Gauge Symmetry and the Invariant Core of Harness Autonomy</a>, where combinatorially distinct harnesses collapse into a finite set of inequivalent autonomy structures.</p>
+<p><strong>Engineering reading.</strong> You don’t need to know differential geometry to use this framework. What matters is this: <em>your harness is a point on a curved surface, and moving it costs something. The cost isn’t the number of toggles you flip; it’s the geometric distance you traverse.</em></p>
+<hr>
+</section>
+<section id="the-fisher-information-metric-on-configuration-space" class="level2">
+<h2 class="anchored" data-anchor-id="the-fisher-information-metric-on-configuration-space">2. The Fisher Information Metric on Configuration Space</h2>
+<p>The central object here is the Fisher information metric (FIM). For the parameter vector <span class="math inline">\(\theta = (\theta^1, \dots, \theta^n)\)</span>, the components are</p>
+<p><span class="math display">\[
+g_{ij}(\theta) \;=\; \mathbb{E}_{p_\theta}\!\left[\frac{\partial \log p_\theta(\mathbf{y}\mid\mathbf{x})}{\partial \theta^i}\;\frac{\partial \log p_\theta(\mathbf{y}\mid\mathbf{x})}{\partial \theta^j}\right].
+\]</span></p>
+<p>In plain terms: <span class="math inline">\(g_{ij}\)</span> measures how much the agent’s <em>behavioral distribution</em> shifts when you nudge parameter <span class="math inline">\(i\)</span> and parameter <span class="math inline">\(j\)</span> at the same time. Think of it as the intrinsic “stiffness” of the harness along the <span class="math inline">\((i,j)\)</span> direction.</p>
+<p>The arc length of a path <span class="math inline">\(\gamma(t)\)</span>, <span class="math inline">\(t \in [0,1]\)</span>, in configuration space works out to</p>
+<p><span class="math display">\[
+L(\gamma) \;=\; \int_0^1 \sqrt{g_{ij}(\gamma(t))\;\dot{\gamma}^i \dot{\gamma}^j}\; dt.
+\]</span></p>
+<p><em>In plain terms: this is the “effort score” of reconfiguring the harness, measured in units of behavioral change rather than parameter units. A path that changes a lot of parameters but produces little behavioral shift is short; a path that tweaks few parameters but radically alters the agent’s decision boundary is long.</em></p>
+<p>The FIM is positive-definite on the interior of <span class="math inline">\(\Theta\)</span> (where <span class="math inline">\(p_\theta\)</span> is regular), so <span class="math inline">\((\mathcal{M}, g)\)</span> is a genuine Riemannian manifold. The Levi-Civita connection <span class="math inline">\(\Gamma^i_{jk}\)</span> comes in the standard way, and the geodesic equation reads</p>
+<p><span class="math display">\[
+\ddot{\gamma}^i + \Gamma^i_{jk}\,\dot{\gamma}^j \dot{\gamma}^k = 0.
+\]</span></p>
+<p><strong>Engineering reading.</strong> The geodesic equation isn’t some aesthetic choice. It’s the <em>minimum-effort</em> path between two autonomy levels. Any non-geodesic reconfiguration—say, flipping the permission matrix before tightening the verification gate—traverses a longer path and thus incurs more behavioral disruption than strictly necessary. This is the geometric content behind the ordering-sensitivity I observed in <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy: Critical Dynamics in Harness Design</a>, where autonomy emerges in discrete jumps rather than sliding in continuously.</p>
+<hr>
+</section>
+<section id="geodesics-as-optimal-autonomy-transitions" class="level2">
+<h2 class="anchored" data-anchor-id="geodesics-as-optimal-autonomy-transitions">3. Geodesics as Optimal Autonomy Transitions</h2>
+<blockquote class="blockquote">
+<p><strong>Theorem (informal).</strong> <em>Let <span class="math inline">\(\theta_A\)</span> and <span class="math inline">\(\theta_B\)</span> be two harness configurations at autonomy levels <span class="math inline">\(\ell_A &lt; \ell_B\)</span> (per the five-level spectrum in <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative</a>). Among all smooth reconfiguration paths <span class="math inline">\(\gamma\)</span> with <span class="math inline">\(\gamma(0)=\theta_A\)</span>, <span class="math inline">\(\gamma(1)=\theta_B\)</span>, the geodesic <span class="math inline">\(\gamma^*\)</span> minimizes the Fisher arc length <span class="math inline">\(L(\gamma)\)</span>. Equivalently, the geodesic is the unique path that maximizes behavioral continuity per unit of parameter change.</em></p>
+</blockquote>
+<p>The proof is the standard variational argument: the arc-length functional is convex in the velocity <span class="math inline">\(\dot{\gamma}\)</span> (since <span class="math inline">\(g_{ij}\)</span> is positive-definite), and the Euler–Lagrange equation yields the geodesic ODE. Uniqueness holds locally (within a convex normal neighborhood), which is exactly the regime in which practical autonomy transitions live.</p>
+<section id="a-worked-2-d-example" class="level3">
+<h3 class="anchored" data-anchor-id="a-worked-2-d-example">A Worked 2-D Example</h3>
+<p>Consider a harness with two free parameters: the mean confidence threshold <span class="math inline">\(\mu\)</span> and the verification strictness <span class="math inline">\(\sigma\)</span>. The induced outcome model is Gaussian, <span class="math inline">\(p_\theta(\mathbf{y}|\mathbf{x}) = \mathcal{N}(\mu, \sigma^2)\)</span>. The Fisher information metric is</p>
+<p><span class="math display">\[
+g_{\mu\mu} = \frac{1}{\sigma^2}, \qquad g_{\mu\sigma} = 0, \qquad g_{\sigma\sigma} = \frac{2}{\sigma^2}.
+\]</span></p>
+<p>The Christoffel symbols (non-zero) are:</p>
+<p><span class="math display">\[
+\Gamma^\mu_{\mu\sigma} = -\frac{1}{2\sigma}, \qquad \Gamma^\sigma_{\mu\mu} = \frac{1}{4\sigma}, \qquad \Gamma^\sigma_{\sigma\sigma} = -\frac{1}{\sigma}.
+\]</span></p>
+<p>The geodesic equations become:</p>
+<p><span class="math display">\[
+\ddot{\mu} - \frac{1}{\sigma}\,\dot{\mu}\,\dot{\sigma} = 0, \qquad \ddot{\sigma} + \frac{1}{2\sigma}\,\dot{\mu}^{\,2} - \frac{2}{\sigma}\,\dot{\sigma}^{\,2} = 0.
+\]</span></p>
+<p>Starting at <span class="math inline">\((\mu, \sigma) = (0, 1)\)</span> with initial velocity <span class="math inline">\((\dot\mu, \dot\sigma) = (1, 0)\)</span>, the first-order expansion gives <span class="math inline">\(\mu(t) \approx t\)</span>, <span class="math inline">\(\sigma(t) \approx 1 - t^2/4\)</span>. The arc length over <span class="math inline">\(t \in [0, 1]\)</span> is</p>
+<p><span class="math display">\[
+L \;=\; \int_0^1 \frac{\sqrt{1 + t^2/2}}{1 - t^2/4}\;dt \;\approx\; 1.13.
+\]</span></p>
+<p>The sectional curvature of this 2-D surface is constant: <span class="math inline">\(K = -1/4\)</span>.</p>
+<p><strong>Engineering reading.</strong> A constant negative curvature means that <em>any</em> reconfiguration path between two autonomy levels on this surface will exhibit “divergence”: two initially similar reconfiguration strategies (e.g., “raise <span class="math inline">\(\mu\)</span> first” vs.&nbsp;“raise <span class="math inline">\(\sigma\)</span> first”) will separate as the transition proceeds. The negative curvature quantifies <em>how quickly</em> those strategies diverge. In practice, this means that at higher autonomy levels, the <em>ordering</em> of constraint relaxation becomes increasingly consequential—a prediction consistent with the percolation-criticality findings in <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy</a>.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+
+<pre class="mermaid mermaid-js">flowchart LR
+  L1["Level 1\nHuman-directed"] --&gt;|"geodesic γ₁\nL ≈ 0.7"| L3["Level 3\nCollaborative"]
+  L3 --&gt;|"geodesic γ₂\nL ≈ 0.8"| L5["Level 5\nAutonomous"]
+  L1 -.-&gt;|"non-geodesic jump\nL ≈ 1.9\n(high curvature cost)"| L5
+
+  style L1 fill:#e8f5e9,stroke:#2e7d32
+  style L3 fill:#fff3e0,stroke:#e65100
+  style L5 fill:#e3f2fd,stroke:#1565c0
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><em>Figure 1. Two geodesic segments (solid arrows) connecting Level 1 → Level 3 → Level 5 autonomy, contrasted with a single non-geodesic dashed arrow jumping directly from Level 1 to Level 5. The two-segment path is shorter because it traverses lower-curvature regions of the manifold.</em></p>
+<hr>
+</section>
+</section>
+<section id="curvature-and-the-cost-of-autonomy" class="level2">
+<h2 class="anchored" data-anchor-id="curvature-and-the-cost-of-autonomy">4. Curvature and the Cost of Autonomy</h2>
+<p>The Riemann curvature tensor <span class="math inline">\(R^i_{\;jkl}\)</span> encodes the failure of parallel-transported vectors to close around infinitesimal loops. For engineering purposes, though, what actually matters is the <em>sectional curvature</em> in the 2-plane spanned by two reconfiguration directions <span class="math inline">\(u, v\)</span>:</p>
+<p><span class="math display">\[
+K(u,v) \;=\; \frac{R_{ikjl}\;u^i v^j v^k u^l}{\bigl(g_{ik}g_{jl} - g_{il}g_{jk}\bigr)\;u^i u^j v^k v^l}.
+\]</span></p>
+<p>The denominator is <span class="math inline">\(\|u\|^2\|v\|^2 - \langle u, v\rangle^2\)</span>, which is just the squared area of the parallelogram spanned by <span class="math inline">\(u\)</span> and <span class="math inline">\(v\)</span>.</p>
+<p><strong>Interpretation.</strong> If <span class="math inline">\(K &gt; 0\)</span> in the <span class="math inline">\((\partial_i, \partial_j)\)</span> plane, then relaxing constraint <span class="math inline">\(i\)</span> and then <span class="math inline">\(j\)</span> produces a <em>different</em> final behavioral state than relaxing <span class="math inline">\(j\)</span> and then <span class="math inline">\(i\)</span>—the commutator <span class="math inline">\([\nabla_i, \nabla_j]\)</span> is non-zero. The agent’s interpretation of “safe” or “correct” depends on the path you took. If <span class="math inline">\(K &lt; 0\)</span> (as in our Gaussian example), the two orderings <em>diverge</em>, and that divergence grows with the magnitude of the reconfiguration.</p>
+<blockquote class="blockquote">
+<p><strong>Corollary (informal).</strong> <em>The cost of a non-geodesic reconfiguration exceeds the geodesic cost by an amount proportional to the integral of <span class="math inline">\(K\)</span> over the 2-surface swept out by the deviation. In the small-deviation limit, the excess cost is <span class="math inline">\(\tfrac{1}{2}\int K\, dA + O(\epsilon^4)\)</span>, where <span class="math inline">\(dA\)</span> is the area element of the deviation surface.</em></p>
+</blockquote>
+<p>This is a geometric “free lunch” that is, of course, bounded by the curvature: the more curved the manifold, the more you pay for taking a shortcut.</p>
+<p><strong>Engineering reading.</strong> Before you relax a pair of constraints simultaneously, compute (or at least estimate) the sectional curvature in that 2-plane. If <span class="math inline">\(|K|\)</span> is large, <em>sequence</em> the relaxations and re-verify after each step. If <span class="math inline">\(|K| \approx 0\)</span>, the order doesn’t matter and you can parallelize the change. This turns the qualitative heuristic “change one thing at a time” into an actual quantitative decision rule.</p>
+<hr>
+</section>
+<section id="parallel-transport-and-constraint-inheritance" class="level2">
+<h2 class="anchored" data-anchor-id="parallel-transport-and-constraint-inheritance">5. Parallel Transport and Constraint Inheritance</h2>
+<p>A constraint in a harness isn’t merely a boolean flag; it carries <em>semantic content</em>—a specification of what the agent should or shouldn’t do, expressed in the coordinate frame of the current autonomy level. When the harness transitions from <span class="math inline">\(\theta_A\)</span> to <span class="math inline">\(\theta_B\)</span>, the constraint’s meaning has to be <em>transported</em> along the path.</p>
+<p>Parallel transport along the geodesic <span class="math inline">\(\gamma^*\)</span> is defined by the covariant derivative:</p>
+<p><span class="math display">\[
+\nabla_{\dot{\gamma}} V = 0, \qquad \text{i.e.} \quad \dot{V}^i + \Gamma^i_{jk}\,\dot{\gamma}^j V^k = 0.
+\]</span></p>
+<p>The solution <span class="math inline">\(V(t)\)</span> is the “constraint vector” as seen by the agent at each point along the transition. If the holonomy <span class="math inline">\(\mathcal{H}(\gamma^*)\)</span>—the net rotation of <span class="math inline">\(V\)</span> after transporting around a closed loop—vanishes, the constraint semantics are <em>path-independent</em>: the agent’s understanding of “do not write to production” is the same whether you got there via Level 2 or Level 4.</p>
+<p>I’d argue this is the geometric content of the dialectic I articulated in <a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">Scaffolding to Sovereignty: The Dialectic of Code Autonomy</a>: scaffolding isn’t a tax on autonomy but the generative precondition, because the parallel transport <em>defines</em> what autonomy means at each level. Without the transport structure, “more autonomy” is just “more parameters turned up,” and the semantic content of the constraints dissolves into noise.</p>
+<p><strong>Engineering reading.</strong> When you promote an agent from “suggest” (Level 2) to “execute” (Level 4), the constraint “respect the project’s style guide” must be <em>re-instantiated</em> in the new autonomy frame. Parallel transport is the mathematical prescription for that re-instantiation. In practice? Re-run the style-check verification gate in the new permission scope, and confirm that the agent’s output distribution (conditioned on the style constraint) hasn’t shifted beyond your tolerance. That’s one step of the transport ODE, discretized.</p>
+<hr>
+</section>
+<section id="the-geodesic-design-workflow-six-steps-from-current-to-target-autonomy" class="level2">
+<h2 class="anchored" data-anchor-id="the-geodesic-design-workflow-six-steps-from-current-to-target-autonomy">6. The Geodesic Design Workflow: Six Steps from Current to Target Autonomy</h2>
+<p>All that theory reduces to a concrete engineering procedure. Given a current harness <span class="math inline">\(\theta_A\)</span> and a target autonomy level <span class="math inline">\(\ell_B\)</span>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Action</th>
+<th>Geometric object</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>Enumerate free parameters; fix gauge (see <a href="../../posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/">Gauge Symmetry</a>)</td>
+<td>Coordinate chart on <span class="math inline">\(\mathcal{M}\)</span></td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>Estimate <span class="math inline">\(g_{ij}\)</span> via Monte Carlo on your task suite <span class="math inline">\(\mathcal{D}\)</span></td>
+<td>Fisher information metric</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>Compute Christoffel symbols <span class="math inline">\(\Gamma^i_{jk}\)</span> from <span class="math inline">\(g_{ij}\)</span></td>
+<td>Levi-Civita connection</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>Solve the geodesic ODE <span class="math inline">\(\ddot\gamma^i + \Gamma^i_{jk}\dot\gamma^j\dot\gamma^k = 0\)</span> with <span class="math inline">\(\gamma(0)=\theta_A\)</span>, <span class="math inline">\(\dot\gamma(0)\)</span> chosen toward <span class="math inline">\(\theta_B\)</span></td>
+<td>Geodesic <span class="math inline">\(\gamma^*\)</span></td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>Evaluate <span class="math inline">\(L(\gamma^*)\)</span> (effort) and <span class="math inline">\(K\)</span> along the path (fragility)</td>
+<td>Arc length, sectional curvature</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>Parallel-transport each constraint vector; check holonomy</td>
+<td>Constraint semantics</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 2 in practice.</strong> You don’t need the full <span class="math inline">\(n \times n\)</span> metric. For a harness with <span class="math inline">\(n \leq 20\)</span> free parameters, a Monte Carlo estimate with <span class="math inline">\(N = 10^4\)</span> task samples gives <span class="math inline">\(g_{ij}\)</span> to roughly <span class="math inline">\(\sim 1\%\)</span> accuracy. The computation is embarrassingly parallel: each sample contributes an outer product <span class="math inline">\(\nabla_\theta \log p_\theta \otimes \nabla_\theta \log p_\theta\)</span>. Libraries like <code>geomstats</code> (Python) or the <code>riemann</code> package (R) provide the geodesic solver and curvature computation out of the box.</p>
+<p><strong>Step 4 in practice.</strong> The geodesic ODE is a system of <span class="math inline">\(n\)</span> second-order ODEs. For <span class="math inline">\(n \leq 20\)</span>, a standard Runge-Kutta 4th-order integrator with adaptive step size will do. For larger <span class="math inline">\(n\)</span>, exploit the block-diagonal structure that falls out of modular harness design: scope rules, permissions, verification, and feedback controllers couple only through a small number of shared parameters.</p>
+<p><strong>Engineering reading.</strong> The workflow replaces the ad-hoc question “should I relax the sandbox first or the verification gate first?” with the computation “what is the geodesic, and what is the curvature in the (sandbox, verification) plane?” The answer is a number, not a gut feeling.</p>
+<hr>
+</section>
+<section id="connection-to-natural-gradient-descent" class="level2">
+<h2 class="anchored" data-anchor-id="connection-to-natural-gradient-descent">7. Connection to Natural Gradient Descent</h2>
+<p>The Fisher information metric isn’t a purely geometric abstraction; it’s the metric that makes <em>natural gradient descent</em> (Amari, 1998) invariant to reparameterization. In the harness-design context, this means the following: if you’re <em>tuning</em> a harness (adjusting <span class="math inline">\(\theta\)</span> to maximize a performance objective <span class="math inline">\(J(\theta)\)</span>), the natural gradient</p>
+<p><span class="math display">\[
+\tilde{\nabla} J = g^{-1} \nabla J
+\]</span></p>
+<p>is the steepest-ascent direction in <em>behavioral</em> space, not in parameter space. A unit step in the natural-gradient direction produces the same behavioral change regardless of how you happen to parameterize the harness.</p>
+<p>This connection isn’t incidental. The rate-distortion cost floor I derived in <a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">The Autonomy Channel</a> can be re-expressed as a bound on the natural-gradient step size: the maximum autonomy increment per tuning iteration is limited by the Fisher-information budget, which is precisely the free-energy bound I quantified in <a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds: A Variational Account of Autonomy</a>. The geodesic framework unifies these results: the geodesic is the path of <em>constant natural-gradient step size</em>, and its length is the total Fisher-information budget consumed by the transition.</p>
+<p><strong>Engineering reading.</strong> If you’ve been tuning your harness with grid search or random search over parameter values, you’re working in a coordinate-dependent metric. Switching to natural-gradient updates (or, equivalently, to geodesic interpolation) makes your tuning invariant to how you choose to parameterize the harness. The same behavioral improvement requires the same number of iterations, whether you express the threshold as a probability, a log-odds, or a percentile.</p>
+<hr>
+</section>
+<section id="limitations" class="level2">
+<h2 class="anchored" data-anchor-id="limitations">8. Limitations</h2>
+<p>Three caveats worth keeping in mind.</p>
+<p><strong>First: the outcome model is a projection.</strong> The distribution <span class="math inline">\(p_\theta(\mathbf{y}|\mathbf{x})\)</span> captures only the observable behavioral signature of the harness. Internal state, prompt engineering, and model-specific quirks (say, a particular LLM’s sensitivity to instruction phrasing) aren’t encoded in the manifold. The Fisher metric is therefore a <em>lower bound</em> on the true reconfiguration cost: it measures the cost of the observable change, not the cost of the internal reorganization that produces it.</p>
+<p><strong>Second: the manifold may be singular.</strong> At the boundary of <span class="math inline">\(\Theta\)</span> (e.g., zero verification strictness, or a fully open sandbox), the FIM can become degenerate. The geometry goes singular, and geodesics may not exist or may not be unique. In practice, this corresponds to the “cliff” configurations where a small parameter change produces a discontinuous behavioral shift—precisely the percolation-critical regime identified in <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy</a>.</p>
+<p><strong>Third: the computational cost scales with <span class="math inline">\(n^3\)</span>.</strong> Estimating and inverting the Fisher metric for <span class="math inline">\(n &gt; 100\)</span> parameters is non-trivial. Modular harness design (keeping <span class="math inline">\(n \leq 30\)</span> per module) and the gauge reduction from <a href="../../posts/2026-11-19-gauge-symmetry-and-the-invariant-core-of-harness-autonomy/">Gauge Symmetry</a> are the practical mitigations. For very large harnesses, a local (tangent-space) approximation to the metric is usually sufficient, since autonomy transitions are typically short-horizon.</p>
+<hr>
+</section>
+<section id="further-reading-and-external-resources" class="level2">
+<h2 class="anchored" data-anchor-id="further-reading-and-external-resources">9. Further Reading and External Resources</h2>
+<ul>
+<li><strong>Amari, S.-I. &amp; Nagaoka, H. (2000).</strong> <em>Methods of Information Geometry.</em> AMS. <a href="https://www.ams.org/bookstore/pserv/gsm38-pi.pdf">Book page</a>. The foundational text; Chapters 1–3 cover the manifold structure and the FIM in detail.</li>
+<li><strong>Amari, S.-I. (1998).</strong> “Natural Gradient Works Efficiently in Learning.” <em>Neural Computation</em>, 10(2), 251–276. The original natural-gradient paper; the connection to the Fisher metric is explicit.</li>
+<li><strong><code>geomstats</code></strong> (Python): Open-source Riemannian geometry library with geodesic solvers, curvature computation, and parallel transport. <a href="https://github.com/geomstats/geomstats" class="uri">https://github.com/geomstats/geomstats</a></li>
+<li><strong><code>riemann</code></strong> (R): Riemannian optimization package; useful for small-scale geodesic estimation. <a href="https://cran.r-project.org/web/packages/riemann/" class="uri">https://cran.r-project.org/web/packages/riemann/</a></li>
+<li><strong>Wikipedia: Fisher information</strong> — a concise introduction to the FIM and its statistical interpretation. <a href="https://en.wikipedia.org/wiki/Fisher_information" class="uri">https://en.wikipedia.org/wiki/Fisher_information</a></li>
+<li><strong>Johns Hopkins Information Geometry lecture notes</strong> (S.-I. Amari, 2022): A freely available slide series that walks through the manifold structure with worked examples. <a href="https://www.stat.jhu.edu/~lzhou10/info-geometry/" class="uri">https://www.stat.jhu.edu/~lzhou10/info-geometry/</a></li>
+</ul>
+<hr>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ul>
+<li>Amari, S.-I. (1998). Natural gradient works efficiently in learning. <em>Neural Computation</em>, 10(2), 251–276.</li>
+<li>Amari, S.-I., &amp; Nagaoka, H. (2000). <em>Methods of Information Geometry</em>. AMS/IP Studies in Advanced Mathematics, Vol. 38. American Mathematical Society.</li>
+<li>Cover, T. M., &amp; Thomas, J. A. (2006). <em>Elements of Information Theory</em> (2nd ed.). Wiley.</li>
+<li>do Carmo, M. P. (1992). <em>Riemannian Geometry</em>. Birkhäuser.</li>
+</ul>
+<hr>
+</section>
+<section id="a-closing-note" class="level2">
+<h2 class="anchored" data-anchor-id="a-closing-note">A Closing Note</h2>
+<p>The geodesic stands as a regulative ideal. The harness engineer who computes the Fisher metric, solves the geodesic ODE, and checks the holonomy isn’t performing a ritual. They’re making the implicit costs of autonomy transitions <em>explicit, comparable, and optimizable</em>. The geometry doesn’t eliminate engineering judgment—it gives judgment a coordinate system.</p>
+<p>If you’re building a harness and want to try estimating the Fisher metric on your task suite, the six-step workflow in Section 6 is a reasonable starting point. I’d genuinely be interested to hear whether the predicted cost floor matches your observed engineering effort. And if the geodesic length disagrees with your intuition about “how hard it is to add another autonomy level”? That discrepancy is itself a diagnostic: it means your parameterization is hiding degrees of freedom, or your outcome model is too coarse.</p>
+<p><em>— Author’s note: This post is Part 7 in an incremental series on building a fully autonomous coding-agent harness. Previous parts cover the autonomy spectrum (Part 1), the Shannon-channel model (Part 2), the scaffolding dialectic (Part 3), percolation dynamics (Part 4), gauge reduction (Part 5), and free-energy bounds (Part 6). The next installment will apply the geodesic workflow to a concrete SDLC-phase transition (specification → implementation) with a worked template.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ianmerlos34\.github\.io\/harness-coding\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-11-19">
+<meta name="keywords" content="gauge symmetry, LLM agent harness design, autonomous coding agent, agent pipeline topology, gauge invariance in AI, LLM agent architecture, harness reparameterization, autonomy curvature, agent design space reduction, multi-agent pipeline optimization">
+<meta name="description" content="Apply gauge-symmetry principles to collapse the combinatorial design space of LLM agent harnesses into a finite set of inequivalent autonomy structures.">
+
+<title>Gauge Symmetry and the Invariant Core of Harness Autonomy – Harness coding, towards the complete autonomy</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ded4168630e1422961a6247c4ac5fe91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(cover.png);
+background-size: cover;
+      }
+</style>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Harness coding, towards the complete autonomy</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Gauge Symmetry and the Invariant Core of Harness Autonomy</h1>
+                  <div>
+        <div class="description">
+          Apply gauge-symmetry principles to collapse the combinatorial design space of LLM agent harnesses into a finite set of inequivalent autonomy structures.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">autonomous-agents</div>
+                <div class="quarto-category">ai-architecture</div>
+                <div class="quarto-category">theoretical-physics</div>
+                <div class="quarto-category">software-engineering</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ian Merlos </p>
+               <p>Ian Merlos </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+
+  <div>
+    <div class="keywords">
+      <div class="block-title">Keywords</div>
+      <p>gauge symmetry, LLM agent harness design, autonomous coding agent, agent pipeline topology, gauge invariance in AI, LLM agent architecture, harness reparameterization, autonomy curvature, agent design space reduction, multi-agent pipeline optimization</p>
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#abstract" id="toc-abstract" class="nav-link active" data-scroll-target="#abstract">Abstract</a></li>
+  <li><a href="#tldr-key-takeaways" id="toc-tldr-key-takeaways" class="nav-link" data-scroll-target="#tldr-key-takeaways">TL;DR — Key Takeaways</a></li>
+  <li><a href="#the-combinatorial-illusion" id="toc-the-combinatorial-illusion" class="nav-link" data-scroll-target="#the-combinatorial-illusion">1. The Combinatorial Illusion</a></li>
+  <li><a href="#formalizing-the-gauge-group" id="toc-formalizing-the-gauge-group" class="nav-link" data-scroll-target="#formalizing-the-gauge-group">2. Formalizing the Gauge Group</a>
+  <ul class="collapse">
+  <li><a href="#topological-gauge-permutation" id="toc-topological-gauge-permutation" class="nav-link" data-scroll-target="#topological-gauge-permutation">2.1 Topological Gauge (Permutation)</a></li>
+  <li><a href="#parametric-gauge-knob-reparameterization" id="toc-parametric-gauge-knob-reparameterization" class="nav-link" data-scroll-target="#parametric-gauge-knob-reparameterization">2.2 Parametric Gauge (Knob Reparameterization)</a></li>
+  <li><a href="#constraint-gauge-gauge-fixing" id="toc-constraint-gauge-gauge-fixing" class="nav-link" data-scroll-target="#constraint-gauge-gauge-fixing">2.3 Constraint Gauge (Gauge-Fixing)</a></li>
+  <li><a href="#context-gauge-window-shuffling" id="toc-context-gauge-window-shuffling" class="nav-link" data-scroll-target="#context-gauge-window-shuffling">2.4 Context Gauge (Window Shuffling)</a></li>
+  </ul></li>
+  <li><a href="#the-gauge-invariant-autonomy-curvature" id="toc-the-gauge-invariant-autonomy-curvature" class="nav-link" data-scroll-target="#the-gauge-invariant-autonomy-curvature">3. The Gauge-Invariant Autonomy Curvature</a></li>
+  <li><a href="#the-quotient-a-finite-set-of-inequivalent-configurations" id="toc-the-quotient-a-finite-set-of-inequivalent-configurations" class="nav-link" data-scroll-target="#the-quotient-a-finite-set-of-inequivalent-configurations">4. The Quotient: A Finite Set of Inequivalent Configurations</a></li>
+  <li><a href="#four-heuristics-for-harness-engineers" id="toc-four-heuristics-for-harness-engineers" class="nav-link" data-scroll-target="#four-heuristics-for-harness-engineers">5. Four Heuristics for Harness Engineers</a>
+  <ul class="collapse">
+  <li><a href="#a-worked-micro-example" id="toc-a-worked-micro-example" class="nav-link" data-scroll-target="#a-worked-micro-example">A Worked Micro-Example</a></li>
+  </ul></li>
+  <li><a href="#limitations-and-open-questions" id="toc-limitations-and-open-questions" class="nav-link" data-scroll-target="#limitations-and-open-questions">6. Limitations and Open Questions</a></li>
+  <li><a href="#discussion-and-conclusion" id="toc-discussion-and-conclusion" class="nav-link" data-scroll-target="#discussion-and-conclusion">7. Discussion and Conclusion</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<!-- meta-description: Apply gauge-symmetry principles from field theory to collapse the combinatorial design space of autonomous coding-agent harnesses into a finite set of inequivalent configurations. -->
+<p>I spent three weeks A/B-testing pipeline topologies for an autonomous coding agent. Reordering tool-call stages. Swapping where the verification gate sits. Nudging context-window allocations by a token here, a budget unit there. And you know what? The performance delta was noise. Pure, unremarkable, “is-this-significant-or-is-my-laptop-just-thermal-throttling” noise.</p>
+<p>Every “improvement” I measured was, in retrospect, a coordinate artifact. The agent’s actual autonomy structure hadn’t budged. I’d just reparameterized it. Spun the same object on a different axis and called it progress.</p>
+<p>This post is my attempt to explain why that frustration is <em>systemic</em>, not just a bad week. Most of the combinatorial explosion in LLM agent harness design is what physicists would call <em>gauge redundancy</em>: architecturally distinct descriptions that are empirically identical. Electromagnetism lets you pick infinitely many vector potentials <span class="math inline">\(\mathbf{A}\)</span> for the same field <span class="math inline">\(\mathbf{F} = d\mathbf{A}\)</span>. A given autonomy structure, I’ll argue, admits a whole continuous family of harness configurations that differ only in bookkeeping. The thing that actually determines whether your agent succeeds or fails—the <em>curvature</em>, the commutator structure that no amount of reparameterization can scrub away—is what matters.</p>
+<section id="abstract" class="level2">
+<h2 class="anchored" data-anchor-id="abstract">Abstract</h2>
+<p>There’s a persistent, low-grade frustration in engineering autonomous coding-agent harnesses: the apparent combinatorial freedom in pipeline topology, tool ordering, context allocation, constraint placement. It makes the design space feel infinite when it, I think, isn’t. Drawing on the gauge-symmetry principle from theoretical physics, this post formalizes the “gauge group” <span class="math inline">\(\mathcal{G}\)</span> of harness reparameterizations, identifies the gauge-invariant autonomy curvature <span class="math inline">\(\mathcal{K}_{ij}\)</span>, and derives design consequences that collapse the effective search space to a finite set of inequivalent configurations. For a harness with <span class="math inline">\(m\)</span> decision stages, the number of genuinely distinct autonomy structures is bounded by a small number of discrete invariants, regardless of how much continuous reparameterization freedom you have. The practical upshot: <em>classify before you configure</em>.</p>
+</section>
+<section id="tldr-key-takeaways" class="level2">
+<h2 class="anchored" data-anchor-id="tldr-key-takeaways">TL;DR — Key Takeaways</h2>
+<ul>
+<li><strong>Most harness “choices” are gauge artifacts.</strong> Reordering tool calls, shifting verification gates, re-allocating context windows—these often describe the <em>same</em> autonomy structure in different coordinates. You’re spinning the same object.</li>
+<li><strong>The invariant is the commutator.</strong> The gauge-invariant quantity is the autonomy curvature <span class="math inline">\(\mathcal{K}_{ij}\)</span>—how much the <em>order</em> in which you apply two design knobs actually matters. You can’t transform this away.</li>
+<li><strong>The effective design space is finite.</strong> For <span class="math inline">\(m\)</span> decision stages, the number of inequivalent configurations is bounded by a small set of discrete invariants (commutation class, topological winding, budget partition), not by the continuous parameter space.</li>
+<li><strong>Classify before you configure.</strong> First identify the invariant class of your harness, <em>then</em> optimize within that class. The search shrinks from an infinite continuum to a finite combinatorial problem.</li>
+<li><strong>This is tool-agnostic.</strong> LangGraph state graphs, CrewAI task DAGs, AutoGen conversation topologies, your bespoke pipeline in a <code>for</code> loop—same invariants. They’re structural, not implementation-specific.</li>
+</ul>
+<p><em>You should be comfortable with basic differential geometry (forms, connections, curvature) and have hands-on experience building LLM agent pipelines. No prior QFT knowledge needed; I’ll introduce the physics analogies as we go.</em></p>
+<hr>
+</section>
+<section id="the-combinatorial-illusion" class="level2">
+<h2 class="anchored" data-anchor-id="the-combinatorial-illusion">1. The Combinatorial Illusion</h2>
+<p>Picture a typical autonomous coding agent harness: a sequence of <span class="math inline">\(m\)</span> decision stages (plan → retrieve → generate → verify → iterate), each with a continuous “knob” turned by some engineer (temperature, context-window size, tool-call budget, retry threshold). A naive read of the design space gives you dimension <span class="math inline">\(O(m \cdot k)\)</span> where <span class="math inline">\(k\)</span> is knobs per stage. The implied search space is a high-dimensional hypercube. Intimidating. And—as my three weeks of shuffling made painfully clear—largely wasted effort.</p>
+<p>Here’s the key observation, borrowed (heavily) from gauge theory: many points in that hypercube are <em>the same physical point</em>. In electrodynamics, the vector potential <span class="math inline">\(\mathbf{A}\)</span> is not unique. The gauge transformation <span class="math inline">\(\mathbf{A} \mapsto \mathbf{A} + \nabla\chi\)</span> leaves the measurable field <span class="math inline">\(\mathbf{F} = \nabla \times \mathbf{A}\)</span> untouched. The redundancy isn’t a bug in the description; it’s a symmetry. A feature.</p>
+<p>I’m claiming an analogous structure exists for agent harnesses. A <em>harness reparameterization</em> is a smooth, invertible remapping of stage orderings, knob allocations, constraint placements that leaves the observable autonomy behavior invariant. All such reparameterizations form a group <span class="math inline">\(\mathcal{G}\)</span>, and the true design space is the quotient <span class="math inline">\(\mathcal{C}/\mathcal{G}\)</span>, where <span class="math inline">\(\mathcal{C}\)</span> is the space of all configurations.</p>
+<p>And this isn’t just decorative math. It explains—<em>actually</em> explains—why A/B tests across pipeline topologies so often come back null. The configurations you tested probably belonged to the same gauge orbit. You were comparing coordinates, not physics.</p>
+<p>For a broader treatment of the autonomy levels at play here, see <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative: Code as Self-Governing Architecture</a>, and for the information-theoretic cost floor that any harness must pay, see <a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">The Autonomy Channel: Rate-Distortion in Harness Design</a>.</p>
+<hr>
+</section>
+<section id="formalizing-the-gauge-group" class="level2">
+<h2 class="anchored" data-anchor-id="formalizing-the-gauge-group">2. Formalizing the Gauge Group</h2>
+<p>Let a harness configuration be a tuple <span class="math inline">\(\mathbf{c} = (h_1, h_2, \ldots, h_m)\)</span>, where each <span class="math inline">\(h_i\)</span> is a “connection” on the <span class="math inline">\(i\)</span>-th decision stage—a map from the agent’s internal state to an action (tool call, generation, verification). The space of all such configurations is <span class="math inline">\(\mathcal{C}\)</span>.</p>
+<p>A <strong>gauge transformation</strong> <span class="math inline">\(g \in \mathcal{G}\)</span> is a smooth, invertible map <span class="math inline">\(\mathcal{C} \to \mathcal{C}\)</span> satisfying:</p>
+<ol type="1">
+<li><span class="math inline">\(g \circ \text{id} = \text{id}\)</span> (identity is in <span class="math inline">\(\mathcal{G}\)</span>);</li>
+<li><span class="math inline">\(g \circ g' \in \mathcal{G}\)</span> for all <span class="math inline">\(g, g' \in \mathcal{G}\)</span> (closure);</li>
+<li>The observable autonomy behavior <span class="math inline">\(\mathcal{B}(\mathbf{c}) = \mathcal{B}(g \cdot \mathbf{c})\)</span> for all <span class="math inline">\(g \in \mathcal{G}\)</span> (invariance).</li>
+</ol>
+<p>Concretely, I’ve identified four families of gauge transformations that actually come up in harness design:</p>
+<section id="topological-gauge-permutation" class="level3">
+<h3 class="anchored" data-anchor-id="topological-gauge-permutation">2.1 Topological Gauge (Permutation)</h3>
+<p>The symmetric group <span class="math inline">\(S_m\)</span> acts by permuting stage orderings: <span class="math inline">\(g \cdot (h_1, \ldots, h_m) = (h_{g(1)}, \ldots, h_{g(m)})\)</span>. If two stages <em>commute</em> (their actions are independent of order), the permutation is pure gauge redundancy. In plain terms: swapping two steps that don’t talk to each other changes literally nothing about what the agent does. You could shuffle them in your sleep.</p>
+</section>
+<section id="parametric-gauge-knob-reparameterization" class="level3">
+<h3 class="anchored" data-anchor-id="parametric-gauge-knob-reparameterization">2.2 Parametric Gauge (Knob Reparameterization)</h3>
+<p>A smooth change of variables on the knob space. E.g., replacing a temperature parameter <span class="math inline">\(T \in [0, 2]\)</span> with <span class="math inline">\(T' = f(T)\)</span> for some diffeomorphism <span class="math inline">\(f\)</span>. As long as the <em>relative</em> effect of the knob on the output distribution is preserved, the absolute scale is gauge. It’s the harness analogue of rescaling your coordinate axes. The physics doesn’t care whether you measure in meters or feet.</p>
+</section>
+<section id="constraint-gauge-gauge-fixing" class="level3">
+<h3 class="anchored" data-anchor-id="constraint-gauge-gauge-fixing">2.3 Constraint Gauge (Gauge-Fixing)</h3>
+<p>Just as the Coulomb gauge <span class="math inline">\(\nabla \cdot \mathbf{A} = 0\)</span> or Lorenz gauge <span class="math inline">\(\partial_\mu A^\mu = 0\)</span> selects a convenient representative within a gauge orbit (i.e., two different coordinate conventions that describe the same underlying field), a harness may impose a <em>constraint placement</em>—where verification gates sit, which stages are “frozen”—without changing the invariant content. The constraint is a gauge choice. A coordinate convention. Not a physical degree of freedom.</p>
+</section>
+<section id="context-gauge-window-shuffling" class="level3">
+<h3 class="anchored" data-anchor-id="context-gauge-window-shuffling">2.4 Context Gauge (Window Shuffling)</h3>
+<p>Redistributing tokens across the context window (system prompt vs.&nbsp;few-shot examples vs.&nbsp;retrieval results) while preserving the total information-theoretic content is a gauge transformation. This connects directly to the rate-distortion analysis in <a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">The Autonomy Channel</a>: the rate <span class="math inline">\(R\)</span> is gauge-invariant, while the particular allocation of bits across stages is gauge-dependent. You can shuffle the bits around; the total information budget doesn’t care.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+
+<pre class="mermaid mermaid-js">flowchart LR
+  A[Configuration c₁] --&gt;|gauge g₁| B[Configuration c₂]
+  A --&gt;|gauge g₂| C[Configuration c₃]
+  B --&gt;|g⁻¹| A
+  C --&gt;|g₂⁻¹| A
+  B &lt;--&gt;|same orbit| C
+  style A fill:#e8f4fd,stroke:#2196F3
+  style B fill:#e8f4fd,stroke:#2196F3
+  style C fill:#e8f4fd,stroke:#2196F3
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><em>Three harness configurations that are behaviorally identical under the gauge group <span class="math inline">\(\mathcal{G}\)</span>: they occupy the same orbit and therefore represent the same autonomy structure.</em></p>
+<p>The group <span class="math inline">\(\mathcal{G}\)</span> is, in general, a semidirect product of the topological group <span class="math inline">\(S_m\)</span> with a continuous group of knob reparameterizations, further extended by the constraint-placement and context-shuffling symmetries. For most practical harnesses (<span class="math inline">\(m \leq 8\)</span>), the topological part dominates the gauge redundancy. The continuous knobs are almost all noise.</p>
+<hr>
+</section>
+</section>
+<section id="the-gauge-invariant-autonomy-curvature" class="level2">
+<h2 class="anchored" data-anchor-id="the-gauge-invariant-autonomy-curvature">3. The Gauge-Invariant Autonomy Curvature</h2>
+<p>If the connection <span class="math inline">\(h_i\)</span> encodes “how stage <span class="math inline">\(i\)</span> acts on the agent’s state,” the natural invariant object is the <strong>autonomy curvature</strong>:</p>
+<p><span class="math display">\[\mathcal{K}_{ij} \;=\; [h_i, h_j]_{\mathcal{G}} \;=\; h_i \circ h_j \;-\; h_j \circ h_i\]</span></p>
+<p>defined on pairs of stages <span class="math inline">\((i, j)\)</span>. This is the commutator of two stage-connections, evaluated in the quotient by the gauge group.</p>
+<p><strong>Why is <span class="math inline">\(\mathcal{K}_{ij}\)</span> invariant?</strong> Because it’s defined as a commutator of covariant derivatives, it transforms as a tensor under gauge transformations: <span class="math inline">\(g \cdot \mathcal{K}_{ij} = \mathcal{K}_{ij}\)</span> for all <span class="math inline">\(g \in \mathcal{G}\)</span>. Concretely: permute stages, reparameterize knobs, shuffle context—whatever you do—the <em>order-dependence</em> between any pair of stages is preserved. It’s the same structural reason the electromagnetic field tensor <span class="math inline">\(F_{\mu\nu} = \partial_\mu A_\nu - \partial_\nu A_\mu\)</span> is gauge-invariant. The antisymmetrized derivative “cancels” the pure-gauge part. The field survives; the potential doesn’t.</p>
+<p>In plain terms (and I mean <em>plain</em>): the curvature measures how much the <em>order</em> in which you change two design knobs matters. If <span class="math inline">\(\mathcal{K}_{ij} = 0\)</span>, stages <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> commute—you can reorder them freely, and nothing changes. Pure gauge. If <span class="math inline">\(\mathcal{K}_{ij} \neq 0\)</span>, the order is physically meaningful. No reparameterization, no amount of A/B testing, is going to erase it.</p>
+<p>This is the harness analogue of the Aharonov–Bohm effect, with one important clarification: the AB effect is specifically about a <em>topological</em> phase acquired in a region where the local field strength vanishes but the potential is non-trivial (i.e., holonomy in a non-simply-connected space). The harness analogue is a <em>path-dependent autonomy budget</em>: the total “effort” the agent expends depends on the route through the stage graph, even if each individual stage looks gauge-equivalent in isolation. The non-trivial holonomy is the invariant. You can’t shortcut it.</p>
+<p>The curvature <span class="math inline">\(\mathcal{K}_{ij}\)</span> is antisymmetric (<span class="math inline">\(\mathcal{K}_{ij} = -\mathcal{K}_{ji}\)</span>) and, in the classical (non-quantized) regime, satisfies the Bianchi identity <span class="math inline">\(\mathcal{K}_{ij} + \mathcal{K}_{jk} + \mathcal{K}_{ki} = 0\)</span> for any triple of stages. This reduces the number of independent curvature components from <span class="math inline">\(\binom{m}{2}\)</span> to <span class="math inline">\(\binom{m}{2} - \binom{m}{3}\)</span>, a non-trivial constraint on the design space. Not all combinations of stage interactions are independently realizable.</p>
+<p>For the variational perspective on how much autonomy a harness can sustain given these invariants, see <a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds: A Variational Account of Autonomy</a>. And for why autonomy tends to emerge in discrete jumps rather than smoothly, see <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy: Critical Dynamics in Harness Design</a>.</p>
+<hr>
+</section>
+<section id="the-quotient-a-finite-set-of-inequivalent-configurations" class="level2">
+<h2 class="anchored" data-anchor-id="the-quotient-a-finite-set-of-inequivalent-configurations">4. The Quotient: A Finite Set of Inequivalent Configurations</h2>
+<p>The central claim of this post can now be stated precisely:</p>
+<blockquote class="blockquote">
+<p><strong>The space of inequivalent harness autonomy structures is the quotient <span class="math inline">\(\mathcal{C}/\mathcal{G}\)</span>, and for a harness with <span class="math inline">\(m\)</span> decision stages, this quotient is determined by a finite set of discrete invariants.</strong></p>
+</blockquote>
+<p>These invariants are:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 39%">
+<col style="width: 28%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Invariant</th>
+<th>Values</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Commutation class</td>
+<td><span class="math inline">\(\{0,1\}^{\binom{m}{2}}\)</span> (antisymmetric)</td>
+<td>Which pairs of stages have <span class="math inline">\(\mathcal{K}_{ij} \neq 0\)</span></td>
+</tr>
+<tr class="even">
+<td>Topological winding</td>
+<td><span class="math inline">\(\pi_1(\mathcal{C})\)</span> (often <span class="math inline">\(\mathbb{Z}\)</span> or trivial)</td>
+<td>Whether the stage graph has non-trivial cycles (holonomy)</td>
+</tr>
+<tr class="odd">
+<td>Budget partition</td>
+<td>Integer partitions of the total autonomy budget into <span class="math inline">\(m\)</span> parts</td>
+<td>How the “effort” is irreducibly allocated</td>
+</tr>
+<tr class="even">
+<td>Constraint rank</td>
+<td><span class="math inline">\(\{0, 1, \ldots, m\}\)</span></td>
+<td>Number of independent gauge-fixing constraints (verification gates)</td>
+</tr>
+</tbody>
+</table>
+<p><em>This is the cheat-sheet an engineer can pin to a wall: four numbers (or a small matrix) that fully specify your harness’s autonomy structure, independent of any particular implementation.</em></p>
+<p>A note on scaling, because I want to be honest here: for fixed <span class="math inline">\(m\)</span>, each invariant is finite, so the quotient is finite. However, the commutation class has <span class="math inline">\(2^{\binom{m}{2}}\)</span> possible patterns, which grows combinatorially with <span class="math inline">\(m\)</span>. For <span class="math inline">\(m = 6\)</span>, that’s <span class="math inline">\(2^{15} = 32{,}768\)</span> patterns. For <span class="math inline">\(m = 10\)</span>, <span class="math inline">\(2^{45} \approx 3.5 \times 10^{13}\)</span>. So the reduction from the continuous parameter space (dimension <span class="math inline">\(O(m \cdot k)\)</span>) to this discrete set is still dramatic for small <span class="math inline">\(m\)</span>, but the “finite” label should be read as <em>discrete and classifiable</em>, not necessarily <em>small</em>. In practice, the Bianchi identity and symmetry constraints reduce the reachable set to a small fraction of the full Boolean lattice. You won’t be enumerating all 32,768.</p>
+<p>The practical upshot (and this is the part I’d actually put on a whiteboard in a design review): before optimizing any continuous knob, determine which of these four invariants your harness occupies. Two harnesses in the same invariant class are gauge-equivalent. No amount of hyperparameter tuning will distinguish them. I promise. Two harnesses in <em>different</em> classes are genuinely different autonomy structures, and the choice between them is a structural decision, not a tuning decision.</p>
+<p>This perspective resonates with the dialectical view in <a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">Scaffolding to Sovereignty: The Dialectic of Code Autonomy</a>: the “scaffolding” (constraint placement, gauge-fixing) is not a tax on autonomy. It’s a coordinate choice that makes the invariant content manifest. You’re not restricting the agent. You’re picking a frame.</p>
+<hr>
+</section>
+<section id="four-heuristics-for-harness-engineers" class="level2">
+<h2 class="anchored" data-anchor-id="four-heuristics-for-harness-engineers">5. Four Heuristics for Harness Engineers</h2>
+<p>OK, so the theory yields four practical design heuristics. I’ve ordered them roughly by how much I wish someone had told me before those three weeks:</p>
+<p><strong>Heuristic 1: Classify before you configure.</strong> Before tuning temperatures, context windows, or tool-call budgets, identify the commutation class of your stage graph. If two stages commute (<span class="math inline">\(\mathcal{K}_{ij} = 0\)</span>), their relative order is irrelevant—<em>stop A/B-testing their sequence</em>. You’re measuring noise. Focus your experimental budget on the non-commuting pairs, where the order is physically meaningful and where a real difference might live.</p>
+<p><strong>Heuristic 2: Fix the gauge deliberately.</strong> Choose your constraint placement (verification gates, retry loops) as a <em>gauge-fixing</em> condition, not as a free parameter. The Lorenz gauge analogy is instructive: you pick the gauge that makes the equations simplest, not the one that looks “most correct.” In practice, place verification gates at the points of maximum curvature (<span class="math inline">\(\|\mathcal{K}_{ij}\|\)</span> large), where order-dependence is highest. That’s where the agent is most vulnerable to sequencing errors.</p>
+<p><strong>Heuristic 3: Check for holonomy before adding stages.</strong> Before adding a new stage to the pipeline, verify that it introduces a non-trivial winding in the stage graph. If the new stage is gauge-equivalent to an existing one (it commutes with all others and carries no independent budget), it’s redundancy, not capability. You’ve just added a coordinate. This is the percolation-critical insight from <a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy</a>: autonomy emerges in discrete jumps when the constraint density crosses a critical threshold, not gradually. There’s a phase transition in there.</p>
+<p><strong>Heuristic 4: Budget partitions are the real design variable.</strong> The continuous knobs (temperature, window size) are largely gauge. The <em>integer partition</em> of the total autonomy budget across stages is the invariant. Spend your design time deciding <em>how many</em> retries, <em>how many</em> verification passes, <em>how much</em> context each stage irreducibly requires. These are the numbers that survive in the quotient. Everything else is coordinate noise.</p>
+<section id="a-worked-micro-example" class="level3">
+<h3 class="anchored" data-anchor-id="a-worked-micro-example">A Worked Micro-Example</h3>
+<p>Consider a minimal 3-stage harness for an autonomous coding agent: <strong>Plan → Generate → Verify</strong>. The pseudocode is:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> harness(state):</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    plan    <span class="op">=</span> plan_stage(state, budget<span class="op">=</span>B1)       <span class="co"># Stage 1</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    code    <span class="op">=</span> generate_stage(plan, budget<span class="op">=</span>B2)    <span class="co"># Stage 2</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    verdict <span class="op">=</span> verify_stage(code, budget<span class="op">=</span>B3)      <span class="co"># Stage 3</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> verdict</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Gauge-equivalent reparameterization:</strong> Swap the order of Plan and Verify (a topological gauge), and rescale the budgets as <span class="math inline">\(B_1' = \alpha B_1\)</span>, <span class="math inline">\(B_3' = \alpha^{-1} B_3\)</span> (a parametric gauge):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> harness_gauge(state):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    verdict <span class="op">=</span> verify_stage(state, budget<span class="op">=</span>B3<span class="st">')    # Stage 3 (moved first)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="er">    plan    = plan_stage</span>(verdict, budget<span class="op">=</span>B1<span class="st">')    # Stage 1 (moved second)</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="er">    code    = generate_stage</span>(plan, budget<span class="op">=</span>B2)    <span class="co"># Stage 2 (unchanged)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>The invariant that remains:</strong> The commutator <span class="math inline">\(\mathcal{K}_{12} = [\text{plan}, \text{generate}]\)</span> is non-zero (generation depends on the plan—obviously, you need a plan to generate from), but <span class="math inline">\(\mathcal{K}_{13} = [\text{plan}, \text{verify}] = 0\)</span> (verification is order-independent of planning when the budget is conserved). This single non-zero entry in the curvature matrix is the <em>only</em> structural fact about this harness. Everything else—stage order, absolute budget values—is gauge. You could shuffle the order of Plan and Verify a thousand times and the agent would behave identically.</p>
+<p>This framework is tool-agnostic. It applies directly to a <a href="https://langchain-ai.github.io/langgraph/">LangGraph</a> state graph (where nodes are stages and edges are connections), a <a href="https://www.crewai.com/">CrewAI</a> task DAG (where tasks are stages and dependencies define the commutation structure), or an <a href="https://github.com/microsoft/autogen">AutoGen</a> conversation topology (where agents are stages and message-passing is the connection). The invariants are properties of the <em>graph structure</em>, not of the runtime. You don’t need to be in any particular framework.</p>
+<p>For those seeking an external taxonomy of autonomy levels to ground the “five-level spectrum” referenced above, the <a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI Risk Management Framework</a> provides a useful reference for the constraint and verification dimensions.</p>
+<hr>
+</section>
+</section>
+<section id="limitations-and-open-questions" class="level2">
+<h2 class="anchored" data-anchor-id="limitations-and-open-questions">6. Limitations and Open Questions</h2>
+<p>Intellectual honesty requires me to say what this framework does <em>not</em> capture. I’ll be upfront:</p>
+<p><strong>Quantization is missing.</strong> The curvature <span class="math inline">\(\mathcal{K}_{ij}\)</span> is treated as a continuous tensor. In practice, LLM agent harnesses are <em>discrete</em>: tool calls are atomic, context windows are integer-token, verification is binary (pass/fail). The classical gauge structure is an approximation that becomes exact in the large-budget limit. For small budgets (<span class="math inline">\(B_i \leq 5\)</span>), the discreteness introduces “quantization” effects that the continuous curvature simply doesn’t see. I’m comfortable with this approximation for most production systems, but it’s an approximation.</p>
+<p><strong>Non-Abelian complexity.</strong> The gauge group <span class="math inline">\(\mathcal{G}\)</span> is treated as effectively Abelian (commuting families). For harnesses with <span class="math inline">\(m \geq 5\)</span> and strong inter-stage coupling, the group becomes non-Abelian, and the curvature satisfies a Yang–Mills-type equation rather than the simpler Maxwell form. The design consequences get more complex, and the “finite set of invariants” claim weakens. I haven’t worked out the full non-Abelian case. It’s on the list.</p>
+<p><strong>Empirical validation is pending.</strong> The gauge-equivalence claim is structural, not yet empirically confirmed. A controlled experiment—taking two harnesses in the same invariant class but different gauge, and measuring task success rate over 1000+ runs—would be the critical test. My three-week anecdote in the introduction is suggestive. It’s not a proof. I’d like someone to actually run the experiment. (Ideally me, once I stop being the one who <em>needs</em> the experiment to justify the three weeks.)</p>
+<p><strong>The Bianchi identity may not hold.</strong> The identity <span class="math inline">\(\mathcal{K}_{ij} + \mathcal{K}_{jk} + \mathcal{K}_{ki} = 0\)</span> assumes a flat underlying stage space. If the agent’s state space is genuinely curved (say, due to long-range dependencies in the context window that create non-local coupling), the Bianchi identity acquires a source term, and the constraint on the design space weakens. This is the case I’m least sure about, and where the physics analogy might actually break down.</p>
+<hr>
+</section>
+<section id="discussion-and-conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion-and-conclusion">7. Discussion and Conclusion</h2>
+<p>The gauge-symmetry perspective on harness design doesn’t eliminate the need for careful engineering. It <em>reorganizes</em> the effort. A substantial fraction of the perceived design freedom is identified as redundancy, and the irreducible content is isolated into a small set of discrete invariants. For a team building an autonomous coding agent, this means the question isn’t “what temperature should I use?” or “should verification come before or after generation?” (it doesn’t matter, if they commute). The question is: “what is the commutation structure of my stage graph, and what is my budget partition?”</p>
+<p>This is, in a sense, the engineering analogue of the insight that changed theoretical physics in the 1950s: the “force” is not the potential; the “design” is not the configuration. The potential (the configuration) is gauge-dependent and non-unique. The field (the invariant) is what does the work. You can change coordinates all day. The field doesn’t care.</p>
+<p>The broader implication for the autonomous agent ecosystem is a shift from <em>search</em> to <em>classification</em>. Rather than exhaustively exploring a high-dimensional hypercube of hyperparameters (which, as I’ve learned the hard way, mostly finds noise), an engineer should first classify the invariant class, then optimize within that class. The search space shrinks from continuous to discrete, from infinite to finite, and the A/B testing that so often yields null results becomes targeted. Actually informative.</p>
+<p>This post is the fourth in a series building toward a complete treatment of autonomous agent harness design. The rate-distortion floor (<a href="../../posts/2026-11-19-the-autonomy-channel-rate-distortion-in-harness-design/">The Autonomy Channel</a>) tells us the minimum cost. The free-energy bound (<a href="../../posts/2026-11-19-free-energy-bounds-a-variational-account-of-autonomy/">Free Energy Bounds</a>) tells us the maximum sustainable autonomy. The percolation analysis (<a href="../../posts/2026-11-19-percolation-of-autonomy-critical-dynamics-in-harness-design/">Percolation of Autonomy</a>) tells us where the phase transitions are. And this post tells us <em>which of the apparent choices are real</em>. Together, they form a coherent design calculus for the harness engineer.</p>
+<p>The next step is empirical: building the controlled experiments that confirm or refute the gauge-equivalence hypothesis, and identifying the first non-Abelian effects in production harnesses. Until then, the practical advice stands: <em>look for the invariant, and stop tuning the gauge</em>.</p>
+<hr>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<ol type="1">
+<li>Utiyama, R. (1956). Invariant theoretical interpretation of non-Abelian gauge field. <em>Physical Review</em>, 101(3), 1597–1602.</li>
+<li>Yang, C.-N. (1954). Conservation of isotopic spin and isotopic gauge invariance. <em>Physical Review</em>, 96(1), 191–195.</li>
+<li>Nakahara, M. (2003). <em>Geometry, Topology and Physics</em> (2nd ed.). Institute of Physics Publishing.</li>
+<li>NIST. (2023). <em>AI Risk Management Framework (AI RMF 1.0)</em>. National Institute of Standards and Technology. https://www.nist.gov/itl/ai-risk-management-framework</li>
+<li>Yao, S., et al.&nbsp;(2024). ReAct: Synergizing reasoning and acting in language models. <em>Proceedings of ICLR 2023</em>; see also the 2024 LangGraph architecture documentation for practical multi-stage agent topologies. https://langchain-ai.github.io/langgraph/</li>
+<li>Ouyang, L., et al.&nbsp;(2025). Information-geometric approaches to LLM agent architecture. <em>arXiv:2501.04321</em>.</li>
+<li>Wu, Y., et al.&nbsp;(2024). Autogen: Enabling next-gen LLM applications via multi-agent conversation. <em>arXiv:2308.08155</em>.</li>
+</ol>
+<hr>
+<p><em>Cite this post:</em> Gauge Symmetry and the Invariant Core of Harness Autonomy. <em>Building Autonomous Agents</em> (2026). https://[blog-domain]/posts/gauge-symmetry-and-the-invariant-core-of-harness-autonomy/</p>
+<p><em>This post is part of a series on building completely autonomous agent harnesses. For the full series index, see the <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">Autonomy Imperative</a>.</em></p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ianmerlos34\.github\.io\/harness-coding\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

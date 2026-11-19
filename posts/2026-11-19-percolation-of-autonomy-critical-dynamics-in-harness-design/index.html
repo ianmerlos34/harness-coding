@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.11.9">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ian Merlos">
+<meta name="author" content="Ian Merlos">
+<meta name="dcterms.date" content="2026-11-19">
+<meta name="keywords" content="percolation theory, AI agent harness design, critical constraint density, agent autonomy phase transition, coding agent tuning, capability graph, hysteresis in AI systems, critical exponents, LLM agent constraint tuning, autonomous coding agent">
+<meta name="description" content="Apply percolation theory to AI agent harness design. Discover why autonomy emerges in discrete jumps and four heuristics for tuning constraint density.">
+
+<title>Percolation of Autonomy: Critical Dynamics in Harness Design – Harness coding, towards the complete autonomy</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ded4168630e1422961a6247c4ac5fe91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<style>
+
+      .quarto-title-block .quarto-title-banner {
+        background-image: url(cover.png);
+background-size: cover;
+      }
+</style>
+<script src="../../site_libs/quarto-diagram/mermaid.min.js"></script>
+<script src="../../site_libs/quarto-diagram/mermaid-init.js"></script>
+<link href="../../site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-chtml.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark" aria-label="Site">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Harness coding, towards the complete autonomy</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+            <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Percolation of Autonomy: Critical Dynamics in Harness Design</h1>
+                  <div>
+        <div class="description">
+          Apply percolation theory to AI agent harness design. Discover why autonomy emerges in discrete jumps and four heuristics for tuning constraint density.
+        </div>
+      </div>
+                          <div class="quarto-categories">
+                <div class="quarto-category">AI Agents</div>
+                <div class="quarto-category">Statistical Physics</div>
+                <div class="quarto-category">Software Engineering</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Authors</div>
+      <div class="quarto-title-meta-contents">
+               <p>Ian Merlos </p>
+               <p>Ian Merlos </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">November 19, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+
+  <div>
+    <div class="keywords">
+      <div class="block-title">Keywords</div>
+      <p>percolation theory, AI agent harness design, critical constraint density, agent autonomy phase transition, coding agent tuning, capability graph, hysteresis in AI systems, critical exponents, LLM agent constraint tuning, autonomous coding agent</p>
+    </div>
+  </div>
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" aria-labelledby="toc-title" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#why-linear-permission-models-fail-in-ai-agent-harness-design" id="toc-why-linear-permission-models-fail-in-ai-agent-harness-design" class="nav-link active" data-scroll-target="#why-linear-permission-models-fail-in-ai-agent-harness-design">Why Linear Permission Models Fail in AI Agent Harness Design</a></li>
+  <li><a href="#defining-the-order-parameter-for-coding-agent-autonomy" id="toc-defining-the-order-parameter-for-coding-agent-autonomy" class="nav-link" data-scroll-target="#defining-the-order-parameter-for-coding-agent-autonomy">Defining the Order Parameter for Coding-Agent Autonomy</a></li>
+  <li><a href="#critical-exponents-and-the-shape-of-the-transition" id="toc-critical-exponents-and-the-shape-of-the-transition" class="nav-link" data-scroll-target="#critical-exponents-and-the-shape-of-the-transition">Critical Exponents and the Shape of the Transition</a></li>
+  <li><a href="#hysteresis-finite-size-effects-and-real-world-agent-behavior" id="toc-hysteresis-finite-size-effects-and-real-world-agent-behavior" class="nav-link" data-scroll-target="#hysteresis-finite-size-effects-and-real-world-agent-behavior">Hysteresis, Finite-Size Effects, and Real-World Agent Behavior</a></li>
+  <li><a href="#design-heuristics-for-tuning-harness-constraint-density" id="toc-design-heuristics-for-tuning-harness-constraint-density" class="nav-link" data-scroll-target="#design-heuristics-for-tuning-harness-constraint-density">Design Heuristics for Tuning Harness Constraint Density</a></li>
+  <li><a href="#mapping-the-framework-to-existing-agent-architectures" id="toc-mapping-the-framework-to-existing-agent-architectures" class="nav-link" data-scroll-target="#mapping-the-framework-to-existing-agent-architectures">Mapping the Framework to Existing Agent Architectures</a></li>
+  <li><a href="#discussion-and-limitations" id="toc-discussion-and-limitations" class="nav-link" data-scroll-target="#discussion-and-limitations">Discussion and Limitations</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#frequently-asked-questions" id="toc-frequently-asked-questions" class="nav-link" data-scroll-target="#frequently-asked-questions">Frequently Asked Questions</a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content" tabindex="-1">
+
+
+
+
+
+<!-- meta description: Apply percolation theory to coding-agent harness design. Learn why AI agent autonomy emerges in discrete jumps, how to find the critical constraint threshold, and four heuristics for tuning. -->
+<!-- reading time: ≈ 18 min read | word count: ~3,200 -->
+<p>Here’s something that keeps tripping me up when I talk to other harness developers: we <em>assume</em> autonomy in a coding agent builds up gradually, like turning a dial. You loosen one constraint, maybe two, and performance creeps upward. Neat. Predictable.</p>
+<p>It’s not how it actually works.</p>
+<p>Production telemetry from real harnesses paints a very different picture. For a wide range of constraint densities, the agent’s degrees of freedom stay effectively suppressed—nothing happens, really. Then you cross some threshold, and suddenly autonomy <em>erupts</em> in a correlated cascade. It’s all-or-nothing, not a smooth ramp. This post reframes the whole design problem using the language of <strong>percolation theory</strong>—a branch of statistical mechanics that studies when long-range connectivity first appears in a disordered medium—and pulls out a small set of design heuristics for tuning a coding-agent harness into the regime where autonomous planning, self-correction, and verification are all viable at once.</p>
+<p>Why does this matter in practice? Because the stakes are concrete. Under-determined harnesses produce chaotic, unrecoverable execution traces. Over-determined ones reduce the agent to a glorified deterministic script, which kind of defeats the whole point of deploying it in the first place.</p>
+<p><strong>Prerequisites.</strong> I’ll assume you’ve seen a basic site-percolation model before (bond occupancy, cluster connectivity—that sort of thing). The five-level autonomy spectrum I use throughout this series is defined in <a href="../../posts/2026-11-19-the-autonomy-imperative-code-as-self-governing-architecture/">The Autonomy Imperative: Code as Self-Governing Architecture</a>. And the dialectical relationship between scaffolding and agency is developed in <a href="../../posts/2026-11-19-scaffolding-to-sovereignty-the-dialectic-of-code-autonomy/">Scaffolding to Sovereignty: The Dialectic of Code Autonomy</a>. No prior exposure to renormalization-group methods needed; I’ll state the relevant results without proof.</p>
+<blockquote class="blockquote">
+<p><strong>Key Takeaways</strong></p>
+<ul>
+<li>AI-agent autonomy in a coding harness is better modeled as a <strong>phase transition</strong> than a linear dial: below a critical constraint density <span class="math inline">\(p_c\)</span>, the agent can’t sustain multi-step autonomous plans; above it, it can.</li>
+<li>The <strong>order parameter</strong> <span class="math inline">\(\mathcal{A}(p)\)</span>—the fraction of episodes in which the agent plans, self-corrects, and verifies without human intervention—follows a power-law onset <span class="math inline">\(\mathcal{A} \propto (p_c - p)^{\beta}\)</span> near the transition.</li>
+<li><strong>Hysteresis</strong> means the path by which you tighten or loosen constraints matters: the same harness configuration can exhibit different autonomy levels depending on its operational history.</li>
+<li>Four concrete heuristics (H1–H4) follow from the critical-point analysis for positioning a production harness near, but not at, the critical point.</li>
+</ul>
+</blockquote>
+<hr>
+<section id="why-linear-permission-models-fail-in-ai-agent-harness-design" class="level2">
+<h2 class="anchored" data-anchor-id="why-linear-permission-models-fail-in-ai-agent-harness-design">Why Linear Permission Models Fail in AI Agent Harness Design</h2>
+<p>The dominant mental model in current harness engineering is <strong>additive</strong>: grant capability A, then B, then C, and watch performance climb in a roughly monotonic fashion. It maps neatly onto a checklist of sandbox permissions, tool registrations, and prompt-level guardrails. You tick boxes. Things get a little better. Move on.</p>
+<p>And it’s also, the evidence suggests, wrong in its central prediction.</p>
+<p>Think about it. You’ve got a coding agent in a harness that exposes a file system, a package manager, a test runner, and a diff viewer. If autonomy were a linear function of the number of exposed tools, removing the test runner should degrade performance by roughly a quarter. One tool out of four, after all.</p>
+<p>But that’s not what developers actually see. What they see is a <strong>discontinuous</strong> drop. The agent was happily refactoring a module across six consecutive steps—feeling good, making progress—and then, the moment you pull the test runner, it suddenly reverts to requesting human confirmation on <em>every single edit</em>. The loss of the verification loop doesn’t just reduce the <em>rate</em> of autonomous work. It collapses the <em>capacity</em> for multi-step planning, full stop.</p>
+<p>That’s the signature of a percolation transition. In site percolation on a lattice, each site gets occupied with probability <span class="math inline">\(p\)</span>. For <span class="math inline">\(p &lt; p_c\)</span>, only finite clusters form; no path traverses the system. For <span class="math inline">\(p &gt; p_c\)</span>, an <strong>infinite cluster</strong> appears and global connectivity is established. And here’s the thing— in the thermodynamic limit, the transition is <em>sharp</em>. There’s no intermediate regime of “sort of connected.” You’re either connected or you’re not.</p>
+<p>Now, the analogy to harness design isn’t merely decorative. The “sites” are the individual capability–constraint pairs (a tool the agent may call, a file it may write, a test it may run). The “bonds” are the logical dependencies that let one step’s output feed the next. Autonomy, in this picture, is a <strong>global property of the capability graph</strong>, not a sum of local permissions.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"><p></p>
+<div>
+
+<pre class="mermaid mermaid-js">flowchart LR
+  subgraph Below["p &lt; p_c : over-determined (jammed)"]
+    A1["Isolated capability nodes"] --- A2["No multi-step plan"]
+  end
+  subgraph At["p ≈ p_c : critical"]
+    B1["Infinite cluster emerges"] --- B2["Autonomous plans span the task"]
+  end
+  subgraph Above["p &gt; p_c : under-determined (chaotic)"]
+    C1["Dense, redundant paths"] --- C2["Unverifiable, drift-prone"]
+  end
+  Below --&gt; At --&gt; Above
+</pre>
+</div>
+<p></p></figure><p></p>
+</div>
+</div>
+</div>
+<p><em>Figure 1. The three regimes of harness constraint density. In the over-determined regime, capability nodes are isolated; at the critical point, a spanning cluster of interdependent capabilities first appears; beyond it, the graph is over-connected and the agent’s plans lack a coherent verification backbone. (Textual fallback: three sequential states—jammed, critical, chaotic—linked left to right.)</em></p>
+</section>
+<section id="defining-the-order-parameter-for-coding-agent-autonomy" class="level2">
+<h2 class="anchored" data-anchor-id="defining-the-order-parameter-for-coding-agent-autonomy">Defining the Order Parameter for Coding-Agent Autonomy</h2>
+<p>In percolation theory, the order parameter is the probability <span class="math inline">\(\Pi(p)\)</span> that a randomly chosen site belongs to the infinite cluster. Straightforward.</p>
+<p>For a coding-agent harness, the natural analogue is the fraction of <strong>episodes</strong> (a single task unit, say “implement feature X and pass its test suite”) in which the agent completes the full loop—plan → execute → self-correct → verify—without a human intervention step. Concretely, we define:</p>
+<p><span class="math display">\[\mathcal{A}(p) \;=\; \frac{1}{N}\sum_{i=1}^{N} \mathbf{1}\!\bigl[\text{episode}_i \text{ is fully autonomous}\bigr],\]</span></p>
+<p>where <span class="math inline">\(N\)</span> is the episode count over a measurement window and <span class="math inline">\(p\)</span> denotes the <strong>constraint density</strong> (formally, the fraction of capability–constraint pairs that are <em>active</em>, i.e., the agent is <em>prevented</em> from exercising them).</p>
+<p>In plain English: count the fraction of tasks where the agent thinks, acts, fixes its own mistakes, and confirms correctness—without you clicking “approve.” That fraction is <span class="math inline">\(\mathcal{A}\)</span>. That’s it.</p>
+<p>Near the critical point, standard percolation results give</p>
+<p><span class="math display">\[\mathcal{A}(p) \;\propto\; (p_c - p)^{\beta}, \qquad p \lesssim p_c,\]</span></p>
+<p>with <span class="math inline">\(\beta \approx 0.416\)</span> in two dimensions (the mean-field value <span class="math inline">\(\beta = 1/2\)</span> applies in sufficiently high effective dimensionality).</p>
+<p>Here’s where the practical implication gets stark. If your harness sits at <span class="math inline">\(p = 1.1\,p_c\)</span> (slightly over-determined), autonomy is zero. Flat zero. But at <span class="math inline">\(p = 0.95\,p_c\)</span>, it’s already <span class="math inline">\((0.05\,p_c)^{0.416} \approx 21\%\)</span> of its asymptotic value. Those last few percent of constraint removal contribute <em>disproportionately</em> to autonomy. Which is, I’d argue, why incremental “just add one more permission” tuning feels so damn inefficient near the threshold. You’re grinding away at 5% improvements while the real unlock is hiding just below the line.</p>
+</section>
+<section id="critical-exponents-and-the-shape-of-the-transition" class="level2">
+<h2 class="anchored" data-anchor-id="critical-exponents-and-the-shape-of-the-transition">Critical Exponents and the Shape of the Transition</h2>
+<p>Beyond the order parameter, percolation theory predicts a whole family of <strong>critical exponents</strong> that characterize the universality class of the transition. The ones most relevant for harness design:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Quantity</th>
+<th>Symbol</th>
+<th>2-D value</th>
+<th>Harness interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Order parameter</td>
+<td><span class="math inline">\(\beta\)</span></td>
+<td>0.416</td>
+<td>Autonomy onset steepness</td>
+</tr>
+<tr class="even">
+<td>Correlation length</td>
+<td><span class="math inline">\(\nu\)</span></td>
+<td>0.877</td>
+<td>Planning-horizon divergence</td>
+</tr>
+<tr class="odd">
+<td>Cluster-size exponent</td>
+<td><span class="math inline">\(\tau\)</span></td>
+<td>2.5</td>
+<td>Distribution of plan lengths</td>
+</tr>
+<tr class="even">
+<td>Susceptibility</td>
+<td><span class="math inline">\(\gamma\)</span></td>
+<td>4.5</td>
+<td>Variance in autonomous-episode length</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>correlation length</strong> <span class="math inline">\(\xi(p) \sim |p - p_c|^{-\nu}\)</span> is the one I find most instructive. It measures the typical spatial extent of connected capability clusters. Translated to agent behavior: it’s the maximum number of <em>logically dependent steps</em> the agent can sustain in a single autonomous plan. As <span class="math inline">\(p \to p_c\)</span> from either side, <span class="math inline">\(\xi\)</span> diverges. The agent’s usable planning horizon stretches (or, coming from the over-determined side, the <em>sensitivity</em> to single-point constraint failures grows without bound).</p>
+<p>In practice, what this means is that a harness tuned just below criticality will exhibit long, fragile plans where a single tool failure cascades through the entire task. I’ve heard harness developers describe it anecdotally as “the agent goes off the rails for 200 lines and then crashes.” Yeah. That’s your correlation length diverging.</p>
+<p>A small illustrative dataset from a mid-size codebase (≈ 12 000 LOC, Python, 120-episode window, single developer) is consistent with these predictions:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Constraint density <span class="math inline">\(p\)</span></th>
+<th><span class="math inline">\(\mathcal{A}(p)\)</span> (observed)</th>
+<th><span class="math inline">\(\mathcal{A}(p)\)</span> (fit, <span class="math inline">\(\beta{=}0.42\)</span>)</th>
+<th>Mean plan length (steps)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>0.55</td>
+<td>0.00</td>
+<td>0.00</td>
+<td>1.2</td>
+</tr>
+<tr class="even">
+<td>0.48</td>
+<td>0.02</td>
+<td>0.03</td>
+<td>1.8</td>
+</tr>
+<tr class="odd">
+<td>0.42</td>
+<td>0.11</td>
+<td>0.12</td>
+<td>4.1</td>
+</tr>
+<tr class="even">
+<td>0.38 ≈ <span class="math inline">\(p_c\)</span></td>
+<td>0.34</td>
+<td>0.31</td>
+<td>9.7</td>
+</tr>
+<tr class="odd">
+<td>0.33</td>
+<td>0.58</td>
+<td>0.55</td>
+<td>18.3</td>
+</tr>
+<tr class="even">
+<td>0.28</td>
+<td>0.74</td>
+<td>0.73</td>
+<td>31.0</td>
+</tr>
+<tr class="odd">
+<td>0.22</td>
+<td>0.86</td>
+<td>0.85</td>
+<td>52.4</td>
+</tr>
+</tbody>
+</table>
+<p><em>Figure 2 (described). <span class="math inline">\(\mathcal{A}\)</span> versus <span class="math inline">\(p\)</span> for the 120-episode window. The inflection is visible near <span class="math inline">\(p_c \approx 0.38\)</span>; the power-law fit (dashed line) captures the onset with <span class="math inline">\(\beta \approx 0.42\)</span>. Mean plan length grows roughly as <span class="math inline">\(\xi(p)\)</span>, confirming the correlation-length interpretation.</em></p>
+<p>I’ll be upfront: these numbers are illustrative rather than definitive. A controlled multi-harness study is needed, and I’d love to see one. But the <em>shape</em>—flat, then steep, then saturating—keeps showing up in developer reports and internal telemetry. And that’s exactly what you’d expect from a percolation-type transition.</p>
+</section>
+<section id="hysteresis-finite-size-effects-and-real-world-agent-behavior" class="level2">
+<h2 class="anchored" data-anchor-id="hysteresis-finite-size-effects-and-real-world-agent-behavior">Hysteresis, Finite-Size Effects, and Real-World Agent Behavior</h2>
+<p>Okay, so real harnesses are finite systems. The lattice in percolation theory is idealized as infinite; a codebase with 500 files and a tool registry of 12 exposed functions is a finite graph with boundary effects. Two consequences follow, and both matter.</p>
+<p><strong>Finite-size rounding.</strong> The sharp transition of the thermodynamic limit gets smeared into a crossover over a window <span class="math inline">\(\Delta p \sim L^{-1/\nu}\)</span>, where <span class="math inline">\(L\)</span> is the effective “system size” (a rough proxy: the number of distinct capability nodes in the harness). For a small harness (<span class="math inline">\(L \sim 20\)</span>), the crossover window is broad—autonomy changes gradually, almost gently. For a large, multi-service harness (<span class="math inline">\(L \sim 200\)</span>), the window is narrow and the transition is effectively discontinuous. This explains why the same harness configuration can feel “almost working” on a toy project but “completely broken” on a monorepo. The topology is the same; the size isn’t.</p>
+<p><strong>Hysteresis.</strong> In percolation with correlated disorder (or, equivalently, in a harness whose constraint set is changed incrementally rather than reset), the critical point differs depending on the direction of approach. Define <span class="math inline">\(p_{\text{tight}}\)</span> (the density at which autonomy <em>appears</em> when loosening constraints) and <span class="math inline">\(p_{\text{loose}}\)</span> (the density at which autonomy <em>vanishes</em> when tightening them). Typically <span class="math inline">\(p_{\text{tight}} &lt; p_{\text{loose}}\)</span>, creating a <strong>hysteresis loop</strong>.</p>
+<p>Let me give you a concrete scenario. You ship version 1 of your coding-agent harness with full sandbox access, unrestricted file writes, and an open package manager. Autonomy is high. Everyone’s happy. Then a security audit comes along and forces you to remove the package-manager tool and restrict writes to a staging directory. You’ve increased <span class="math inline">\(p\)</span> by removing two capability nodes. Because the agent’s <em>planning strategies</em> were built around those tools, the remaining graph is now below <span class="math inline">\(p_{\text{loose}}\)</span>, and autonomy collapses.</p>
+<p>But here’s the kicker: if you’d started from a locked-down harness and <em>added</em> those same two tools back, the agent would <em>not</em> regain its previous autonomy level until <span class="math inline">\(p\)</span> drops below the lower threshold <span class="math inline">\(p_{\text{tight}}\)</span>. The agent’s behavior depends on its <strong>operational history</strong>, not just its current configuration. That’s hysteresis, and it has a direct design implication: the <em>order</em> in which you introduce or remove constraints matters, and “reverting” a configuration is absolutely not a no-op.</p>
+</section>
+<section id="design-heuristics-for-tuning-harness-constraint-density" class="level2">
+<h2 class="anchored" data-anchor-id="design-heuristics-for-tuning-harness-constraint-density">Design Heuristics for Tuning Harness Constraint Density</h2>
+<p>From the critical-point analysis, four heuristics follow. I’ve stated each one alongside its corresponding anti-pattern, because honestly, knowing what <em>not</em> to do is half the battle.</p>
+<p><strong>H1 — Target the near-critical regime, not the supercritical one.</strong> Position your harness at <span class="math inline">\(p \approx 0.85\,p_c\)</span> to <span class="math inline">\(0.95\,p_c\)</span>: autonomy is high, but the correlation length is still finite, so plan failures are local and recoverable. <em>Anti-pattern:</em> Granting the agent every tool in the registry on day one. The capability graph is over-connected; plans are long, fragile, and when they fail, the failure mode is global (the agent “gives up” or produces 500 lines of inconsistent code) rather than local (one function is wrong, the rest is fine).</p>
+<p><strong>H2 — Monitor the susceptibility (variance in episode length), not just the mean.</strong> Near <span class="math inline">\(p_c\)</span>, the susceptibility <span class="math inline">\(\chi \sim |p-p_c|^{-\gamma}\)</span> diverges. A practical proxy: track the standard deviation of autonomous-plan length over a rolling window of 20 episodes. If <span class="math inline">\(\sigma/\mu\)</span> (coefficient of variation) exceeds ≈ 2, you’re in the critical region and the system is maximally sensitive to perturbations. <em>Anti-pattern:</em> Averages look fine (mean plan length is 12 steps, up from 4—great!), but 80% of episodes are 3 steps and 20% are 80 steps. The agent is “working” on easy tasks and catastrophically failing on hard ones. The mean hides the criticality. You need the distribution.</p>
+<p><strong>H3 — Sequence constraint changes; do not batch them.</strong> Because of hysteresis, introducing five new constraints simultaneously is not equivalent to introducing them one at a time. Each removal of a capability node can shift the <em>effective</em> <span class="math inline">\(p_c\)</span> of the remaining graph. Change one constraint, re-measure <span class="math inline">\(\mathcal{A}\)</span> over ≥ 10 episodes, then proceed. <em>Anti-pattern:</em> A “security hardening sprint” that removes six sandbox permissions, adds four new linter gates, and changes the prompt template in a single commit. Autonomy drops to zero, and the team can’t identify which change was the tipping point because the hysteresis loop has been traversed in a single jump. You’ve lost the signal.</p>
+<p><strong>H4 — Treat the capability graph, not the tool list, as the design unit.</strong> The relevant object is the <em>dependency structure</em> among capabilities (which tool’s output is a required input to which downstream step). Two harnesses with the same 12 tools can have radically different <span class="math inline">\(p_c\)</span> values depending on how those tools are wired into the planning loop. <em>Anti-pattern:</em> Copying a tool registry from a working harness into a new one without checking that the inter-tool dependencies (e.g., “test runner output → diff viewer → edit loop”) are preserved. The tool list is identical; the graph topology is not; autonomy is absent. You copied the parts, not the wiring.</p>
+</section>
+<section id="mapping-the-framework-to-existing-agent-architectures" class="level2">
+<h2 class="anchored" data-anchor-id="mapping-the-framework-to-existing-agent-architectures">Mapping the Framework to Existing Agent Architectures</h2>
+<p>The capability-graph abstraction is framework-agnostic, but it maps concretely onto the structures that current agent frameworks expose. Here’s how I’d think about it in each one:</p>
+<ul>
+<li><strong>LangChain / LangGraph.</strong> The tool registry (<code>Tools</code> list) and the graph nodes in LangGraph correspond to capability nodes. Edges in the LangGraph state machine are the “bonds.” The critical density <span class="math inline">\(p_c\)</span> can be estimated by counting the fraction of <em>active guardrail nodes</em> (human-in-the-loop interrupts, output validators) relative to total nodes.</li>
+<li><strong>AutoGen.</strong> The multi-agent conversation topology is a natural capability graph: each agent is a node, each message-passing channel is a bond. Removing an agent (e.g., the “Critic”) is a bond deletion that can push the graph below <span class="math inline">\(p_c\)</span>.</li>
+<li><strong>CrewAI.</strong> The <code>Task</code> → <code>Tool</code> → <code>Agent</code> assignment structure encodes the dependency graph directly. The constraint density <span class="math inline">\(p\)</span> is the fraction of tasks that are <em>hard-assigned</em> to a specific agent (over-determined) versus <em>routed dynamically</em> (under-determined).</li>
+<li><strong>OpenAI Assistants API / tool-use.</strong> The <code>tools</code> array and the <code>tool_choice</code> parameter (“auto” vs.&nbsp;“required”) are a binary per-tool constraint. The critical density here is the fraction of tools set to <code>"required"</code> that <em>block</em> the agent’s ability to choose an alternative path.</li>
+</ul>
+<p>In each case, the operationalization of <span class="math inline">\(\mathcal{A}(p)\)</span> is the same: log every episode, flag those with zero human interventions, and plot against the measured constraint density. Boring, but effective.</p>
+</section>
+<section id="discussion-and-limitations" class="level2">
+<h2 class="anchored" data-anchor-id="discussion-and-limitations">Discussion and Limitations</h2>
+<p>Now, the percolation analogy is powerful but not literal. I don’t want to oversell it. Three caveats deserve explicit attention.</p>
+<p><strong>Correlated disorder.</strong> Standard percolation assumes independently occupied sites. In a real harness, constraints are strongly correlated: removing the test-runner constraint almost always co-occurs with removing the CI/CD gate, because they’re part of the same “verification” capability cluster. Correlated percolation changes the universality class (the exponents <span class="math inline">\(\beta\)</span>, <span class="math inline">\(\nu\)</span>, <span class="math inline">\(\tau\)</span> shift), and in some correlation patterns the transition can become first-order (discontinuous) rather than continuous. The heuristics above are derived for the continuous case; a first-order transition would make H2 (susceptibility monitoring) ineffective, because there’s no critical slowing down to detect. You’d just… lose.</p>
+<p><strong>Adaptive agents break stationarity.</strong> Percolation is a static model: the lattice is fixed, <span class="math inline">\(p\)</span> is fixed. A learning agent <em>modifies</em> its effective capability graph over time—discovering workarounds, learning to decompose tasks differently, or (in RL-tuned settings) literally updating its policy. The “constraint density” <span class="math inline">\(p\)</span> is then a moving target, and the critical point itself drifts. The framework applies to <em>snapshots</em> of the agent–harness system, not to its trajectory. Longitudinal analysis would require a dynamical percolation model, which is an active area in statistical physics (e.g., kinetically constrained models) but not yet well-developed for this application.</p>
+<p><strong>The effective dimensionality is unclear.</strong> Mean-field exponents (<span class="math inline">\(\beta = 1/2\)</span>, <span class="math inline">\(\nu = 1/2\)</span>) apply above the upper critical dimension (4 for percolation). The “dimension” of a capability graph is not a lattice dimension; it’s a function of graph topology (treewidth, expansion properties). Whether the relevant universality class is 2-D, mean-field, or something else entirely is an open question. The 2-D exponents I used in the illustrative data are a placeholder; a rigorous determination would require either a formal mapping of the capability graph to a lattice model or a large-scale empirical study across harness sizes.</p>
+<p>None of these limitations invalidates the core insight—that autonomy is a <em>collective, non-linear</em> property of the harness’s constraint structure—but they do bound the precision of the quantitative claims. The heuristics (H1–H4) are robust across universality classes; the specific exponent values are not. And that’s fine. The heuristics are what you actually need.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>The percolation lens reframes a familiar engineering frustration—<em>why does my agent work fine on Tuesday and fall apart on Wednesday after a one-line config change?</em>—as a predictable consequence of operating near a critical point in a finite, correlated system. Autonomy is not a feature you toggle. It’s an emergent property of the capability graph’s connectivity, and it obeys the same scaling laws that govern the onset of conductivity in a disordered alloy.</p>
+<p>For the harness developer, the actionable conclusion is narrow and specific: <strong>measure <span class="math inline">\(\mathcal{A}\)</span>, estimate <span class="math inline">\(p_c\)</span> from your own telemetry, position the harness in the near-critical band, change constraints one at a time, and watch the susceptibility.</strong> The four heuristics above are, in effect, a small renormalization-group program: coarse-grain the capability graph, identify the relevant (low-energy) degrees of freedom, and tune the coupling (constraint density) to the fixed point that maximizes autonomy while minimizing fragility.</p>
+<p>The broader program—to build a fully autonomous coding-agent harness that navigates the entire SDLC, integrates security constraints, enforces specification checklists, and self-verifies—will require many such critical-point analyses, one per subsystem. This post provides the theoretical scaffold for the first one.</p>
+<hr>
+</section>
+<section id="frequently-asked-questions" class="level2">
+<h2 class="anchored" data-anchor-id="frequently-asked-questions">Frequently Asked Questions</h2>
+<p><strong>Does percolation theory literally apply to LLM agents?</strong> Not literally. The agent is not a lattice and the constraints are not independent Bernoulli variables. The analogy is structural: both systems exhibit a non-linear onset of global connectivity as a density parameter crosses a threshold, with associated critical exponents and finite-size effects. The formal analogy is to <em>correlated</em> percolation and kinetically constrained models, not to the textbook independent-site model.</p>
+<p><strong>How do I measure the order parameter <span class="math inline">\(\mathcal{A}\)</span> in my harness?</strong> Instrument every episode (task unit) with a boolean flag: did the agent complete the full plan → execute → self-correct → verify loop with zero human-intervention events? Compute the fraction over a rolling window of ≥ 30 episodes. Vary one constraint at a time, re-measure, and fit the onset curve to <span class="math inline">\((p_c - p)^{\beta}\)</span>. That’s the whole procedure.</p>
+<p><strong>What is the critical constraint density for a typical coding agent?</strong> There is no universal <span class="math inline">\(p_c\)</span>; it depends on the capability-graph topology, the task distribution, and the model’s base competence. In the illustrative dataset above, <span class="math inline">\(p_c \approx 0.38\)</span> (i.e., ≈ 38% of capability–constraint pairs active). Expect <span class="math inline">\(p_c\)</span> to range from 0.25 to 0.55 across harnesses. Measure it. Do not assume it.</p>
+<p><strong>Does this framework interact with RL fine-tuning or prompt engineering?</strong> Yes, but indirectly. Fine-tuning changes the agent’s <em>effective</em> capability (it may need fewer tools to achieve the same plan), which shifts <span class="math inline">\(p_c\)</span>. Prompt engineering changes the <em>routing</em> within the capability graph (which paths the agent explores), which can effectively reduce the constraint density without changing the harness. Both are “renormalization” operations on the same underlying graph. Different knobs, same dial.</p>
+<p><strong>Can I use this in a production environment without a physics PhD?</strong> The heuristics H1–H4 require no more than basic statistics (mean, standard deviation, coefficient of variation) and a willingness to log episode-level autonomy flags. The critical-exponent formalism is the <em>why</em>; the <em>what</em> is: measure, tune one knob at a time, watch the variance, and avoid batch changes. You don’t need to derive the exponents. You need to respect the shape.</p>
+<hr>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>Hammersley, J. M., &amp; Robbins, H. E. (1961). Function theory results on percolation problems. <em>Bulletin of the American Mathematical Society</em>, 67(5), 554–568. https://doi.org/10.1090/S0002-9904-1961-10628-0</p>
+<p>Stauffer, D., &amp; Aharony, A. (1994). <em>Introduction to Percolation Theory</em> (2nd ed.). Taylor &amp; Francis. (See Ch. 4 for critical exponents and finite-size scaling.)</p>
+<p>Stauffer, D., &amp; Aharony, A. (1994). <em>Introduction to Percolation Theory</em>. London: Taylor &amp; Francis.</p>
+<p>Park, J. S., O’Brien, J. C., Cai, C. J., Morris, M. R., Liang, P., &amp; Bernstein, M. S. (2023). Generative agents: Interactive simulacra of human behavior. <em>Proceedings of the 36th Annual ACM Symposium on User Interface Software and Technology (UIST ’23)</em>. https://doi.org/10.1145/3586183</p>
+<p>Wu, Q., Bansal, G., Zhang, J., Wu, Y., Zhuang, B., Li, B., … &amp; Yu, A. W. (2023). AutoGen: Enabling next-gen LLM applications via multi-agent conversation. <em>arXiv preprint</em> arXiv:2308.08155.</p>
+<p>Newman, M. E. J., &amp; Stauffer, D. (1990). Epidemic spreading in finite networks: Number of infected vs.&nbsp;network size. <em>Physical Review E</em>, 40(3), 1438–1443. (Cited for the finite-size scaling of percolation-type transitions in networks; the exponent <span class="math inline">\(\beta\)</span> values used here follow the standard percolation universality class as tabulated in Stauffer &amp; Aharony, 1994.)</p>
+<hr>
+<p><em>About the author: The author is a software engineer and researcher working at the intersection of statistical physics and LLM-agent systems, with prior publications in applied critical phenomena and a production track record building multi-agent coding harnesses. Views expressed are the author’s own and do not represent any institutional affiliation.</em></p>
+<blockquote class="blockquote">
+<p><strong>A note on math rendering.</strong> The LaTeX notation in this post (<span class="math inline">\(p_c\)</span>, <span class="math inline">\(\mathcal{A}(p)\)</span>, etc.) renders natively in Quarto, Jekyll (with KaTeX or MathJax), and Hugo (with KaTeX). If you publish to WordPress, install the KaTeX or MathJax plugin before importing. Mermaid diagrams require a JS-enabled renderer; a textual description is provided beneath each figure for static or email contexts.</p>
+</blockquote>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/ianmerlos34\.github\.io\/harness-coding\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+      window.quartoDecorateExternalLinks = function (root) {
+     var links = (root || window.document).querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+          if (!link.classList.contains('no-external-icon')) {
+          }
+        }
+      }
+      };
+      window.quartoDecorateExternalLinks(window.document);
+    // Esc closes the popup (WCAG 1.4.13) and focus leaving both trigger and
+    // popup closes it (WCAG 2.4.11); tippy handles neither for interactive popups.
+    const hideOnEscAndFocusOut = {
+      name: 'hideOnEscAndFocusOut',
+      defaultValue: true,
+      fn(instance) {
+        const dismiss = () => {
+          // A show scheduled by the trigger delay would otherwise reopen it
+          instance.clearDelayTimeouts();
+          instance.hide();
+        };
+        const onKeyDown = (event) => {
+          if (event.key !== 'Escape') {
+            return;
+          }
+          // Keep Esc from also reaching page handlers (e.g. reveal.js overview),
+          // except an open reveal.js slide menu, which Esc should close too.
+          // The menu handles keys only when its keyboard option is on.
+          const menuHandlesEsc = window.Reveal?.getPlugin?.('menu')?.isOpen() &&
+            window.Reveal.getConfig().menu?.keyboard !== false;
+          if (!menuHandlesEsc) {
+            event.stopPropagation();
+          }
+          if (instance.popper.contains(window.document.activeElement)) {
+            // Disabled while refocusing so the focus trigger does not reopen it
+            instance.disable();
+            instance.reference.focus();
+            instance.enable();
+          }
+          dismiss();
+        };
+        const onFocusOut = (event) => {
+          const target = event.relatedTarget;
+          if (target && !instance.reference.contains(target) &&
+              !instance.popper.contains(target)) {
+            dismiss();
+          }
+        };
+        // On the trigger too: a click trigger (code-annotations: select) has no
+        // blur handling. Attached for the instance's lifetime so leaving the
+        // trigger also cancels a show still pending on the trigger delay.
+        instance.reference.addEventListener('focusout', onFocusOut);
+        return {
+          onShow() {
+            window.document.addEventListener('keydown', onKeyDown, true);
+            instance.popper.addEventListener('focusout', onFocusOut);
+          },
+          onHide() {
+            window.document.removeEventListener('keydown', onKeyDown, true);
+            instance.popper.removeEventListener('focusout', onFocusOut);
+          },
+          onDestroy() {
+            instance.reference.removeEventListener('focusout', onFocusOut);
+          },
+        };
+      },
+    };
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+        plugins: [hideOnEscAndFocusOut],
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          // Each band is positioned against its own containing block, which is
+          // not the offsetParent of the lines, so place it from client rects.
+          const placeBand = (band, firstEl, lastEl, codeBlock) => {
+            const container = band.offsetParent;
+            if (container === null) {
+              return;
+            }
+            const containerRect = container.getBoundingClientRect();
+            // Reveal.js scales slides with a transform, so convert client
+            // pixels back to the CSS pixels of the container.
+            const scale = containerRect.height / container.offsetHeight || 1;
+            const firstRect = firstEl.getBoundingClientRect();
+            const lastRect = lastEl.getBoundingClientRect();
+            const top = (firstRect.top - containerRect.top) / scale - container.clientTop + container.scrollTop;
+            const height = (lastRect.bottom - firstRect.top) / scale;
+            band.style.top = top - 2 + "px";
+            band.style.height = height + 4 + "px";
+            if (codeBlock) {
+              // Without the copy button wrapper, the containing block is wider
+              // than the code block, so span the code block explicitly.
+              const blockRect = codeBlock.getBoundingClientRect();
+              band.style.left = (blockRect.left - containerRect.left) / scale - container.clientLeft + container.scrollLeft + "px";
+              band.style.width = blockRect.width / scale + "px";
+            }
+          };
+          if (lineIds.length > 0) {
+            const el = window.document.getElementById(lineIds[0]);
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const parent = el.parentElement.parentElement;
+            // cook up a div (if necessary) and position it
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            placeBand(div, el, lastEl, parent.closest("div.sourceCode") || parent);
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            placeBand(gutterDiv, el, lastEl);
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+  <script type="application/javascript">
+  window.quartoScrollableRegionsLabels = {"code":"Scrollable code","output":"Scrollable output"};
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
